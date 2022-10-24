@@ -1,24 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('can:post list', ['only' => ['index', 'show']]);
-        $this->middleware('can:post create', ['only' => ['create', 'store']]);
-        $this->middleware('can:post edit', ['only' => ['edit', 'update']]);
-        $this->middleware('can:post delete', ['only' => ['destroy']]);
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -28,14 +21,11 @@ class PostController extends Controller
     {
         $posts = (new Post)->newQuery();
         $posts->latest();
-        $posts = $posts->paginate(100)->onEachSide(2)->appends(request()->query());
-        return Inertia::render('Admin/Pages/ModelTable/Index', [
-            'items' => $posts,
-            'can' => [
-                'create' => Auth::hasRole('super-admin') ?? Auth::user()->can('post create'),
-                'edit' => Auth::user()->can('post edit'),
-                'delete' => Auth::user()->can('post delete'),
-            ],
+        $posts = $posts->paginate(2)->onEachSide(2)->appends(request()->query());
+        return Inertia::render('Post/Index', [
+            'tags' => Tag::all(),
+            'categories' => Category::all(),
+            'posts' => $posts,
         ]);
     }
 
@@ -52,10 +42,10 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StorePostRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
         //
     }
@@ -85,11 +75,11 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdatePostRequest  $request
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
         //
     }
