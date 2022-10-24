@@ -5,7 +5,7 @@ import { Multiselect } from 'react-widgets';
 
 
 
-export default function Create(props){
+export default function Create({st,setSt,title}){
     const { permissions } = usePage().props;
     const {data,setData,errors,post} = useForm({
         name:"",
@@ -25,11 +25,11 @@ export default function Create(props){
         e.preventDefault()
         post(route('admin.role.store'),{
             data,
-            onSuccess:()=>{props.setSt(false)},
+            onSuccess:()=>{setSt(false)},
         });
     }
     return (
-        <CreateModal title={props.title} st={props.st} setSt={props.setSt} onSubmit={handleSubmit} >
+        <CreateModal title={`Create New Role`} st={st} setSt={setSt} onSubmit={handleSubmit} >
             <form className='w-full max-w-lg'
                 onSubmit={handleSubmit}>
                 <div className="flex flex-wrap -mx-3 mb-6">

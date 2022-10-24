@@ -42,7 +42,7 @@ export default function Index(props) {
 
 
     return (
-        <Layout LinkTitle="Role">
+        <Layout linkTitle="Role">
             <EditModal {...editAttrs}/>
             <CreateModal {...createAttrs}/>
             <DestroyModal {...deleteAttrs} onConfirm={onDeleteConfirm}>
@@ -74,9 +74,7 @@ export default function Index(props) {
                                     <TheadTh {...sortAttrs} itemKey="id">
                                         Id
                                     </TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="guard_name">
-                                        Guard Name
-                                    </TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="guard_name">Guard Name</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="name">Name</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
@@ -112,17 +110,6 @@ export default function Index(props) {
                             </tbody>
                         </table>
                         <Pagination items={props.roles}/>
-                        {/* <div className="table-pagination">
-                            <div className="flex items-center justify-between">
-                                <div className="buttons">
-                                    { props.roles.links.map((link, k) => (
-                                        <Link key={k} href={link.url || ''} type="button"
-                                            disabled={link.url == null ? true : false} className={`${ link.active && 'active' }  ${link.url == null && ''} button`}>{link.label}</Link>
-                                    ))}
-                                </div>
-                                <small>Page { props.roles.current_page } of { props.roles.last_page }</small>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
             </section>

@@ -31,7 +31,7 @@ class PermissionController extends Controller
         $permissions->filter($filter);
         $permissions = $permissions->paginate(5)->onEachSide(2)->appends(request()->query());
         return Inertia::render('Permission/Index', [
-            'permissions' => $permissions,
+            'permissions' => IndexPermissionResource::collection($permissions),
             'can' => [
                 'create' => Auth::user()->can('permission create'),
                 'edit' => Auth::user()->can('permission edit'),

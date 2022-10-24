@@ -5,8 +5,7 @@ import { Multiselect } from "react-widgets";
 
 
 
-export default function Edit(props){
-    const role = props.item;
+export default function Edit({st,setSt,title,item:role}){
     const { permissions } = usePage().props;
     const {data,setData,errors,patch} = useForm({
         name: role.name || "",
@@ -34,11 +33,11 @@ export default function Edit(props){
         e.preventDefault()
         patch(route('admin.role.update',role),{
             data,
-            onSuccess:()=>{props.setSt(false)},
+            onSuccess:()=>{setSt(false)},
         });
     }
     return (
-        <EditModal st={props.st} setSt={props.setSt} title={`Edit Role #${role.id}`} onSubmit={handleSubmit}>
+        <EditModal st={st} setSt={setSt} title={`Edit Role #${role.id}`} onSubmit={handleSubmit}>
             <form className='w-full max-w-lg'
                 onSubmit={handleSubmit}>
                 <div className="flex flex-wrap -mx-3 mb-6">
@@ -46,7 +45,7 @@ export default function Edit(props){
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-name">
                             Name
                         </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" type="text" placeholder="Jane"
+                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" type="text"
                             onChange={handleChange} value={data.name} name="name"/>
                         { errors.name && <p className="text-red-500 text-xs italic">{ errors.name }</p> }
                     </div>
@@ -54,19 +53,20 @@ export default function Edit(props){
                         <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-guard_name">
                             Guard Name
                         </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-guard_name" type="text" placeholder="Doe"
+                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-guard_name" type="text" placeholder="web"
                             onChange={handleChange} value={data.guard_name} name="guard_name"/>
                         { errors.guard_name && <p className="text-red-500 text-xs italic">{ errors.guard_name }</p> }
                     </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password">
+                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-permissions">
                             Permissions
                         </label>
 
                         <div className="relative">
                             <Multiselect
+                                id="grid-permissions"
                                 dataKey="id"
                                 textField="name"
                                 defaultValue={data.permissions}

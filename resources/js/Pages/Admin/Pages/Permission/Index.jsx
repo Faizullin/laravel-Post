@@ -63,7 +63,7 @@ export default function Index({permissions,filters,}) {
 
 
     return (
-        <Layout LinkTitle="Permission">
+        <Layout linkTitle="Permission">
             <EditModal {...editAttrs}/>
             <CreateModal {...createAttrs}/>
             <DestroyModal {...deleteAttrs} onConfirm={onDeleteConfirm}>
@@ -130,7 +130,7 @@ export default function Index({permissions,filters,}) {
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={permissions.links}/>
+                        <Pagination items={permissions}/>
                     </div>
                 </div>
             </section>

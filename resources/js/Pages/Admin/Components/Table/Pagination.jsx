@@ -44,6 +44,17 @@ export default function Pagination({ items,pageCount }) {
                     ))}
 
                 </div>
+                {/* <div className="table-pagination">
+                        <div className="flex items-center justify-between">
+                            <div className="buttons">
+                                { props.roles.links.map((link, k) => (
+                                    <Link key={k} href={link.url || ''} type="button"
+                                        disabled={link.url == null ? true : false} className={`${ link.active && 'active' }  ${link.url == null && ''} button`}>{link.label}</Link>
+                                ))}
+                            </div>
+                            <small>Page { props.roles.current_page } of { props.roles.last_page }</small>
+                        </div>
+                    </div> */}
 
             </div>
 

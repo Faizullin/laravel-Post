@@ -53,7 +53,6 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
 
         return redirect()->back();
@@ -85,7 +84,6 @@ class ProfileController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
         return redirect()->back();
     }

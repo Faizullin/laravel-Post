@@ -24,13 +24,13 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PostFilter $filter)
     {
         $posts = (new Post)->newQuery();
-        $posts->latest();
+        $posts->filter($filter);
         $posts = $posts->paginate(100)->onEachSide(2)->appends(request()->query());
-        return Inertia::render('Admin/Pages/ModelTable/Index', [
-            'items' => $posts,
+        return Inertia::render('Post/Index', [
+            'items' => IndexPostResource::collection($posts),
             'can' => [
                 'create' => Auth::hasRole('super-admin') ?? Auth::user()->can('post create'),
                 'edit' => Auth::user()->can('post edit'),
@@ -44,9 +44,15 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(P)
     {
-        //
+        return Inertia::render('Post/Create', [
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'can' => [
+                'create' => Auth::hasRole('super-admin') ?? Auth::user()->can('post create'),
+            ],
+        ]);
     }
 
     /**
@@ -79,7 +85,14 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return Inertia::render('Post/Create', [
+            'post' => EditPostResource::collection($post),
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'can' => [
+                'edit' => Auth::hasRole('super-admin') ?? Auth::user()->can('post edit'),
+            ],
+        ]);
     }
 
     /**

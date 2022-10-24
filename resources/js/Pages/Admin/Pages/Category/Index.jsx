@@ -17,7 +17,7 @@ export default function Index(props) {
     const [sortAttrs,searchAttrs] = useFilterable(props.filters);
 
     const onDeleteConfirm = (deleteItem)=>{
-        Inertia.delete(route('admin.user.destroy',deleteItem));
+        Inertia.delete(route('admin.category.destroy',deleteItem));
         deleteAttrs.setSt(false);
     }
 
@@ -26,9 +26,9 @@ export default function Index(props) {
     const [DestroyModal,deleteAttrs] = useDialog(Destroy,{
         title:"Delete item?",
     });
-    const handleEditClick =(user) => {
-        axios.get(route('admin.user.edit',{user})).then((response) => {
-            editAttrs.setItem(response.data.user);
+    const handleEditClick =(category) => {
+        axios.get(route('admin.category.edit',{category})).then((response) => {
+            editAttrs.setItem(response.data.category);
             editAttrs.setSt(true)
         });
     },
@@ -42,7 +42,7 @@ export default function Index(props) {
 
 
     return (
-        <Layout linkTitle="User">
+        <Layout linkTitle="Category">
             <EditModal {...editAttrs}/>
             <CreateModal {...createAttrs}/>
             <DestroyModal {...deleteAttrs} onConfirm={onDeleteConfirm}>
@@ -53,12 +53,12 @@ export default function Index(props) {
                     <header className="card-header">
                         <p className="card-header-title">
                             <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                            Users
+                            Categorys
                         </p>
                         <button
                             className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
                             onClick={ handleCreateClick }>
-                            Create New User
+                            Create New Category
                         </button>
                         <Link href="#" className="card-header-icon">
                             <span className="icon"><i className="mdi mdi-reload"></i></span>
@@ -71,11 +71,9 @@ export default function Index(props) {
                         <table>
                             <thead>
                                 <tr>
-                                    <TheadTh {...sortAttrs} itemKey="id">
-                                        Id
-                                    </TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="name">Name</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="email">Email</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="id">Id</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="name">Title</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="email">Slug</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="posts_count">Posts Count</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
@@ -83,25 +81,25 @@ export default function Index(props) {
                                 </tr>
                             </thead>
                             <tbody>
-                            { props.users.data.map((user,index) => (
-                                    <tr key={user.id}>
-                                        <td>{ user.id }</td>
-                                        <td data-label="Name">{ user.name }</td>
-                                        <td data-label="Email">{ user.email }</td>
-                                        <td data-label="Posts Count">{ user.posts_count }</td>
+                            { props.categories.data.map((category,index) => (
+                                    <tr key={category.id}>
+                                        <td>{ category.id }</td>
+                                        <td data-label="Name">{ category.title }</td>
+                                        <td data-label="Email">{ category.slug }</td>
+                                        <td data-label="Posts Count">{ category.posts_count }</td>
                                         <td data-label="Last Updated">
-                                            <small className="text-gray-500" title="Dec 30, 2021">{ user.updated_at }</small>
+                                            <small className="text-gray-500" title="Dec 30, 2021">{ category.updated_at }</small>
                                         </td>
                                         <td data-label="Created">
-                                            <small className="text-gray-500" title="Dec 30, 2021">{ user.created_at }</small>
+                                            <small className="text-gray-500" title="Dec 30, 2021">{ category.created_at }</small>
                                         </td>
                                         <td className="actions-cell">
                                             <div className="buttons right nowrap">
-                                                <button className="button small blue --jb-modal"  data-target="sample-modal-2" type="button" onClick={ (e) => handleEditClick(user.id) }>
+                                                <button className="button small blue --jb-modal"  data-target="sample-modal-2" type="button" onClick={ (e) => handleEditClick(category.id) }>
                                                     <span className="icon"><i className="mdi mdi-eye"></i></span>
                                                 </button>
                                                 <button className="button small red --jb-modal" data-target="sample-modal" type="button"
-                                                    onClick={ (e) => handleDestroyClick(user.id) }>
+                                                    onClick={ (e) => handleDestroyClick(category.id) }>
                                                     <span className="icon"><i className="mdi mdi-trash-can"></i></span>
                                                 </button>
                                             </div>
@@ -111,7 +109,8 @@ export default function Index(props) {
                             )}
                             </tbody>
                         </table>
-                        <Pagination items={props.users}/>
+                        <Pagination items={props.categories}/>
+                    
                     </div>
                 </div>
             </section>
