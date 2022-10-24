@@ -5,16 +5,22 @@ import { useEffect } from "react";
 export default function EditPasswordForm(){
     const { user } = usePage().props.auth;
     const {data,setData,errors,patch} = useForm({
-
+        password_current: '',
+        password: '',
+        password_confirmation:'',
     });
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data)
-        patch(route('admin.profile.update',user.id),{
+        patch(route('admin.profile.updateProfile'),{
             data,
-            onSuccess: (response) => {
-
-            },
+            onSuccess:(response) => {
+                console.log(response,'ok')
+                const tmp = {...data};
+                Object.keys(tmp).forEach(key => {
+                    tmp[key] = '';
+                });
+                setData(tmp);
+            }
         })
     }
     const handleChange = (e) => {
@@ -40,7 +46,11 @@ export default function EditPasswordForm(){
                             <input type="password" autoComplete="current-password" className="input" required
                                 name="password_current" onChange={handleChange} value={data.password_current}/>
                         </div>
-                        <p className="help">Required. Your current password</p>
+                        { errors.password_current ? (
+                            <p className="text-red-500 text-xs italic">{ errors.password_current }</p>
+                        ) : (
+                            <p className="help">Required. Your current password</p>
+                        ) }
                     </div>
                     <hr />
                     <div className="field">
@@ -49,7 +59,11 @@ export default function EditPasswordForm(){
                             <input type="password" autoComplete="new-password" className="input" required
                                 name="password" onChange={handleChange} value={data.password}/>
                         </div>
-                        <p className="help">Required. New password</p>
+                        { errors.password ? (
+                            <p className="text-red-500 text-xs italic">{ errors.password }</p>
+                        ) : (
+                            <p className="help">Required. New password</p>
+                        ) }
                     </div>
                     <div className="field">
                         <label className="label">Confirm password</label>

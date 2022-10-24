@@ -23,6 +23,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@heroicons/react": "^2.0.12",
         "@mdi/js": "^7.0.96",
         "chart.js": "^3.9.1",
         "react-bootstrap": "^2.5.0",

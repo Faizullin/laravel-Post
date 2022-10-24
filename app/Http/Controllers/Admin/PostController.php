@@ -36,22 +36,6 @@ class PostController extends Controller
                 'edit' => Auth::user()->can('post edit'),
                 'delete' => Auth::user()->can('post delete'),
             ],
-            "table"=>[
-                "columns"=>[
-                    "id"=>[
-                        "label"=>"Id",
-                        "canSee"=>True,
-                    ],
-                    "title"=>[
-                        "label"=>"Title",
-                        "canSee"=>True,
-                    ],
-                    "description"=>[
-                        "label"=>"Description",
-                        "canSee"=>True,
-                    ],
-                ]
-            ]
         ]);
     }
 

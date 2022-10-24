@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/inertia-react";
 
-export default function Pagination({ links }) {
+export default function Pagination({ items,pageCount }) {
+    pageCount = pageCount ? pageCount : 2;
     function getClassName(active) {
 
         if(active) {
@@ -15,34 +16,32 @@ export default function Pagination({ links }) {
 
     }
 
-
-
     return (
 
-        links.length > 3 && (
+        (items.meta.links.length > pageCount) && (
             <div className="table-pagination mb-4">
                 <div className="flex mt-8">
-                    {links.map((link, key) => (
+                    {items.meta.links.map((item, key) => (
 
-                            link.url === null ?
+                            item.url === null ?
 
                                     (<div
                                         key={key}
                                             className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
 
-                                        >{link.label}</div>) :
+                                        >{item.label}</div>) :
 
 
 
                                     (<Link key={key}  type="button"
-                                        disabled={link.url == null ? true : false}
-                                        className={getClassName(link.active)}
+                                        disabled={item.url == null ? true : false}
+                                        className={getClassName(item.active)}
 
-                                        href={link.url || ''}
+                                        href={item.url || ''}
 
-                                            >{link.label}</Link>)
+                                            >{item.label}</Link>)
 
-                                    ))}
+                    ))}
 
                 </div>
 

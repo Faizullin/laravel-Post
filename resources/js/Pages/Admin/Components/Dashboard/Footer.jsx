@@ -6,7 +6,7 @@ export default function Footer(){
             <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
                 <div className="flex items-center justify-start space-x-3">
                 <div>
-                    © 2022, JustBoil.me
+                    © 2022, Faizullin.me
                 </div>
                 <Link href="https://github.com/justboil/admin-one-tailwind" style={{height: "20px"}}>
                     <img src="https://img.shields.io/github/v/release/justboil/admin-one-tailwind?color=%23999" />

@@ -10,34 +10,12 @@ import Destroy from '../../Components/Table/DestroyModal';
 import axios from 'axios';
 import useDialog from '../../Hooks/useDialog';
 import Pagination from '../../Components/Table/Pagination';
-import useDidMountEffect from '../../Hooks/useDidMountEffect';
+import useFilterable from '../../Hooks/useFilterable';
 
 
 export default function Index(props) {
-    const[sortItem,setSortItem] = useState("");
-    const[searchItem,setSearchItem] = useState("");
+    const [sortAttrs,searchAttrs] = useFilterable(props.filters);
 
-    useDidMountEffect(function(){
-        const query ={...props.filters};
-        if(sortItem){
-            query['sort'] = sortItem;
-        }
-        console.log(sortItem,query)
-        getItems(query)
-    },[sortItem]);
-    useDidMountEffect(function(){
-        const query ={...props.filters};
-        query['filter'] = {search:searchItem,};
-        console.log("search Effect",searchItem,query)
-        getItems(query)
-    },[searchItem]);
-
-    const getItems = (query) => {
-        Inertia.get(route(route().current()), query, {
-            preserveState: true,
-            replace: true,
-        });
-    }
     const onDeleteConfirm = (deleteItem)=>{
         Inertia.delete(route('admin.role.destroy',deleteItem));
         deleteAttrs.setSt(false);
@@ -87,19 +65,21 @@ export default function Index(props) {
                         </Link>
                     </header>
                     <div className="card-content">
-                        <GlobalFilter setSearchItem={ setSearchItem } />
+                        <div className='lg:w-full mb-3'>
+                            <GlobalFilter {...searchAttrs} />
+                        </div>
                         <table>
                             <thead>
                                 <tr>
-                                    <TheadTh setSortItem={setSortItem} itemKey="id">
+                                    <TheadTh {...sortAttrs} itemKey="id">
                                         Id
                                     </TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="guard_name">
+                                    <TheadTh {...sortAttrs} itemKey="guard_name">
                                         Guard Name
                                     </TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="name">Name</TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="updated_at">Last Updated</TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="created_at">Created</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="name">Name</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
                                     <TheadTh></TheadTh>
                                 </tr>
                             </thead>
@@ -131,7 +111,7 @@ export default function Index(props) {
                             )}
                             </tbody>
                         </table>
-                        <Pagination links={props.roles.links}/>
+                        <Pagination items={props.roles}/>
                         {/* <div className="table-pagination">
                             <div className="flex items-center justify-between">
                                 <div className="buttons">

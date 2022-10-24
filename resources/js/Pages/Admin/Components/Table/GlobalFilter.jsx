@@ -3,12 +3,11 @@ import { Inertia } from "@inertiajs/inertia";
 import { usePage } from "@inertiajs/inertia-react";
 import useDidMountEffect from "../../Hooks/useDidMountEffect";
 
-export default function GlobalFIlter({setSearchItem}){
+export default function GlobalFilter({setSearchItem}){
     const { filters } = usePage().props;
     const [value,setValue] = useState("");
 
     useEffect(function(){
-        console.log("Search",filters.filter?.search )
         setValue(filters.filter?.search || "");
     },[]);
 

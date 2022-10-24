@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Admin\RoleFilter;
+use App\Http\Requests\Admin\StoreRoleRequest;
+use App\Http\Requests\Admin\UpdateRoleRequest;
 use App\Http\Resources\Admin\Role\EditRoleResource;
+use App\Http\Resources\Admin\Role\IndexRoleResource;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
@@ -33,7 +36,7 @@ class RoleController extends Controller
         $roles->filter($filter);
         $roles = $roles->paginate(2)->onEachSide(2)->appends(request()->query());
         return Inertia::render('Role/Index', [
-            'roles' => $roles,
+            'roles' => IndexRoleResource::collection($roles),
             'permissions'=>Permission::all(),
             'can' => [
                 'create' => Auth::user()->can('role create'),
@@ -60,19 +63,14 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRoleRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'max:50','unique:roles,name'],
-            'guard_name' => ['required', 'max:50'],
-            'permissions' => ['array'],
-            'permissions.*' => ['integer','exists:permissions,id'],
-        ]);
+        $data = $request->validated();
 
         $data['guard_name'] = 'web';
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $role_permissions = $data['permissions'];
             unset($data['permissions']);
             $role = Role::create(
@@ -87,17 +85,6 @@ class RoleController extends Controller
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        return $this->authorise('members.view');
     }
 
     /**
@@ -120,14 +107,9 @@ class RoleController extends Controller
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
-        $data = $request->validate([
-            'name' => ['required', 'max:50','unique:roles,name,'.$role->id],
-            'guard_name' => ['required', 'max:50' ],
-            'permissions' => ['array'],
-            'permissions.*' => ['integer','exists:permissions,id'],
-        ]);
+        $data = $request->validated();
 
         $data['guard_name'] = "web";
 

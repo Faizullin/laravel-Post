@@ -45,17 +45,31 @@ Route::group([
     Route::get('dashboard',function(){
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::resource('profile', 'ProfileController');
+    Route::group( ['controller' => 'ProfileController'],function(){
+        Route::get('profile','index')->name('profile.index');
+        Route::patch('profile','update')->name('profile.update');
+        Route::patch('profilePassword','updatePassword')->name('profile.updateProfile');
+    });
 
     Route::resource('user', 'UserController');
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
     Route::resource('post', 'PostController');
+    Route::resource('category', 'CategoryController');
+    Route::resource('tag', 'TagController');
 });
-Route::get("/profile",function()
-{
-    return Inertia::render('Profile');
-})->name('profile');
 
 
+Route::group([
+    'namespace' => 'App\Http\Controllers',
+],function(){
+    Route::get("/profile",function(){
+        return Inertia::render('Profile');
+    })->name('profile');
+    Route::resource('post', 'PostController');
+    Route::get('posts', 'PostController@index');
 
+
+    Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
+
+});

@@ -5,7 +5,8 @@ import { useEffect } from "react";
 export default function EditProfileForm(){
     const { user } = usePage().props.auth;
     const {data,setData,errors,patch} = useForm({
-
+        name:'',
+        email:'',
     });
     useEffect(() => {
         setData({...user});
@@ -14,6 +15,7 @@ export default function EditProfileForm(){
         e.preventDefault();
 
         console.log(data)
+        patch(route('admin.profile.update'),data);
     }
     const handleChange = (e) => {
         setData({
@@ -53,7 +55,12 @@ export default function EditProfileForm(){
                                     <input type="text" autoComplete="on" className="input" required
                                         name='name' value={ data.name } onChange={ handleChange }/>
                                 </div>
-                                <p className="help">Required. Your name</p>
+                                { errors.name ? (
+                                    <p className="text-red-500 text-xs italic">{ errors.name }</p>
+                                ) : (
+                                    <p className="help">Required. Your name</p>
+                                ) }
+
                             </div>
                         </div>
                     </div>
@@ -65,7 +72,11 @@ export default function EditProfileForm(){
                                     <input type="email" autoComplete="on" className="input" required
                                         name='email' value={ data.email } onChange={ handleChange }/>
                                 </div>
-                                <p className="help">Required. Your e-mail</p>
+                                { errors.email ? (
+                                    <p className="text-red-500 text-xs italic">{ errors.email }</p>
+                                ) : (
+                                    <p className="help">Required. Your email</p>
+                                ) }
                             </div>
                         </div>
                     </div>

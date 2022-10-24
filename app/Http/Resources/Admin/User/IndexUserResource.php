@@ -17,10 +17,11 @@ class IndexUserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'username' => $this->name,
             'email' => $this->email,
-            //'address' => $this->address,
-            'joined' => $this->created_at->diffForHumans(),
+            'posts_count' => $this->posts()->count(),
+            'created_at' => $this->created_at->diffForHumans(),
+            'updated_at' => $this->updated_at->diffForHumans(),
+
         ];
     }
 }

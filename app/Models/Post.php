@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +10,8 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $table = 'posts';
+    use Filterable;
+
     protected $fillable = ["title", "file_path", "created_at", "updated_at"];
 
     public function category()
