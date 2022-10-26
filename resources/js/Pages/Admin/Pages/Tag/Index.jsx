@@ -72,8 +72,8 @@ export default function Index(props) {
                             <thead>
                                 <tr>
                                     <TheadTh {...sortAttrs} itemKey="id">Id</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="name">Title</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="email">Slug</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="title">Title</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="slug">Slug</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="posts_count">Posts Count</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
@@ -110,7 +110,7 @@ export default function Index(props) {
                             </tbody>
                         </table>
                         <Pagination items={props.tags}/>
-                    
+
                     </div>
                 </div>
             </section>

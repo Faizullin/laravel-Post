@@ -1,20 +1,24 @@
-import EditModal from "../../Components/Table/EditModal";
 import { useEffect } from "react";
-import { useForm, usePage } from "@inertiajs/inertia-react";
+import { useForm } from "@inertiajs/inertia-react";
 import { Multiselect } from "react-widgets";
+import Layout from "../../Layouts/Layout";
+import CropprtInput from "../../Components/Post/CopperInput";
 
 
 
-export default function Edit({st,setSt,title,item:post}){
-    const { data:tags } = usePage().props.tags;
-    const {data,setData,errors,post} = useForm({
+export default function Edit(props){
+    const { data:post } = props.post;
+    const { data:tags } = props.tags;
+    const { data:users } = props.users;
+    const { data:categories } = props.categories;
+    const {data,setData,errors,patch} = useForm({
         title: post.title || "",
         description: post.description || "",
-        content: post.content || "",
+        body: post.body || "",
         author:post.author || null,
         category:post.category || null,
         tags: post.tags || [],
-        file_path: post.file_path || "",
+        imageUrl: post.file_path || "",
     });
 
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
@@ -26,7 +30,8 @@ export default function Edit({st,setSt,title,item:post}){
         }));
     }
     useEffect(()=>{
-        if(st && post){
+        if(post){
+            console.log(post)
             setData(data => ({
                 ...post,
                 tags: post.tags.map(item => item.id)
@@ -35,58 +40,106 @@ export default function Edit({st,setSt,title,item:post}){
     },[post]);
     function handleSubmit(e){
         e.preventDefault()
-        patch(route('admin.post.update',post),{
-            data,
-            onSuccess:()=>{setSt(false)},
-        });
+        patch(route('admin.post.update',post),data);
     }
     return (
-        <EditModal st={st} setSt={setSt} title={`Edit Post #${post.id}`} onSubmit={handleSubmit}>
-            <form className='w-full max-w-lg'
-                onSubmit={handleSubmit}>
-                <div className="flex flex-wrap -mx-3 mb-6">
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-title">
-                            Title
-                        </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-title" type="text"
-                            onChange={handleChange} value={data.title} name="title"/>
-                        { errors.title && <p className="text-red-500 text-xs italic">{ errors.title }</p> }
-                    </div>
-                    <div className="w-full md:w-1/2 px-3">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-email">
-                            Email
-                        </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-email" type="email"
-                            onChange={handleChange} value={data.email} name="email"/>
-                        { errors.email && <p className="text-red-500 text-xs italic">{ errors.email }</p> }
-                    </div>
-                </div>
-                <div className="flex flex-wrap -mx-3 mb-6">
-                    <div className="w-full px-3">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-tags">
-                            Tags
-                        </label>
+        <Layout linkTitle="Post">
+             <section className="section main-section">
+                <div className="card has-table">
+                    <header className="card-header">
+                        <p className="card-header-title">
+                            <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
+                            Edit Post #{post.id}
+                        </p>
+                    </header>
+                    <div className="card-content">
+                        <div className="py-12">
+                            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                                    <div className="p-6 bg-white border-b border-gray-200">
+                                        <form onSubmit={handleSubmit}
+                                            className="max-w-lg">
+                                            <div className="mb-4">
+                                                <label className="text-xl text-gray-600">Title <span className="text-red-500">*</span></label><br/>
+                                                <input type="text" className="border-2 border-gray-300 p-2 w-full"
+                                                    name="title" id="title" required
+                                                    value={data.title} onChange={handleChange}/>
+                                            </div>
 
-                        <div className="relative">
-                            <Multiselect
-                                id="grid-tags"
-                                dataKey="id"
-                                textField="name"
-                                defaultValue={data.tags}
-                                data={ tags }
-                                filter='contains'
-                                onChange={value => setTags(value)}
-                            />
+                                            <div className="mb-4">
+                                                <label className="text-xl text-gray-600">Description</label><br/>
+                                                <textarea className="border-2 border-gray-500 w-full"
+                                                    name="description" id="description" placeholder="(Optional)"
+                                                    value={data.description} onChange={handleChange}/>
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <label className="text-xl text-gray-600">Content <span className="text-red-500">*</span></label><br/>
+                                                <textarea name="body"  className="border-2 border-gray-500 w-full"
+                                                    value={data.body} onChange={handleChange} />
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <select name="user" id="" onChange={handleChange}>
+                                                    { categories.map((category,index) => (
+                                                        <option value={category.id}>{category.title}</option>
+                                                    )) }
+                                                </select>
+                                            </div>
+                                            <div className="mb-4">
+                                                <select name="user" id="">
+                                                    { users.map((user,index) => (
+                                                        <option value={user.id}>{user.name}</option>
+                                                    )) }
+                                                </select>
+                                            </div>
+
+                                            <div className="mb-4">
+                                                <label className="text-xl text-gray-600"
+                                                    htmlFor="tags">
+                                                    Tags
+                                                </label>
+                                                <div className="relative">
+                                                    <Multiselect
+                                                        id='tags'
+                                                        dataKey="id"
+                                                        textField="title"
+                                                        defaultValue={data.tags}
+                                                        data={ tags }
+                                                        filter='contains'
+                                                        onChange={value => setTags(value)}
+                                                    />
+                                                </div>
+                                                { errors.tags ?
+                                                    <p className="text-red-500 text-xs italic">{ errors.tags }</p>
+                                                    :
+                                                    <p className="text-gray-600 text-xs italic">Select Tags</p>
+                                                }
+                                            </div>
+
+                                            <div className="mb-8">
+                                                <CropprtInput defaultValue={data.imageUrl}/>
+                                            </div>
+
+                                            <div className="flex p-1">
+                                                {/* <select className="border-2 border-gray-300 border-r p-2" name="action">
+                                                    <option>Save and Publish</option>
+                                                    <option>Save Draft</option>
+                                                </select> */}
+                                                <button role="submit" className="p-3 bg-blue-500 text-white hover:bg-blue-400"
+                                                    type='submit'>Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
                         </div>
-                        { errors.tags ?
-                            <p className="text-red-500 text-xs italic">{ errors.tags }</p>
-                            :
-                            <p className="text-gray-600 text-xs italic">Select Tags</p>
-                         }
                     </div>
                 </div>
-            </form>
-        </EditModal>
+            </section>
+        </Layout>
+
     );
 }

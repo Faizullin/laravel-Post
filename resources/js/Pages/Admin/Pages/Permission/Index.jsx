@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/inertia-react';
-import { useState, useEffect } from 'react'
 import { Inertia } from '@inertiajs/inertia';
 import Layout from '../../Layouts/Layout';
 import GlobalFilter from '../../Components/Table/GlobalFilter';
@@ -10,33 +9,12 @@ import Destroy from '../../Components/Table/DestroyModal';
 import axios from 'axios';
 import useDialog from '../../Hooks/useDialog';
 import Pagination from '../../Components/Table/Pagination';
-import useDidMountEffect from '../../Hooks/useDidMountEffect';
+import useFilterable from '../../Hooks/useFilterable';
 
 
 export default function Index({permissions,filters,}) {
-    const[sortItem,setSortItem] = useState("");
-    const[searchItem,setSearchItem] = useState("");
-    useDidMountEffect(function(){
-        const query ={...filters};
-        if(sortItem){
-            query['sort'] = sortItem;
-        }
-        console.log(sortItem,query)
-        getItems(query)
-    },[sortItem]);
-    useDidMountEffect(function(){
-        const query ={...filters};
-        query['filter'] = {search:searchItem,};
-        console.log("search Effect",searchItem,query)
-        getItems(query)
-    },[searchItem]);
+    const [sortAttrs,searchAttrs] = useFilterable(filters);
 
-    const getItems = (query) => {
-        Inertia.get(route(route().current()), query, {
-            preserveState: true,
-            replace: true,
-        });
-    }
     const onDeleteConfirm = (deleteItem)=>{
         Inertia.delete(route('admin.permission.destroy',deleteItem));
         deleteAttrs.setSt(false);
@@ -49,8 +27,8 @@ export default function Index({permissions,filters,}) {
     });
     const handleEditClick =(permission) => {
         axios.get(route('admin.permission.edit',{permission})).then((response) => {
-            editAttrs.setItem(response.data.item);
-            editAttrs.setSt(true)
+            editAttrs.setItem(response.data.permission);
+            editAttrs.setSt(true);
         });
     },
     handleCreateClick =() => {
@@ -86,19 +64,17 @@ export default function Index({permissions,filters,}) {
                         </Link>
                     </header>
                     <div className="card-content">
-                        <GlobalFilter setSearchItem={ setSearchItem } />
+                        <div className='lg:w-full mb-3'>
+                            <GlobalFilter {...searchAttrs} />
+                        </div>
                         <table>
                             <thead>
                                 <tr>
-                                    <TheadTh setSortItem={setSortItem} itemKey="id">
-                                        Id
-                                    </TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="guard_name">
-                                        Guard Name
-                                    </TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="name">Name</TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="updated_at">Last Updated</TheadTh>
-                                    <TheadTh setSortItem={setSortItem} itemKey="created_at">Created</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="id">Id</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="guard_name">Guard Name</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="name">Name</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
                                     <TheadTh></TheadTh>
                                 </tr>
                             </thead>

@@ -3,19 +3,46 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Admin\TagFilter;
+use App\Http\Requests\Admin\StoreTagRequest;
+use App\Http\Requests\Admin\UpdateTagRequest;
+use App\Http\Resources\Admin\Tag\EditTagResource;
+use App\Http\Resources\Admin\Tag\IndexTagResource;
 use App\Models\Tag;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class TagController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('can:tag list', ['only' => ['index', 'show']]);
+        $this->middleware('can:tag create', ['only' => ['create', 'store']]);
+        $this->middleware('can:tag edit', ['only' => ['edit', 'update']]);
+        $this->middleware('can:tag delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TagFilter $filter)
     {
-        //
+        $tags = (new Tag)->newQuery();
+        $tags->filter($filter);
+        $tags = $tags->paginate(2)->onEachSide(2)->appends(request()->query());
+        return Inertia::render('Tag/Index', [
+            'tags' => IndexTagResource ::collection($tags),
+            'can' => [
+                'create' => Auth::user()->can('tag create'),
+                'edit' => Auth::user()->can('tag edit'),
+                'delete' => Auth::user()->can('tag delete'),
+            ],
+            'filters' => $filter->getFilters(),
+        ]);
     }
 
     /**
@@ -25,7 +52,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -34,9 +61,23 @@ class TagController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTagRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $tag = Tag::create($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Tag has been created',
+        ]);
     }
 
     /**
@@ -58,7 +99,9 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        //
+        return [
+            "tag"=> new EditTagResource($tag),
+        ];
     }
 
     /**
@@ -68,9 +111,18 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
-        //
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $tag->update($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     /**
@@ -81,6 +133,17 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $tag->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Tag has been deleted',
+        ]);
     }
 }

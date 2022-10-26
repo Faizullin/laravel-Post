@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -12,7 +13,7 @@ class Post extends Model
 
     use Filterable;
 
-    protected $fillable = ["title", "file_path", "created_at", "updated_at"];
+    protected $fillable = ["title","description", "body", "image_path", "created_at", "updated_at"];
 
     public function category()
     {
@@ -29,10 +30,13 @@ class Post extends Model
       return $this->hasMany(Comment::class,'post_id')->whereNull('parent_id');
     }
 
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function getImageUrlAttribute()
     {
-        return $this->image_path ? $this->image_path : 'img/unknown.jpg';
+        return Storage::url($this->image_path ? $this->image_path : 'img/unknown.jpg');
     }
 }

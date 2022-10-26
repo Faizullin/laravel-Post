@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Admin\PermissionFilter;
+use App\Http\Requests\Admin\StorePermissionRequest;
+use App\Http\Requests\Admin\UpdatePermissionRequest;
 use App\Http\Resources\Admin\Permission\EditPermissionResource;
+use App\Http\Resources\Admin\Permission\IndexPermissionResource;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PermissionController extends Controller
@@ -57,9 +61,24 @@ class PermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        $data['guard_name'] = 'web';
+
+        try {
+            DB::beginTransaction();
+            $permission = Permission::create($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Permission has been created',
+        ]);
     }
 
     /**
@@ -93,9 +112,24 @@ class PermissionController extends Controller
      * @param  \App\Models\Permission  $permission
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(UpdatePermissionRequest $request, Permission $permission)
     {
-        //
+        $data = $request->validated();
+
+        $data['guard_name'] = "web";
+
+        try {
+            DB::beginTransaction();
+            $permission->update($data);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Permission has been updated',
+        ]);
     }
 
     /**
@@ -106,6 +140,17 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $permission->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Permission has been deleted',
+        ]);
     }
 }

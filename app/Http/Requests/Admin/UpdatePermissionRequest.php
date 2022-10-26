@@ -13,7 +13,7 @@ class UpdatePermissionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class UpdatePermissionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => ['required', 'max:50','unique:permissions,name,'.$this->id],
+            'guard_name' => ['required', 'max:50' ],
         ];
     }
 }

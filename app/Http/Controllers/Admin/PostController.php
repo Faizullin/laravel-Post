@@ -3,7 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Admin\PostFilter;
+use App\Http\Resources\Admin\Category\CategoryMinResource;
+use App\Http\Resources\Admin\Post\EditPostResource;
+use App\Http\Resources\Admin\Post\IndexPostResource;
+use App\Http\Resources\Admin\Tag\TagMinResource;
+use App\Http\Resources\Admin\User\UserMinResource;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -28,14 +37,15 @@ class PostController extends Controller
     {
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
-        $posts = $posts->paginate(100)->onEachSide(2)->appends(request()->query());
+        $posts = $posts->paginate(2)->onEachSide(2)->appends(request()->query());
         return Inertia::render('Post/Index', [
-            'items' => IndexPostResource::collection($posts),
+            'posts' => IndexPostResource::collection($posts),
             'can' => [
-                'create' => Auth::hasRole('super-admin') ?? Auth::user()->can('post create'),
+                'create' => Auth::user()->can('post create'),
                 'edit' => Auth::user()->can('post edit'),
                 'delete' => Auth::user()->can('post delete'),
             ],
+            'filters' => $filter->getFilters(),
         ]);
     }
 
@@ -44,13 +54,14 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(P)
+    public function create()
     {
         return Inertia::render('Post/Create', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
+            'users' => UserMinResource::collection(User::all()),
             'can' => [
-                'create' => Auth::hasRole('super-admin') ?? Auth::user()->can('post create'),
+                'create' => Auth::user()->can('post create'),
             ],
         ]);
     }
@@ -85,12 +96,13 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return Inertia::render('Post/Create', [
-            'post' => EditPostResource::collection($post),
+        return Inertia::render('Post/Edit', [
+            'post' => new EditPostResource($post),
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
+            'users' => UserMinResource::collection(User::all()),
             'can' => [
-                'edit' => Auth::hasRole('super-admin') ?? Auth::user()->can('post edit'),
+                'create' => Auth::user()->can('post edit'),
             ],
         ]);
     }

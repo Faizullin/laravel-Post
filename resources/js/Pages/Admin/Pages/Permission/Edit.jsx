@@ -4,8 +4,7 @@ import { useForm, usePage } from "@inertiajs/inertia-react";
 
 
 
-export default function Edit({st,setSt,title,item}){
-    const permission = item;
+export default function Edit({st,setSt,title,item:permission}){
     const {data,setData,errors,patch} = useForm({
         name: permission.name || "",
         guard_name: permission.guard_name || "web",
@@ -15,6 +14,7 @@ export default function Edit({st,setSt,title,item}){
 
 
     useEffect(()=>{
+
         if(st && permission){
             setData(data => ({
                 ...permission,

@@ -38,6 +38,14 @@ class BasicAdminPermissionSeeder extends Seeder
             'post create',
             'post edit',
             'post delete',
+            'tag list',
+            'tag create',
+            'tag edit',
+            'tag delete',
+            'category list',
+            'category create',
+            'category edit',
+            'category delete',
         ];
 
         foreach ($permissions as $permission) {
@@ -47,6 +55,8 @@ class BasicAdminPermissionSeeder extends Seeder
         // create roles and assign existing permissions
         $role1 = Role::create(['name' => 'writer']);
         $role1->givePermissionTo('permission list');
+        $role1->givePermissionTo('tag list');
+        $role1->givePermissionTo('category list');
         $role1->givePermissionTo('role list');
         $role1->givePermissionTo('user list');
         $role1->givePermissionTo('post list');

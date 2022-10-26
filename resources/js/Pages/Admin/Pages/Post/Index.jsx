@@ -1,5 +1,4 @@
 import { Link } from '@inertiajs/inertia-react';
-import { useState, useEffect } from 'react'
 import { Inertia } from '@inertiajs/inertia';
 import Layout from '../../Layouts/Layout';
 import GlobalFilter from '../../Components/Table/GlobalFilter';
@@ -12,22 +11,15 @@ import useFilterable from '../../Hooks/useFilterable';
 
 export default function Index(props) {
     const [sortAttrs,searchAttrs] = useFilterable(props.filters);
+    const [DestroyModal,deleteAttrs] = useDialog(Destroy,{
+        title:"Delete item?",
+    });
 
     const onDeleteConfirm = (deleteItem)=>{
         Inertia.delete(route('admin.post.destroy',deleteItem));
         deleteAttrs.setSt(false);
     }
-
-    const [DestroyModal,deleteAttrs] = useDialog(Destroy,{
-        title:"Delete item?",
-    });
-    const handleEditClick =(post) => {
-        route('admin.post.edit',post)
-    },
-    handleCreateClick =() => {
-        route('admin.post.create')
-    },
-    handleDestroyClick =(item) => {
+    const handleDestroyClick =(item) => {
         deleteAttrs.setItem(item);
         deleteAttrs.setSt(true);
     };
@@ -45,11 +37,11 @@ export default function Index(props) {
                             <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
                             Posts
                         </p>
-                        <button
+                        <Link
                             className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
-                            onClick={ handleCreateClick }>
+                            href={route('admin.post.create')}>
                             Create New Post
-                        </button>
+                        </Link>
                         <Link href="#" className="card-header-icon">
                             <span className="icon"><i className="mdi mdi-reload"></i></span>
                         </Link>
@@ -76,11 +68,15 @@ export default function Index(props) {
                             { props.posts.data.map((post,index) => (
                                     <tr key={post.id}>
                                         <td>{ post.id }</td>
-                                        <td data-label="Name">{ post.name }</td>
-                                        <td data-label="Logo Image">{ post.file_path }</td>
-                                        <td data-label="Author">{ post.author.name }</td>
+                                        <td data-label="Name">{ post.title }</td>
+                                        <td data-label="Logo Image" className="image-cell">
+                                            <div className="image">
+                                                <img src={post.imageUrl} className="rounded-full"/>
+                                            </div>
+                                        </td>
+                                        <td data-label="Author">{ post.author?.name  || "Unknown" }</td>
                                         <td data-label="Description">{ post.description }</td>
-                                        <td data-label="Category">{ post.category }</td>
+                                        <td data-label="Category">{ post.category?.name || "Unknown" }</td>
                                         <td data-label="Last Updated">
                                             <small className="text-gray-500" title="Dec 30, 2021">{ post.updated_at }</small>
                                         </td>
@@ -89,9 +85,10 @@ export default function Index(props) {
                                         </td>
                                         <td className="actions-cell">
                                             <div className="buttons right nowrap">
-                                                <button className="button small blue --jb-modal"  data-target="sample-modal-2" type="button" onClick={ (e) => handleEditClick(post.id) }>
+                                                <Link className="button small blue --jb-modal"  data-target="sample-modal-2" type="button"
+                                                    href={route('admin.post.edit',post.id)}>
                                                     <span className="icon"><i className="mdi mdi-eye"></i></span>
-                                                </button>
+                                                </Link>
                                                 <button className="button small red --jb-modal" data-target="sample-modal" type="button"
                                                     onClick={ (e) => handleDestroyClick(post.id) }>
                                                     <span className="icon"><i className="mdi mdi-trash-can"></i></span>

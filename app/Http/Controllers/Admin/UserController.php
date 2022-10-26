@@ -89,7 +89,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->authorise('members.view');
+
     }
 
     /**
@@ -126,7 +126,6 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
 
         return back()->with([

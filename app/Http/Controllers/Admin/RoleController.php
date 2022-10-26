@@ -81,10 +81,12 @@ class RoleController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
 
-        return redirect()->back();
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Role has been created',
+        ]);
     }
 
     /**
@@ -123,10 +125,12 @@ class RoleController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
 
-        return redirect()->back();
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Role has been updated',
+        ]);
     }
 
     /**
@@ -144,8 +148,10 @@ class RoleController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
-            //abort(500,$e);
         }
-        return redirect()->back();
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Role has been deleted',
+        ]);
     }
 }

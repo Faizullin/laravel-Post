@@ -9,7 +9,7 @@ export default function Edit({st,setSt,title,item:role}){
     const { permissions } = usePage().props;
     const {data,setData,errors,patch} = useForm({
         name: role.name || "",
-        guard_name: role.guard_name || "",
+        guard_name: role.guard_name || "web",
         permissions:[],
     });
 
@@ -22,7 +22,7 @@ export default function Edit({st,setSt,title,item:role}){
         }));
     }
     useEffect(()=>{
-        if(props.st && role){
+        if(st && role){
             setData(data => ({
                 ...role,
                 permissions: role.permissions.map(item => item.id)

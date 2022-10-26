@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class UpdateTagRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateTagRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,14 @@ class UpdateTagRequest extends FormRequest
      */
     public function rules()
     {
+        if($this->has('slug')){
+            $this->merge([
+                'slug' => is_null($this->input('slug')) ? Str::slug($this->input('title')) : Str::slug($this->input('slug')),
+            ]);
+        }
         return [
-            //
+            'title'=>['required','string','min:2','max:50','unique:tags,title,'.$this->id],
+            'slug' =>['required','string','min:2','max:50','unique:tags,slug,'.$this->id],
         ];
     }
 }

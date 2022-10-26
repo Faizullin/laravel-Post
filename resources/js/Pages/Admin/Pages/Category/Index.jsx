@@ -53,7 +53,7 @@ export default function Index(props) {
                     <header className="card-header">
                         <p className="card-header-title">
                             <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                            Categorys
+                            Categories
                         </p>
                         <button
                             className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
@@ -72,8 +72,8 @@ export default function Index(props) {
                             <thead>
                                 <tr>
                                     <TheadTh {...sortAttrs} itemKey="id">Id</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="name">Title</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="email">Slug</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="title">Title</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="slug">Slug</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="posts_count">Posts Count</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="updated_at">Last Updated</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="created_at">Created</TheadTh>
@@ -110,7 +110,7 @@ export default function Index(props) {
                             </tbody>
                         </table>
                         <Pagination items={props.categories}/>
-                    
+
                     </div>
                 </div>
             </section>

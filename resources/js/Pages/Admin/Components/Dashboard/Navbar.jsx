@@ -1,7 +1,8 @@
-import { Link } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/inertia-react";
 
 
 export default function Navbar(){
+    const { user } = usePage().props.auth;
     const handleNavBarMenuClick = (e)=>{
         var dropdownIcon = e.currentTarget.getElementsByClassName('icon')[0].getElementsByClassName('mdi')[0];
         document.getElementById(e.currentTarget.getAttribute('data-target')).classList.toggle('active');
@@ -55,48 +56,50 @@ export default function Navbar(){
                         </span>
                         </a>
                         <div className="navbar-dropdown">
-                        <a href={route('admin.profile.index')} className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-account"></i></span>
-                            <span>My Profile</span>
-                        </a>
-                        <a className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-settings"></i></span>
-                            <span>Settings</span>
-                        </a>
-                        <a className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-email"></i></span>
-                            <span>Messages</span>
-                        </a>
-                        <hr className="navbar-divider"/>
-                        <a className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-logout"></i></span>
-                            <span>Log Out</span>
-                        </a>
+                            <Link href={route('admin.profile.index')} className="navbar-item">
+                                <span className="icon"><i className="mdi mdi-account"></i></span>
+                                <span>My Profile</span>
+                            </Link>
+                            <Link className="navbar-item">
+                                <span className="icon"><i className="mdi mdi-settings"></i></span>
+                                <span>Settings</span>
+                            </Link>
+                            <Link className="navbar-item">
+                                <span className="icon"><i className="mdi mdi-email"></i></span>
+                                <span>Messages</span>
+                            </Link>
+                            <hr className="navbar-divider"/>
+                            <Link className="navbar-item"
+                                method="post" href={route('logout')} as="button">
+                                <span className="icon"><i className="mdi mdi-logout"></i></span>
+                                <span>Log Out</span>
+                            </Link>
                         </div>
                     </DropDown>
                     <DropDown className="navbar-item dropdown has-divider has-user-avatar">
                         <a className="navbar-link">
-                        <div className="user-avatar">
-                            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" className="rounded-full"/>
-                        </div>
-                        <div className="is-user-name"><span>John Doe</span></div>
-                        <span className="icon"><i className="mdi mdi-chevron-down"></i></span>
+                            <div className="user-avatar">
+                                <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" className="rounded-full"/>
+                            </div>
+                            <div className="is-user-name"><span>{ user.name }</span></div>
+                            <span className="icon"><i className="mdi mdi-chevron-down"></i></span>
                         </a>
                         <div className="navbar-dropdown">
                         <Link href={ route('admin.profile.index') } className="navbar-item --set-active-profile-html">
                             <span className="icon"><i className="mdi mdi-account"></i></span>
                             <span>My Profile</span>
                         </Link>
-                        <a className="navbar-item">
+                        <Link className="navbar-item">
                             <span className="icon"><i className="mdi mdi-settings"></i></span>
                             <span>Settings</span>
-                        </a>
-                        <a className="navbar-item">
+                        </Link>
+                        <Link className="navbar-item">
                             <span className="icon"><i className="mdi mdi-email"></i></span>
                             <span>Messages</span>
-                        </a>
+                        </Link>
                         <hr className="navbar-divider"/>
-                        <Link className="navbar-item" href={ route('logout') }>
+                        <Link className="navbar-item"
+                            method="post" href={route('logout')} as="button">
                             <span className="icon"><i className="mdi mdi-logout"></i></span>
                             <span>Log Out</span>
                         </Link>

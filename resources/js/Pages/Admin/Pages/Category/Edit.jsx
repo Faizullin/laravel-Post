@@ -6,7 +6,6 @@ import { Multiselect } from "react-widgets";
 
 
 export default function Edit({st,setSt,title,item:category}){
-    console.log(item===category)
     const {data,setData,errors,patch} = useForm({
         title: category.title || "",
         slug: category.slug || "",
