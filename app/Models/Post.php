@@ -25,9 +25,10 @@ class Post extends Model
         return $this->belongsToMany(Tag::class, 'post_tags', 'post_id', 'tag_id');
     }
 
+
     public function comments()
     {
-      return $this->hasMany(Comment::class,'post_id')->whereNull('parent_id');
+        return $this->morphMany(Comment::class, 'commentable')->whereNull('parent_id');
     }
 
     public function user()
