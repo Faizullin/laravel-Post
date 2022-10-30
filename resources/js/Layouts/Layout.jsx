@@ -1,0 +1,18 @@
+import Header from "@/Components/Header";
+import Navbar from "@/Components/Navbar";
+import { usePage } from "@inertiajs/inertia-react";
+
+
+export default function  Layout({children}){
+    const auth = usePage().props.auth;
+    console.log("AUTH:",auth)
+    console.log("Rerender test");
+    return (
+        <>
+            <Header>
+                <Navbar auth={auth}/>
+            </Header>
+            {children}
+        </>
+    );
+}

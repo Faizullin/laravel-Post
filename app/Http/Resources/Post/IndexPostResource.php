@@ -21,11 +21,12 @@ class IndexPostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description'  => $this->description,
-            'content'  => $this->content,
+            'body'  => $this->body,
             'author'   => $this->user ? new UserMinResource($this->user) : null,
-            'categories' => CategoryMinResource::collection($this->categories),
+            'category' => new CategoryMinResource($this->category),
             'tags' => TagMinResource::collection($this->tags),
-            'created_at' => $this->create_at,
+            "imageUrl" => $this->imageUrl,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }

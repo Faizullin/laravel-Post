@@ -4,18 +4,24 @@ import "cropperjs/dist/cropper.css";
 import CropperModal from "./CropperModal";
 
 
-export default function CropprtInput({defaultValue}){
+export default function CropprtInput({defaultValue,id,onChange}){
     const [st,setSt] = useState(false);
     const [image, setImage] = useState("");
     const [cropData, setCropData] = useState("");
     const [cropper, setCropper] = useState<any>();
+    id=id || "dropzone-id";
 
 
     const handleCrop = (e) => {
         e.preventDefault();
         if (typeof cropper !== "undefined") {
-            setCropData(cropper.getCroppedCanvas().toDataURL());
-            setSt(false);
+            const cropperCanvas = cropper.getCroppedCanvas();
+            setCropData(cropperCanvas.toDataURL());
+            cropperCanvas.toBlob(function(blob){
+                const file = new File([blob],blob.name || "unknown.jpg",{type:blob.type});
+                onChange(file)
+                setSt(false);
+            });
         }
     }
     const handleImageUpload =(e) => {
@@ -30,18 +36,21 @@ export default function CropprtInput({defaultValue}){
         reader.onload = () => {
             setImage(reader.result as any);
             setSt(true);
+
         };
+        console.log(files[0])
         reader.readAsDataURL(files[0]);
+
     }
     useEffect(()=>{
         if(defaultValue){
             setCropData(defaultValue);
         }
-    },[defaultValue]);
+    },[]);
     return (
         <>
             <div className="flex justify-center items-center w-full">
-                <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                <label htmlFor={id} className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                     { cropData ? (
                          <div className="w-full h-full flex justify-center items-center">
                             <img src={cropData} alt=""
@@ -56,7 +65,7 @@ export default function CropprtInput({defaultValue}){
                         </div>
                      ) }
 
-                    <input id="dropzone-file" type="file"
+                    <input id={id} type="file"
                         className="hidden"
                         accept="image/*"
                         onChange={handleImageUpload}/>

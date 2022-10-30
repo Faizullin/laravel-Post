@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let nextElement = selectHeader.nextElementSibling;
 
     const headerFixed = () => {
+        console.log(headerOffset)
       if ((headerOffset - window.scrollY) <= 0) {
         selectHeader.classList.add('sticked');
         if (nextElement) nextElement.classList.add('sticked-header-offset');
@@ -94,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navbarlink.addEventListener('click', () => {
       if (document.querySelector('.mobile-nav-active')) {
+        console.log("Toggle")
         mobileNavToogle();
       }
     });

@@ -13,7 +13,7 @@ class Post extends Model
 
     use Filterable;
 
-    protected $fillable = ["title","description", "body", "image_path", "created_at", "updated_at"];
+    protected $fillable = ["title","description", "body", "image_path","user_id","category_id", "created_at", "updated_at"];
 
     public function category()
     {

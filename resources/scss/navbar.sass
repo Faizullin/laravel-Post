@@ -1,0 +1,220 @@
+@media (min-width:768px)
+	.navbar
+		padding: 0
+		ul
+			margin: 0
+			padding: 0
+			display: flex
+			list-style: none
+			align-items: center
+
+		li
+			position: relative
+			&:hover
+				>a
+					&:before
+						visibility: visible
+						width: 100%
+
+					color: #fff
+
+
+
+		>ul
+			>li
+				white-space: nowrap
+				padding: 10px 0 10px 28px
+				>a
+					&:before
+						content: ""
+						position: absolute
+						width: 100%
+						height: 2px
+						bottom: -6px
+						left: 0
+						background-color: var(--color-secondary)
+						visibility: hidden
+						width: 0px
+						transition: all 0.3s ease-in-out 0s
+
+
+
+
+		a
+			display: flex
+			align-items: center
+			justify-content: space-between
+			padding: 0 3px
+			font-family: var(--font-secondary)
+			font-size: 16px
+			font-weight: 600
+			color: rgba(255, 255, 255, 0.6)
+			white-space: nowrap
+			transition: 0.3s
+			position: relative
+			&:focus
+				display: flex
+				align-items: center
+				justify-content: space-between
+				padding: 0 3px
+				font-family: var(--font-secondary)
+				font-size: 16px
+				font-weight: 600
+				color: rgba(255, 255, 255, 0.6)
+				white-space: nowrap
+				transition: 0.3s
+				position: relative
+				i
+					font-size: 12px
+					line-height: 0
+					margin-left: 5px
+
+
+			i
+				font-size: 12px
+				line-height: 0
+				margin-left: 5px
+
+			&:hover
+				&:before
+					visibility: visible
+					width: 100%
+
+				color: #fff
+
+
+		.active
+			&:before
+				visibility: visible
+				width: 100%
+
+			color: #fff
+			&:focus
+				color: #fff
+
+
+
+
+@media (max-width: 767px)
+	.navbar
+		position: fixed
+		top: 0
+		right: 0
+		width: 100%
+		max-width: 400px
+		bottom: 0
+		z-index: 9997
+		transition: 0.3s
+		ul
+			position: absolute
+			inset: 0
+			padding: 50px 0 10px 0
+			margin: 0
+			background: rgba(0, 131, 116, 0.9)
+			opacity: 0.9
+			overflow-y: auto
+			transition: 0.3s
+			z-index: 9998
+
+		a
+			display: flex
+			align-items: center
+			justify-content: space-between
+			padding: 10px 20px
+			font-family: var(--font-primary)
+			font-size: 15px
+			font-weight: 600
+			color: rgba(255, 255, 255, 0.7)
+			white-space: nowrap
+			transition: 0.3s
+			&:focus
+				display: flex
+				align-items: center
+				justify-content: space-between
+				padding: 10px 20px
+				font-family: var(--font-primary)
+				font-size: 15px
+				font-weight: 600
+				color: rgba(255, 255, 255, 0.7)
+				white-space: nowrap
+				transition: 0.3s
+				i
+					font-size: 12px
+					line-height: 0
+					margin-left: 5px
+
+
+			i
+				font-size: 12px
+				line-height: 0
+				margin-left: 5px
+
+			&:hover
+				color: #fff
+
+
+		.active
+			color: #fff
+			&:focus
+				color: #fff
+
+
+		li
+			&:hover
+				>a
+					color: #fff
+
+
+
+		.getstarted
+			background: var(--color-primary)
+			padding: 8px 20px
+			border-radius: 4px
+			margin: 15px
+			color: #fff
+			&:focus
+				background: var(--color-primary)
+				padding: 8px 20px
+				border-radius: 4px
+				margin: 15px
+				color: #fff
+				&:hover
+					color: #fff
+					background: rgba(0, 131, 116, 0.8)
+
+
+			&:hover
+				color: #fff
+				background: rgba(0, 131, 116, 0.8)
+
+
+
+	.mobile-nav-show
+		color: rgba(255, 255, 255, 0.6)
+		font-size: 28px
+		cursor: pointer
+		line-height: 0
+		transition: 0.5s
+		z-index: 9999
+		margin-right: 10px
+
+	.mobile-nav-hide
+		color: #fff
+		font-size: 32px
+		cursor: pointer
+		line-height: 0
+		transition: 0.5s
+		position: fixed
+		right: 20px
+		top: 20px
+		z-index: 9999
+
+	.mobile-nav-active
+		overflow: hidden
+		.navbar
+			right: 0
+
+
+	.mobile-nav-bg
+		background: rgba(0, 106, 93, 0.8)
+		z-index: 9996

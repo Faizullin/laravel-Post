@@ -18,6 +18,7 @@ class CategoryMinResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'slug'  => $this->slug,
+            'posts_count' => $this->posts()->count(),
         ];
     }
 }

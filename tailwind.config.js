@@ -12,7 +12,13 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                //sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+            },
+            // colors: {
+            //     'regal-blue': '#243c5a',
+            // },
+            backgroundColor:{
+                'green-basic':'#008374',
             },
         },
     },

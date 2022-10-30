@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Admin\PostFilter;
+use App\Http\Requests\Admin\StorePostRequest;
+use App\Http\Requests\Admin\UpdatePostRequest;
 use App\Http\Resources\Admin\Category\CategoryMinResource;
 use App\Http\Resources\Admin\Post\EditPostResource;
 use App\Http\Resources\Admin\Post\IndexPostResource;
@@ -15,6 +17,8 @@ use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PostController extends Controller
@@ -72,9 +76,32 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $data['category_id']=$data['category'];
+            $data['user_id']=$data['user'];
+            $post_tags = $data['tags'];
+            unset($data['category'],$data['user'],$data['tags']);
+            if ($request->hasFile('image_path')) {
+                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+            }
+            $post = Post::create($data);
+            $post->tags()->attach($post_tags);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been created',
+        ]);
     }
 
     /**
@@ -114,9 +141,32 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $data = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $data['category_id']=$data['category'];
+            $data['user_id']=$data['user'];
+            $post_tags = $data['tags'];
+            unset($data['category'],$data['user'],$data['tags']);
+            if ($request->hasFile('image_path')) {
+                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+            }
+            $post->update($data);
+            $post->tags()->sync($post_tags);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been updated',
+        ]);
     }
 
     /**
@@ -127,6 +177,20 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        try {
+            DB::beginTransaction();
+            if(Storage::disk('public')->exists($post->image_path)){
+                Storage::disk('public')->delete($post->image_path);
+            }
+            $post->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been deleted',
+        ]);
     }
 }

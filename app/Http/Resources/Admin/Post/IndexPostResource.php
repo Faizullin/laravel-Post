@@ -23,7 +23,7 @@ class IndexPostResource extends JsonResource
             'description'  => $this->description,
             'body'  => $this->body,
             'author'   => $this->user ? new UserMinResource($this->user) : null,
-            'categories' => new CategoryMinResource($this->category),
+            'category' => new CategoryMinResource($this->category),
             'tags' => TagMinResource::collection($this->tags),
             "imageUrl" => $this->imageUrl,
             'created_at' => $this->created_at,

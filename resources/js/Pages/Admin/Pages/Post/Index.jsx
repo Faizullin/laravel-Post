@@ -54,7 +54,7 @@ export default function Index(props) {
                             <thead>
                                 <tr>
                                     <TheadTh {...sortAttrs} itemKey="id">Id</TheadTh>
-                                    <TheadTh {...sortAttrs} itemKey="name">Title</TheadTh>
+                                    <TheadTh {...sortAttrs} itemKey="title">Title</TheadTh>
                                     <TheadTh>Logo Image</TheadTh>
                                     <TheadTh {...sortAttrs} itemKey="author">Author</TheadTh>
                                     <TheadTh >Description</TheadTh>
@@ -76,7 +76,7 @@ export default function Index(props) {
                                         </td>
                                         <td data-label="Author">{ post.author?.name  || "Unknown" }</td>
                                         <td data-label="Description">{ post.description }</td>
-                                        <td data-label="Category">{ post.category?.name || "Unknown" }</td>
+                                        <td data-label="Category">{ post.category?.title || "Unknown" }</td>
                                         <td data-label="Last Updated">
                                             <small className="text-gray-500" title="Dec 30, 2021">{ post.updated_at }</small>
                                         </td>

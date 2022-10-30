@@ -24,7 +24,7 @@ class EditPostResource extends JsonResource
             'body'  => $this->body,
             'imageUrl' => $this->imageUrl,
             'author'   => $this->user ? new UserMinResource($this->user) : null,
-            'categories' => new CategoryMinResource($this->category),
+            'category' => new CategoryMinResource($this->category),
             'tags' => TagMinResource::collection($this->tags),
             'created_at' => $this->create_at,
             'updated_at' => $this->updated_at,

@@ -5,32 +5,10 @@ import Sidebar from '@/Components/Sidebar'
 import PostItem from "@/Components/Post/PostItem";
 
 
-interface IPost{
-    id: number | string ,
-    title:string,
-    author:{
-        name:string,
-    },
-    description:string,
-    category:{
-        title:string,
-    },
-    imageUrl:string,
+export default function Index({post,errors,auth}){
 
-}
-interface IProps{
-    posts:{
-        data:Array<IPost>,
-        links:Array<any>,
-    },
-    auth:{
-        user:any
-    } | null |undefined,
-    errors:any,
-}
-export default function Index({posts,errors,auth}:IProps){
-
-    const [filtersSidebarOpen,setFiltersSidebarOpen] = useState<boolean>(false);
+    const [filtersSidebarOpen,setFiltersSidebarOpen] = useState(false);
+    post = post.data;
     return (
         <Layout>
             {/* errors={ errors } */}
@@ -60,19 +38,7 @@ export default function Index({posts,errors,auth}:IProps){
                     <Sidebar.TriggerButton onClick={ () => setFiltersSidebarOpen(!filtersSidebarOpen) } />
                     <div className="flex">
                         <div className="md:w-2/3 ">
-                            <div className="flex flex-wrap mx-auto  posts-list">
-                                { posts.data.map((post,index) => (
-                                    <PostItem post={post} />
-                                ))}
-
-                            </div>
-                            <div className="blog-pagination">
-                                <ul className="justify-center">
-                                    <li><a href="#">1</a></li>
-                                    <li className="active"><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                </ul>
-                            </div>
+                            <PostItem post={post} />
                         </div>
                         <Sidebar open={filtersSidebarOpen}/>
                     </div>

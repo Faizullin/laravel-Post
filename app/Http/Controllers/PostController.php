@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\PostFilter;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\Category\CategoryMinResource;
+use App\Http\Resources\Post\EditPostResource;
+use App\Http\Resources\Post\IndexPostResource;
+use App\Http\Resources\Tag\TagMinResource;
 use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
@@ -17,15 +22,16 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(PostFilter $filter)
     {
         $posts = (new Post)->newQuery();
-        $posts->latest();
-        $posts = $posts->paginate(2)->onEachSide(2)->appends(request()->query());
+        $posts->filter($filter);
+        $posts = $posts->paginate(6)->onEachSide(2)->appends(request()->query());
         return Inertia::render('Post/Index', [
-            'tags' => Tag::all(),
-            'categories' => Category::all(),
-            'posts' => $posts,
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'posts' => IndexPostResource::collection($posts),
+            'filters' => $filter->getFilters(),
         ]);
     }
 
@@ -36,7 +42,10 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Post/Create', [
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+        ]);
     }
 
     /**
@@ -58,7 +67,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return Inertia::render('Post/Show', [
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'post' => new EditPostResource($post),
+        ]);
     }
 
     /**
@@ -69,7 +82,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return Inertia::render('Post/Index', [
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'post' => new EditPostResource($post),
+        ]);
     }
 
     /**

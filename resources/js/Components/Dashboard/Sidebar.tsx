@@ -57,31 +57,31 @@ export default function Sidebar({children}){
     }
     useEffect(()=>console.log("Data",data),[data])
     useEffect(() => {
-        setFilterSection([
-            {
-                id: 'tags',
-                name: 'Tags',
-                type: 'checkbox',
-                getRoute: (tag)=>(route('tag.index',tag.slug)),
-                options: tags.map(tag => ({
-                    value:tag.slug,
-                    label:tag.title,
-                    slug:tag.slug,
-                    checked:false,
-                })),
-            },
-            {
-                id: 'category',
-                name: 'Categories',
-                type:'link',
-                getRoute: (category) => route('post.category.index',{'slug': category.slug }),
-                options: categories.map(category => ({
-                    value:category.slug,
-                    label:category.title,
-                    slug:category.slug,
-                })),
-            },
-        ]);
+        // setFilterSection([
+        //     {
+        //         id: 'tags',
+        //         name: 'Tags',
+        //         type: 'checkbox',
+        //         getRoute: (tag)=>(route('tag.index',tag.slug)),
+        //         options: tags.map(tag => ({
+        //             value:tag.slug,
+        //             label:tag.title,
+        //             slug:tag.slug,
+        //             checked:false,
+        //         })),
+        //     },
+        //     {
+        //         id: 'category',
+        //         name: 'Categories',
+        //         type:'link',
+        //         getRoute: (category) => route('post.category.index',{'slug': category.slug }),
+        //         options: categories.map(category => ({
+        //             value:category.slug,
+        //             label:category.title,
+        //             slug:category.slug,
+        //         })),
+        //     },
+        // ]);
     },[]);
     return (
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

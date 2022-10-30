@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Tag;
+namespace App\Http\Resources\Post;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagMinResource extends JsonResource
+class EditPostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,11 +14,6 @@ class TagMinResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'slug'  => $this->slug,
-            'posts_count' => $this->posts()->count(),
-        ];
+        return parent::toArray($request);
     }
 }

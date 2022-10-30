@@ -63,13 +63,21 @@ Route::group([
 Route::group([
     'namespace' => 'App\Http\Controllers',
 ],function(){
-    Route::get("/profile",function(){
+    Route::get("profile",function(){
         return Inertia::render('Profile');
     })->name('profile');
+
+    Route::get("about",\Pages\AboutController::class)->name('pages.about');
+    Route::group(['prefix' => 'contact','controller'=>"Pages\ContactController"],function(){
+        Route::get("/",'index')->name("pages.contact.index");
+        Route::post("/",'store')->name("pages.contact.store");
+    });
+
     Route::resource('post', 'PostController');
     Route::get('posts', 'PostController@index');
-
-
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
-
+    Route::get('search', 'SearchController')->name('post.search');
+    Route::get("/test",function(){
+        return Inertia::render('Test');
+    })->name('test');
 });
