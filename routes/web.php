@@ -74,8 +74,10 @@ Route::group([
     });
 
     Route::resource('post', 'PostController');
+    Route::resource('post.comment', 'CommentController');
     Route::get('posts', 'PostController@index');
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
+    Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
     Route::get('search', 'SearchController')->name('post.search');
     Route::get("/test",function(){
         return Inertia::render('Test');

@@ -1,7 +1,7 @@
 import { FunnelIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/inertia-react"
 import { useState } from "react";
-import SearchInput from "./Post/SearchInput";
+import SearchInput from "./SearchInput";
 
 
 const Sidebar = ({open}) => {
@@ -78,7 +78,7 @@ const Sidebar = ({open}) => {
                 <h3 className="sidebar-title">Tags</h3>
                 <ul className="mt-3">
                     { tags.map((tag,index) => (
-                        <li><Link href={ '' }>{tag.title}</Link></li>
+                        <li><Link href={ route('post.tag.index',tag) }>{tag.title}</Link></li>
                     ))}
                 </ul>
                 </div>

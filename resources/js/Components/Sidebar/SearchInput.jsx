@@ -30,6 +30,10 @@ export default function SearchInput(){
     const handleChange = (e) => setValue(e.target.value);
     const handleSubmit = (e) => {
         e.preventDefault();
+        if(value){
+            post(route(`search`,{keyword:value}));
+        }
+        
     }
     useEffect(()=>{
         setValue(filters?.filter?.search || "")
@@ -77,5 +81,5 @@ export default function SearchInput(){
                 </div>
             </div>
         </div>
-    )
+    );
 }

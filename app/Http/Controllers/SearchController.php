@@ -23,6 +23,11 @@ class SearchController extends Controller
         $posts = Post::where('title','LIKE','%'.$keyword."%")->orderBy('updated_at','DESC')->paginate(5);
         $categories = Category::all();
         $tags = Tag::all();
-        return view('post.index',compact('posts','categories','tags'));
+        return Inertia::render('Post/Index', [
+            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::all()),
+            'posts' => IndexPostResource::collection($posts),
+            'filters' => $filter->getFilters(),
+        ]);
     }
 }

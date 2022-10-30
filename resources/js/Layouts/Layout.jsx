@@ -1,5 +1,6 @@
 import Header from "@/Components/Header";
 import Navbar from "@/Components/Navbar";
+import Footer from "@/Components/Footer";
 import { usePage } from "@inertiajs/inertia-react";
 
 
@@ -13,6 +14,7 @@ export default function  Layout({children}){
                 <Navbar auth={auth}/>
             </Header>
             {children}
+            <Footer />
         </>
     );
 }
