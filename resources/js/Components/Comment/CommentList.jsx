@@ -1,95 +1,84 @@
+import { Inertia } from '@inertiajs/inertia';
+import { usePage } from '@inertiajs/inertia-react';
+import axios from 'axios';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import CommentCreateForm from './CommentCreateForm';
+import CommentEditModalForm from './CommentEditModalForm';
 import CommentItem from './CommentItem';
-import CommentCreateReplyModalForm from './CommentReplyModalForm';
+import CommentReplyModalForm from './CommentReplyModalForm';
+import Pagination from './Pagination';
+import apiAuth from '@/services/apiAuth';
 
-export default function CommentList({comments,comments_count}){
-  const [openCreateReplyModal,setOpenCreateReplyModal] = useDialog(CommentCreateReplyModalForm);
-  return (
-    <div className="comments">
-      <CommentCreateReplyModalForm {...CommentCreateModalFormAttrs} />
-      <h4 className="comments-count">{comments_count} Comments</h4>
-      
-      { comments.map((comment,index) => (
-        <CommentItem comment={comment}
-          openCreateReplyModal={openCreateReplyModal}
-          setOpenCreateReplyModal={setOpenCreateReplyModal}
-          />
-      )) }
+export default function CommentList({post}){
+    const {user} = usePage().props.auth;
+    const [createReplyParentId,setCreateReplyParentId] = useState(null);
+    const [editItem,setEditItem] = useState({});
+    const [openEditModal,setOpenEditModal] = useState(false);
+    const [openDeleteModal,setOpenDeleteModal] = useState(false);
+    const [openCreateReplyModal,setOpenCreateReplyModal] = useState(false);
 
-      <div id="comment-2" className="comment">
-        <div className="flex">
-          <div className="comment-img"><img src="assets/img/blog/comments-2.jpg" alt=""></div>
-          <div>
-            <h5><a href="">Aron Alvarado</a> <a href="#" className="reply"><i className="bi bi-reply-fill"></i> Reply</a></h5>
-            <time datetime="2020-01-01">01 Jan,2022</time>
-            <p>
-              Ipsam tempora sequi voluptatem quis sapiente non. Autem itaque eveniet saepe. Officiis illo ut beatae.
-            </p>
-          </div>
-        </div>
+    console.log(user)
+    const [comments,setComments] = useState({
+        data:[]
+    });
+    const handleReply =(e,parent_id) => {
+		e.preventDefault();
+        setCreateReplyParentId(parent_id);
+        setOpenCreateReplyModal(true);
+	}
+    const getComments = (page=1) => {
+        return axios.get(route (`api.comment.index`),{params:{post_id:post.id,page,}}).then(response => {
+            setComments(response.data || {data:[]});
+            console.log(response.data,post)
+        });
+    }
+    const handleEdit = (comment) => {
+        console.log(comment)
+        setEditItem({...comment})
+        setOpenEditModal(true)
+    }
+    const handleDelete = (comment) => {
+        console.log(comment)
+    }
+    useEffect(function(){
+        getComments();
+    },[]);
 
-        <div id="comment-reply-1" className="comment comment-reply">
-          <div className="flex">
-            <div className="comment-img"><img src="assets/img/blog/comments-3.jpg" alt=""></div>
-            <div>
-              <h5><a href="">Lynda Small</a> <a href="#" className="reply"><i className="bi bi-reply-fill"></i> Reply</a></h5>
-              <time datetime="2020-01-01">01 Jan,2022</time>
-              <p>
-                Enim ipsa eum fugiat fuga repellat. Commodi quo quo dicta. Est ullam aspernatur ut vitae quia mollitia id non. Qui ad quas nostrum rerum sed necessitatibus aut est. Eum officiis sed repellat maxime vero nisi natus. Amet nesciunt nesciunt qui illum omnis est et dolor recusandae.
+    return (
+        <div className="comments">
 
-                Recusandae sit ad aut impedit et. Ipsa labore dolor impedit et natus in porro aut. Magnam qui cum. Illo similique occaecati nihil modi eligendi. Pariatur distinctio labore omnis incidunt et illum. Expedita et dignissimos distinctio laborum minima fugiat.
+            <h4 className="comments-count">{post.comments_count} Comments</h4>
 
-                Libero corporis qui. Nam illo odio beatae enim ducimus. Harum reiciendis error dolorum non autem quisquam vero rerum neque.
-              </p>
+            { comments.data.map((comment,index) => (
+                <CommentItem comment={comment}
+                    key={comment.id}
+                    openCreateReplyModal={openCreateReplyModal}
+                    setOpenCreateReplyModal={setOpenCreateReplyModal}
+                    onReply={handleReply}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    />
+            )) }
+            <div className={`mb-3 ${!(post.comments_count>0) ? "hidden" : "" }`}>
+                <Pagination items={comments} onPaginate={getComments}/>
             </div>
-          </div>
 
-          <div id="comment-reply-2" className="comment comment-reply">
-            <div className="flex">
-              <div className="comment-img"><img src="assets/img/blog/comments-4.jpg" alt=""></div>
-              <div>
-                <h5><a href="">Sianna Ramsay</a> <a href="#" className="reply"><i className="bi bi-reply-fill"></i> Reply</a></h5>
-                <time datetime="2020-01-01">01 Jan,2022</time>
-                <p>
-                  Et dignissimos impedit nulla et quo distinctio ex nemo. Omnis quia dolores cupiditate et. Ut unde qui eligendi sapiente omnis ullam. Placeat porro est commodi est officiis voluptas repellat quisquam possimus. Perferendis id consectetur necessitatibus.
-                </p>
-              </div>
-            </div>
-
-          </div><!-- End comment reply #2-->
+            <CommentCreateForm
+                reload={getComments}/>
+            <CommentReplyModalForm
+                createReplyParentId={createReplyParentId}
+                reload={getComments}
+                show={openCreateReplyModal}
+                setShow={setOpenCreateReplyModal}
+                />
+            <CommentEditModalForm
+                item={editItem}
+                reload={getComments}
+                show={openEditModal}
+                setShow={setOpenEditModal}
+                />
 
         </div>
-      </div>
-
-      <div id="comment-3" className="comment">
-        <div className="flex">
-          <div className="comment-img"><img src="assets/img/blog/comments-5.jpg" alt=""></div>
-          <div>
-            <h5><a href="">Nolan Davidson</a> <a href="#" className="reply"><i className="bi bi-reply-fill"></i> Reply</a></h5>
-            <time datetime="2020-01-01">01 Jan,2022</time>
-            <p>
-              Distinctio nesciunt rerum reprehenderit sed. Iste omnis eius repellendus quia nihil ut accusantium tempore. Nesciunt expedita id dolor exercitationem aspernatur aut quam ut. Voluptatem est accusamus iste at.
-              Non aut et et esse qui sit modi neque. Exercitationem et eos aspernatur. Ea est consequuntur officia beatae ea aut eos soluta. Non qui dolorum voluptatibus et optio veniam. Quam officia sit nostrum dolorem.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="comment-4" className="comment">
-        <div className="flex">
-          <div className="comment-img"><img src="assets/img/blog/comments-6.jpg" alt=""></div>
-          <div>
-            <h5><a href="">Kay Duggan</a> <a href="#" className="reply"><i className="bi bi-reply-fill"></i> Reply</a></h5>
-            <time datetime="2020-01-01">01 Jan,2022</time>
-            <p>
-              Dolorem atque aut. Omnis doloremque blanditiis quia eum porro quis ut velit tempore. Cumque sed quia ut maxime. Est ad aut cum. Ut exercitationem non in fugiat.
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-      <CommentReplyModalForm />
-    </div
-  )
+    )
 }

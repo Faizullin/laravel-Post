@@ -2,6 +2,9 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\Category\CategoryMinResource;
+use App\Http\Resources\Tag\TagMinResource;
+use App\Http\Resources\User\UserMinResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class EditPostResource extends JsonResource
@@ -14,6 +17,18 @@ class EditPostResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description'  => $this->description,
+            'body'  => $this->body,
+            'author'   => $this->user ? new UserMinResource($this->user) : null,
+            'category' => new CategoryMinResource($this->category),
+            'tags' => TagMinResource::collection($this->tags),
+            "comments_count" => $this->comments()->count(),
+            "imageUrl" => $this->imageUrl,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 }

@@ -1,6 +1,8 @@
 import './bootstrap';
-import '../css/admin.css';
+
 import '../css/app.css';
+import '../css/admin.css';
+
 import "react-widgets/scss/styles.scss";
 
 import React from 'react';

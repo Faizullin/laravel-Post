@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import Layout from "@/Layouts/Layout";
 import Sidebar from '@/Components/Sidebar'
-import PostItem from "@/Components/Post/PostItem";
+import PostItem from "@/Components/Post/Index/PostItem";
+import Pagination from "@/Components/Post/Index/Pagination";
+import SortDropdown from "@/Components/Post/Index/SortDropdown"
 
 
 interface IPost{
@@ -29,8 +31,11 @@ interface IProps{
     errors:any,
 }
 export default function Index({posts,errors,auth}:IProps){
-
     const [filtersSidebarOpen,setFiltersSidebarOpen] = useState<boolean>(false);
+
+    const getPosts = () => {
+        ;
+    }
     return (
         <Layout>
             {/* errors={ errors } */}
@@ -57,8 +62,12 @@ export default function Index({posts,errors,auth}:IProps){
             </div>
             <section id="blog" className="blog">
                 <div className="container mx-auto" data-aos="fade-up">
-                    <Sidebar.TriggerButton onClick={ () => setFiltersSidebarOpen(!filtersSidebarOpen) } />
-                    <div className="flex">
+                    <div className="flex justify-end  items-center items-baseline border-b border-gray-200 px-6 pb-4 md:px-0">
+                        <SortDropdown />
+                        <Sidebar.TriggerButton onClick={ () => setFiltersSidebarOpen(!filtersSidebarOpen) } />
+                    </div>
+
+                    <div className="flex mt-8">
                         <div className="md:w-2/3 ">
                             <div className="flex flex-wrap mx-auto  posts-list">
                                 { posts.data.map((post,index) => (
@@ -66,6 +75,7 @@ export default function Index({posts,errors,auth}:IProps){
                                 ))}
 
                             </div>
+                            <Pagination items={posts}/>
                             <div className="blog-pagination">
                                 <ul className="justify-center">
                                     <li><a href="#">1</a></li>

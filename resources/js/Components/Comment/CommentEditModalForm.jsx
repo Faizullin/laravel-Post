@@ -1,6 +1,5 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
 import { Dialog, Transition } from "@headlessui/react";
-import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-react";
 import axios from "axios";
 import { useState } from "react";
@@ -8,9 +7,9 @@ import { useEffect } from "react";
 import { Fragment } from "react";
 
 
-export default function CommentReplyModalForm({show,setShow,title,createReplyParentId,reload}) {
+export default function CommentEditModalForm({show,setShow,title,item,reload}) {
     const [errors,setErrors] = useState({})
-    const {data,setData,post} = useForm({
+    const {data,setData} = useForm({
         message:"",
         post_id:usePage().props.post.data.id,
         parent_id:null,
@@ -18,7 +17,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(route(`api.comment.storeReply`),{
+        axios.patch(route(`api.comment.update`,item),{
             ...data
         }).then(response => {
             reload().then(response => {
@@ -37,15 +36,9 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
     const closeModal = (e) => {
         setShow(false);
     }
-    useDidMountEffect(() => {
-        setData(data => ({
-            ...data,
-            parent_id:createReplyParentId,
-        }))
-    },[createReplyParentId])
     useEffect(() => {
-        setErrors({...data})
-    },[])
+        setData({...item})
+    },[item])
 	return (
 		<Transition appear show={show} as={Fragment}>
 			<Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -79,7 +72,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
 									{title}
 								</Dialog.Title>
                                 <div className="reply-form m-0">
-                                    <h4>Leave a Reply</h4>
+                                    <h4>Edit Comment</h4>
                                     <form className="mt-5 md:mt-10" onSubmit={handleSubmit}>
                                         <div className="flex flex-wrap ">
                                             <div className="relative flex-grow max-w-full flex-1">

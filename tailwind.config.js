@@ -19,6 +19,7 @@ module.exports = {
             // },
             backgroundColor:{
                 'green-basic':'#008374',
+                'secondary-basic':'#f85a40',
             },
         },
     },

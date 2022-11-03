@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'post_pagination'=>1,
+    'post_pagination'=>6,
 ];

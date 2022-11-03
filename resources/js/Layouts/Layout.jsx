@@ -4,10 +4,9 @@ import Footer from "@/Components/Footer";
 import { usePage } from "@inertiajs/inertia-react";
 
 
-export default function  Layout({children}){
+export default function Layout({children}){
     const auth = usePage().props.auth;
     console.log("AUTH:",auth)
-    console.log("Rerender test");
     return (
         <>
             <Header>

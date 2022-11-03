@@ -23,6 +23,12 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Admin','as'=>'api.admin.','
 });
 Route::group(['namespace'=>'App\Http\Controllers\Api','as'=>'api.',],function(){
     Route::get('search', \Search\SearchController::class)->name('search');
+    Route::group(['prefix' => 'comment','controller'=>\Comment\CommentController::class],function(){
+        Route::get("/",'index')->name("comment.index");
+        Route::post("/add",'store')->name("comment.store")->middleware("auth");
+        Route::post("/reply/add",'storeReply')->name("comment.storeReply")->middleware("auth");
+        Route::patch("/{comment}",'update')->name("comment.update")->middleware("auth");
+    });
 });
 
 

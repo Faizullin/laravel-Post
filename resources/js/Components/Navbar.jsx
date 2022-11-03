@@ -1,6 +1,7 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
 import { Link } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
+import Dropdown from "./Dropdown";
 
 
 export default function Navbar({auth}){
@@ -15,11 +16,15 @@ export default function Navbar({auth}){
                 {/* <!-- <img src="assets/img/logo.png" alt=""> --> */}
                 <h1>Impact<span>.</span></h1>
             </Link>
-            <div className={`${ isOpenNavbar ? "" : "hidden" } fixed inset-0 mobile-nav-bg`}></div>
+            <div className={`${ isOpenNavbar ? "" : "hidden" } fixed inset-0 mobile-nav-bg`}>
+
+            </div>
             <nav id="navbar" className={` navbar ease-out duration-300
                 ${ isOpenNavbar ? "translate-x-0 " : "translate-x-full" }  md:transform-none md:transition-none`} >
                 <ul className="flex flex-col p-4 mt-4 md:flex-row m-bg-green-basic">
-                    <li><a href="#hero">Home</a></li>
+                    <li>
+                        <a href="#hero">Home</a>
+                    </li>
                     <li>
                         <Link href={route('pages.about')}>About</Link>
                     </li>
@@ -30,14 +35,14 @@ export default function Navbar({auth}){
                         <Link href={route('pages.contact.index')}>Contact</Link>
                     </li>
                     <li>
-                        <Dropdown className={ (!auth.user) ! "hidden" : "" }>
+                        <Dropdown className={ (!auth.user) ? "hidden" : "" }>
                             <Dropdown.Trigger>
                                 <span className="inline-flex rounded-md">
                                     <button
                                         type="button"
                                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                     >
-                                        {auth.user.name}
+                                        {auth.user?.name}
 
                                         <svg
                                             className="ml-2 -mr-0.5 h-4 w-4"
@@ -61,12 +66,11 @@ export default function Navbar({auth}){
                                 </Dropdown.Link>
                             </Dropdown.Content>
                         </Dropdown>
-                        <Link className={ (auth.user) ! "hidden" : "" } href={route('login')}>
+                        <Link className={ (auth.user) ? "hidden" : "" } href={route('login')}>
                             Log In
                         </Link>
                     </li>
                 </ul>
-
             </nav>
             <div className="block md:hidden">
                 <i className={`mobile-nav-toggle mobile-nav-show bi bi-list ${isOpenNavbar ? "hidden" : ""} m-0`} onClick={handleMobileToggle}>

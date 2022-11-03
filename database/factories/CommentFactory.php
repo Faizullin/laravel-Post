@@ -19,7 +19,8 @@ class CommentFactory extends Factory
         return [
             'message'=>$this->faker->sentence,
             'user_id'=>\App\Models\User::all()->random()->id,
-            'post_id'=>\App\Models\Post::all()->random()->id,
+            'commentable_id'=>\App\Models\Post::all()->random()->id,
+            'commentable_type'=>"App\Models\Post",
             'parent_id'=>null,
         ];
     }
@@ -30,7 +31,8 @@ class CommentFactory extends Factory
             return [
                 'message'=>$this->faker->sentence,
                 'user_id'=>\App\Models\User::all()->random()->id,
-                'post_id'=>$random_comment->post->id,
+                'commentable_id'=>$random_comment->post->id,
+                'commentable_type'=>"App\Models\Post",
                 'parent_id'=>$random_comment->id,
             ];
         });

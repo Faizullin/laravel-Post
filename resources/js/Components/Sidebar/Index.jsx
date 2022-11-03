@@ -18,11 +18,13 @@ const Sidebar = ({open}) => {
                 <SearchInput />
                 <div className="sidebar-item categories">
                 <h3 className="sidebar-title">Categories</h3>
-                <ul className="mt-3">
-                    { categories.map((category,index) => (
-                        <li><Link href={ route('post.category.index',category) }>{category.title} <span>({category.posts_count})</span></Link></li>
-                    ))}
-                </ul>
+                    <ul className="mt-3 flex flex-wrap">
+                        { categories.map((category,index) => (
+                            <li key={category.id}>
+                                <Link href={ route('post.category.index',category) }>{category.title} <span>({category.posts_count})</span></Link>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
                 <div className="sidebar-item recent-posts">
@@ -75,14 +77,15 @@ const Sidebar = ({open}) => {
                 </div>
 
                 <div className="sidebar-item tags">
-                <h3 className="sidebar-title">Tags</h3>
-                <ul className="mt-3">
-                    { tags.map((tag,index) => (
-                        <li><Link href={ route('post.tag.index',tag) }>{tag.title}</Link></li>
-                    ))}
-                </ul>
+                    <h3 className="sidebar-title">Tags</h3>
+                    <ul className="mt-3 flex flex-wrap">
+                        { tags.map((tag,index) => (
+                            <li key={tag.id}>
+                                <Link href={ route('post.tag.index',tag) }>{tag.title}</Link>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-
             </div>
         </div>
     )

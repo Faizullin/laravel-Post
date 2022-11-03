@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/inertia-react";
 
 
 export default function Breadcrumb({children,title}) {

@@ -15,14 +15,6 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('pages.home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -63,22 +55,28 @@ Route::group([
 Route::group([
     'namespace' => 'App\Http\Controllers',
 ],function(){
+    Route::get('/', "PostController@index")->name('pages.home');
     Route::get("profile",function(){
         return Inertia::render('Profile');
     })->name('profile');
-
     Route::get("about",\Pages\AboutController::class)->name('pages.about');
     Route::group(['prefix' => 'contact','controller'=>"Pages\ContactController"],function(){
         Route::get("/",'index')->name("pages.contact.index");
         Route::post("/",'store')->name("pages.contact.store");
     });
 
+
     Route::resource('post', 'PostController');
-    Route::resource('post.comment', 'CommentController');
     Route::get('posts', 'PostController@index');
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
+
     Route::get('search', 'SearchController')->name('post.search');
+    Route::group(['prefix' => 'comment','controller'=>"CommentController"],function(){
+        Route::get("/",'index')->name("comment.index");
+        Route::post("/add",'store')->name("comment.store");
+        Route::post("/reply/add",'storeReply')->name("comment.reply.store");
+    });
     Route::get("/test",function(){
         return Inertia::render('Test');
     })->name('test');
