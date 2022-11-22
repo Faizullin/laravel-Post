@@ -56,7 +56,31 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $data = $request->validated();
+        $user = Auth::user();
+
+        try {
+            DB::beginTransaction();
+            $data['category_id']=$data['category'];
+            $data['user_id']=$user->id;
+            $post_tags = $data['tags'];
+            unset($data['category'],$data['user'],$data['tags']);
+            if ($request->hasFile('image_path')) {
+                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+            }
+            $post = Post::create($data);
+            $post->tags()->attach($post_tags);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been created',
+        ]);
     }
 
     /**
@@ -98,7 +122,31 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $data = $request->validated();
+        $user = Auth::user();
+
+        try {
+            DB::beginTransaction();
+            $data['category_id']=$data['category'];
+            $data['user_id']=$user->id;
+            $post_tags = $data['tags'];
+            unset($data['category'],$data['user'],$data['tags']);
+            if ($request->hasFile('image_path')) {
+                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+            }
+            $post->update($data);
+            $post->tags()->sync($post_tags);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been updated',
+        ]);
     }
 
     /**
@@ -109,6 +157,20 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        try {
+            DB::beginTransaction();
+            if(Storage::disk('public')->exists($post->image_path)){
+                Storage::disk('public')->delete($post->image_path);
+            }
+            $post->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return back()->with([
+            'type' => 'success',
+            'message' => 'Post has been deleted',
+        ]);
     }
 }

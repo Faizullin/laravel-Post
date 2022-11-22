@@ -66,13 +66,19 @@ Route::group([
     });
 
 
-    Route::resource('post', 'PostController');
-    Route::get('posts', 'PostController@index');
+    Route::group(["prefix"=>"post","controller" => "ProfileController"],function(){
+        Route::get("", "index")->name("indec");
+        Route::get("create", "create")->name("create")->middleware("auth");
+        Route::post("", "store")->name("store")->middleware("auth");
+        Route::get("{post}/edit", "edit")->name("edit")->middleware("auth");
+        Route::patch("{post}/edit", "update")->name("update")->middleware("auth");
+        Route::delete("{post}", "delete")->name("create")->middleware("auth");
+
+    });
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
-
     Route::get('search', 'SearchController')->name('post.search');
-    Route::group(['prefix' => 'comment','controller'=>"CommentController"],function(){
+    Route::group(["prefix" => 'comment','controller'=>"CommentController"],function(){
         Route::get("/",'index')->name("comment.index");
         Route::post("/add",'store')->name("comment.store");
         Route::post("/reply/add",'storeReply')->name("comment.reply.store");

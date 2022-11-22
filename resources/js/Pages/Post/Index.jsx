@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import Layout from "@/Layouts/Layout";
 import Sidebar from '@/Components/Sidebar'
@@ -7,29 +7,7 @@ import Pagination from "@/Components/Post/Index/Pagination";
 import SortDropdown from "@/Components/Post/Index/SortDropdown"
 
 
-interface IPost{
-    id: number | string ,
-    title:string,
-    author:{
-        name:string,
-    },
-    description:string,
-    category:{
-        title:string,
-    },
-    imageUrl:string,
 
-}
-interface IProps{
-    posts:{
-        data:Array<IPost>,
-        links:Array<any>,
-    },
-    auth:{
-        user:any
-    } | null |undefined,
-    errors:any,
-}
 export default function Index({posts,errors,auth}:IProps){
     const [filtersSidebarOpen,setFiltersSidebarOpen] = useState<boolean>(false);
 
