@@ -75,7 +75,6 @@ export default function Index({posts,errors,auth}:IProps){
                                 ))}
 
                             </div>
-                            <Pagination items={posts}/>
                             <div className="blog-pagination">
                                 <ul className="justify-center">
                                     <li><a href="#">1</a></li>
