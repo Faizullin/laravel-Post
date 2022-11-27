@@ -1,9 +1,9 @@
 import React from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import InputError from '@/Components/Auth/InputError';
+import PrimaryButton from '@/Components/Auth/PrimaryButton';
+import TextInput from '@/Components/Auth/TextInput';
 import { Head, useForm } from '@inertiajs/inertia-react';
+import AuthLayout from '@/Layouts/AuthLayout';
 
 export default function ForgotPassword({ status }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -21,7 +21,7 @@ export default function ForgotPassword({ status }) {
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Forgot Password" />
 
             <div className="mb-4 text-sm text-gray-500 leading-normal">
@@ -49,6 +49,6 @@ export default function ForgotPassword({ status }) {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

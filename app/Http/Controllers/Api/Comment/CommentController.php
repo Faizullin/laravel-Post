@@ -145,8 +145,20 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        //
+        try{
+            DB::beginTransaction();
+            $comment->delete();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Comment has been deleted',
+        ]);
     }
 }

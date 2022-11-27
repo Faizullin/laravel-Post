@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreContactRequest;
+use App\Mail\ContactMail;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Mail;
 
 class ContactController extends Controller
 {
@@ -24,22 +27,27 @@ class ContactController extends Controller
 
     public function store(StoreContactRequest $request)
     {
-        $data = $request->validate([
-            'name' => ['required','string','max:50'],
-            'email' => ['required','email','max:50'],
-            'message' => ['required','email','max:500'],
-        ]);
-        //  Store data in database
-        Contact::create($data);
-        //  Send mail to admin
-        // \Mail::send('mail', array(
+        $data = $request->validated();
+        try {
+            DB::beginTransaction();
+            $contact = Contact::create($data);
+            Mail::to(config("mail.reply_to.address"))->queue(new ContactMail($contact));
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+
+
+        // \Mail::send('emails.contact.index', array(
         //     'name' => $data['name'],
         //     'email' => $data['email'],
         //     'subject' => $data['subject'],
         //     'message' => $data['message'],
-        // ), function($message) use ($request){
+        // ), function($message) use ($data){
         //     $message->from($data['email']);
-        //     $message->to('digambersingh126@gmail.com', 'Admin')->subject($data['subject']);
+        //     $message->to("admin@mail.ru", 'Admin')->subject($data['subject']);
         // });
 
         return back()->with([

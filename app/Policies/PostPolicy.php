@@ -42,6 +42,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
+        return $user->can("post create") ? Response::allow() : Response::deny();
 
     }
 
@@ -54,6 +55,9 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
+        if(!$user->can("post update") ){
+            return Response::deny();
+        }
         return $user->id === $post->user->id ? Response::allow() : Response::deny();
     }
 
@@ -66,6 +70,9 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
+        if(!$user->can("post delete") ){
+            return Response::deny();
+        }
         return $user->id === $post->user->id ? Response::allow() : Response::deny();
 
     }

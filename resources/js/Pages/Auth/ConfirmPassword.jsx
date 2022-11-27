@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
+import AuthLayout from '@/Layouts/AuthLayout';
+import InputError from '@/Components/Auth/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/Auth/PrimaryButton';
+import TextInput from '@/Components/Auth/TextInput';
 import { Head, useForm } from '@inertiajs/inertia-react';
 
 export default function ConfirmPassword() {
@@ -28,7 +28,7 @@ export default function ConfirmPassword() {
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Confirm Password" />
 
             <div className="mb-4 text-sm text-gray-600">
@@ -57,6 +57,6 @@ export default function ConfirmPassword() {
                     </PrimaryButton>
                 </div>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import { Link, useForm, usePage } from '@inertiajs/inertia-react';
 import { Inertia } from '@inertiajs/inertia';
-import Checkbox from '../Checkbox';
+import Checkbox from '../Auth/Checkbox';
 
 interface IFilterFormData{
     tags:Array<string | number>,

@@ -1,8 +1,11 @@
 import './bootstrap';
 import '../css/app.css';
 import '../css/main.css';
+import '../css/header.css'
+import "react-widgets/scss/styles.scss";
 //import '../scss/app.sass';
 import './main';
+
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';

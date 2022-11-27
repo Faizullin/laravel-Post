@@ -1,7 +1,7 @@
 import React from 'react';
 import Base from '../../Layouts/Base';
 import { Head } from '@inertiajs/inertia-react';
-import PrimaryButton from '@/Components/PrimaryButton';
+import PrimaryButton from '@/Components/Auth/PrimaryButton';
 
 import CreateModal from '@/Pages/Admin/Components/CreateModal';
 

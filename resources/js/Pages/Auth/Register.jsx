@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
+import AuthLayout from '@/Layouts/AuthLayout';
+import InputError from '@/Components/Auth/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/Auth/PrimaryButton';
+import TextInput from '@/Components/Auth/TextInput';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
 
 export default function Register() {
@@ -31,7 +31,7 @@ export default function Register() {
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Register" />
 
             <form onSubmit={submit}>
@@ -99,16 +99,13 @@ export default function Register() {
                     <InputError message={errors.password_confirmation} className="mt-2" />
                 </div>
 
-                <div className="flex items-center justify-end mt-4">
-                    <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
-                        Already registered?
-                    </Link>
-
-                    <PrimaryButton className="ml-4" processing={processing}>
-                        Register
-                    </PrimaryButton>
-                </div>
+                <PrimaryButton className="mt-6" processing={processing}>
+                    Register
+                </PrimaryButton>
+                <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900 mt-4">
+                    Already registered?
+                </Link>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

@@ -67,6 +67,11 @@ export default function Aside(){
                                     <span>Tag</span>
                                 </Link>
                             </li>
+                            <li>
+                                <Link href={ route("admin.contact.index") }>
+                                    <span>Contact</span>
+                                </Link>
+                            </li>
                         </ul>
                     </li>
                     <li className={`${route().current('admin.profile.index') && 'active'}`}>
@@ -112,6 +117,12 @@ export default function Aside(){
                         <Link href={ route("admin.tag.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Tag</span>
+                        </Link>
+                    </li>
+                    <li className={`${route().current('admin.contact.*') && 'active'}`}>
+                        <Link href={ route("admin.contact.index") }>
+                            <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
+                            <span className="menu-item-label">Contact</span>
                         </Link>
                     </li>
                 </ul>

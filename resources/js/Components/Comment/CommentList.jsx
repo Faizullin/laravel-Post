@@ -22,24 +22,27 @@ export default function CommentList({post}){
     const [comments,setComments] = useState({
         data:[]
     });
-    const handleReply =(e,parent_id) => {
-		e.preventDefault();
-        setCreateReplyParentId(parent_id);
-        setOpenCreateReplyModal(true);
-	}
+
     const getComments = (page=1) => {
         return axios.get(route (`api.comment.index`),{params:{post_id:post.id,page,}}).then(response => {
             setComments(response.data || {data:[]});
             console.log(response.data,post)
         });
     }
+    const handleReply =(e,parent_id) => {
+		e.preventDefault();
+        setCreateReplyParentId(parent_id);
+        setOpenCreateReplyModal(true);
+	}
     const handleEdit = (comment) => {
-        console.log(comment)
         setEditItem({...comment})
         setOpenEditModal(true)
     }
+
     const handleDelete = (comment) => {
-        console.log(comment)
+        axios.delete(route(`api.comment.destroy`,comment)).then(response => {
+            getComments();
+        });
     }
     useEffect(function(){
         getComments();

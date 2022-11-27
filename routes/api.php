@@ -28,6 +28,7 @@ Route::group(['namespace'=>'App\Http\Controllers\Api','as'=>'api.',],function(){
         Route::post("/add",'store')->name("comment.store")->middleware("auth");
         Route::post("/reply/add",'storeReply')->name("comment.storeReply")->middleware("auth");
         Route::patch("/{comment}",'update')->name("comment.update")->middleware("auth");
+        Route::delete("/{comment}",'destroy')->name("comment.destroy")->middleware("auth");
     });
 });
 

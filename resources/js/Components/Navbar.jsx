@@ -2,6 +2,7 @@ import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
 import { Link } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
+import AuthDropdown from "./AuthDropdown";
 
 
 export default function Navbar({auth}){
@@ -23,53 +24,21 @@ export default function Navbar({auth}){
                 ${ isOpenNavbar ? "translate-x-0 " : "translate-x-full" }  md:transform-none md:transition-none`} >
                 <ul className="flex flex-col p-4 mt-4 md:flex-row m-bg-green-basic">
                     <li>
-                        <a href="#hero">Home</a>
+                        <Link href={route('pages.home')} className={ route().current('pages.home') ? `active` : `` }>Home</Link>
                     </li>
                     <li>
-                        <Link href={route('pages.about')}>About</Link>
+                        <Link href={route('pages.about')} className={ route().current('pages.about') ? `active` : `` }>About</Link>
                     </li>
                     <li>
-                        <Link href={route('post.index')}>Posts</Link>
+                        <Link href={route('post.index')} className={ route().current('post.index') ? `active` : `` }>Posts</Link>
                     </li>
                     <li>
-                        <Link href={route('pages.contact.index')}>Contact</Link>
+                        <Link href={route('post.create')} className={ route().current('post.create') ? `active` : `` }>Create Post</Link>
                     </li>
                     <li>
-                        <Dropdown className={ (!auth.user) ? "hidden" : "" }>
-                            <Dropdown.Trigger>
-                                <span className="inline-flex rounded-md">
-                                    <button
-                                        type="button"
-                                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-                                    >
-                                        {auth.user?.name}
-
-                                        <svg
-                                            className="ml-2 -mr-0.5 h-4 w-4"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fillRule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clipRule="evenodd"
-                                            />
-                                        </svg>
-                                    </button>
-                                </span>
-                            </Dropdown.Trigger>
-
-                            <Dropdown.Content>
-                                <Dropdown.Link href={route('logout')} method="post" as="button">
-                                    Log Out
-                                </Dropdown.Link>
-                            </Dropdown.Content>
-                        </Dropdown>
-                        <Link className={ (auth.user) ? "hidden" : "" } href={route('login')}>
-                            Log In
-                        </Link>
+                        <Link href={route('pages.contact.index')} className={ route().current('pages.contact.index') ? `active` : `` }>Contact</Link>
                     </li>
+                    <AuthDropdown auth={auth} className={ route().current('pages.home') ? `active` : `` }/>
                 </ul>
             </nav>
             <div className="block md:hidden">

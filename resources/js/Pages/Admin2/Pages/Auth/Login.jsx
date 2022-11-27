@@ -26,7 +26,7 @@ export default function Login({ errors }) {
                                         </div>
                                         <div className="row px-xl-5 px-sm-4 px-3 d-flex justify-content-center">
                                             <div className="col-12 px-1 inline-block">
-                                                <a className="btn btn-outline-light w-100 inline-block" href={route('auth.google')} >
+                                                <a className="btn btn-outline-light w-100 inline-block" href={``} >
                                                     <svg width="24px" height="32px" viewBox="0 0 64 64" version="1.1">
                                                     <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
                                                     <g transform="translate(3.000000, 2.000000)" fillRule="nonzero">

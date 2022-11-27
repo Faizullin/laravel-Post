@@ -9,32 +9,23 @@ class PostFilter extends AbstractFilter
 {
 
 
-    public $filterable = [ 'id' => "id", 'title'=>"title", "user_id"=>"author", 'description'=>'description'];
+    public $filterable = [  'title'=>"title", 'description'=>'description'];
 
-	public $sortable = ['id', 'title', 'author', 'category', 'created_at', 'updated_at'];
-
-
-    /**
-     * @param string $user
-     */
-    public function userFilter($value)
-    {
-        $this->builder->whereHas("users",function (Builder $query) use ($value) {
-            $query->where('name', 'like', "%$value%");
-        });
-    }
+	public $sortable = [ "most_liked", "most_recent"];
 
 
     /**
      * @param string $user
      */
-    public function authorSort($value)
+    public function mostRecentSort($value)
     {
-        $this->builder->with(['user' => function ($query) use ($value) {
-            $query->orderBy('name', $value);
-        }]);
+        $this->builder->orderBy("updated_at","DESC");
     }
-
+    
+     public function mostLikedSort($value)
+    {
+        $this->builder->orderBy("likes_count","DESC");
+    }
 
 
     public function searchFilter($value)
@@ -45,7 +36,7 @@ class PostFilter extends AbstractFilter
             })
             ->orWhereHas("user",function (Builder $query) use ($value) {
                 $query->where('name', 'like', "%$value%");
-            });
+         });
     }
 
 }

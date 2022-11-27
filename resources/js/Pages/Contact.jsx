@@ -12,7 +12,7 @@ export default function Contact(){
     const handleChange = (e) => setData({...data,[e.target.name]:e.target.value});
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('contact.store'),data);
+        post(route('pages.contact.store'),data);
     }
     return (
         <Layout>

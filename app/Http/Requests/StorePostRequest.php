@@ -24,7 +24,14 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title'=>['required','string','min:3','max:150','unique:posts,title'],
+            'description'=>['required','string','max:255'],
+            'body'=>['required','string'],
+            'category'=>['required','integer','exists:categories,id'],
+            'user'=>['required','integer','exists:users,id'],
+            'tags'=>['nullable','array'],
+            'tag.*'=>['integer','exists:tags,id'],
+            'image_path'=>['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'],
         ];
     }
 }

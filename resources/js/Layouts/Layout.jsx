@@ -6,7 +6,7 @@ import { usePage } from "@inertiajs/inertia-react";
 
 export default function Layout({children}){
     const auth = usePage().props.auth;
-    console.log("AUTH:",auth)
+
     return (
         <>
             <Header>

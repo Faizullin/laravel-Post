@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import Checkbox from '@/Components/Checkbox';
-import GuestLayout from '@/Layouts/GuestLayout';
-import InputError from '@/Components/InputError';
+import Checkbox from '@/Components/Auth/Checkbox';
+import InputError from '@/Components/Auth/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
+import PrimaryButton from '@/Components/Auth/PrimaryButton';
+import TextInput from '@/Components/Auth/TextInput';
 import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import AuthLayout from '@/Layouts/AuthLayout';
 
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -31,7 +31,7 @@ export default function Login({ status, canResetPassword }) {
     };
 
     return (
-        <GuestLayout>
+        <AuthLayout>
             <Head title="Log in" />
 
             {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
@@ -68,15 +68,12 @@ export default function Login({ status, canResetPassword }) {
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="block mt-4">
+                <div className="flex justify-between mt-4">
                     <label className="flex items-center">
                         <Checkbox name="remember" value={data.remember} handleChange={onHandleChange} />
 
                         <span className="ml-2 text-sm text-gray-600">Remember me</span>
                     </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
@@ -85,12 +82,12 @@ export default function Login({ status, canResetPassword }) {
                             Forgot your password?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ml-4" processing={processing}>
-                        Log in
-                    </PrimaryButton>
                 </div>
+                <PrimaryButton className="mt-6" processing={processing}>
+                    Click to Login
+                </PrimaryButton>
+                <p className="mt-3 text-sm">Not a member yet? <Link href={route(`register`)}>Create your Account</Link></p>
             </form>
-        </GuestLayout>
+        </AuthLayout>
     );
 }

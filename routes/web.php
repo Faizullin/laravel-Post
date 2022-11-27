@@ -49,6 +49,7 @@ Route::group([
     Route::resource('post', 'PostController');
     Route::resource('category', 'CategoryController');
     Route::resource('tag', 'TagController');
+    Route::resource('contact', 'ContactController');
 });
 
 
@@ -66,13 +67,21 @@ Route::group([
     });
 
 
-    Route::resource('post', 'PostController');
-    Route::get('posts', 'PostController@index');
+    Route::group(["prefix"=>"post","controller" => "PostController"],function(){
+        Route::get("", "index")->name("post.index");
+        Route::get("create", "create")->name("post.create");
+        Route::get("{post}", "show")->name("post.show");
+        Route::post("", "store")->name("post.store");
+        Route::get("{post}/edit", "edit")->name("post.edit");
+        Route::patch("{post}/edit", "update")->name("post.update");
+        Route::delete("{post}", "destroy")->name("post.destroy");
+    });
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
 
     Route::get('search', 'SearchController')->name('post.search');
-    Route::group(['prefix' => 'comment','controller'=>"CommentController"],function(){
+
+    Route::group(["prefix" => 'comment','controller'=>"CommentController"],function(){
         Route::get("/",'index')->name("comment.index");
         Route::post("/add",'store')->name("comment.store");
         Route::post("/reply/add",'storeReply')->name("comment.reply.store");
@@ -80,4 +89,10 @@ Route::group([
     Route::get("/test",function(){
         return Inertia::render('Test');
     })->name('test');
+    Route::get("/test/login",function()
+    {
+        return inertia("Admin2/Pages/Auth/Login");
+    });
 });
+
+

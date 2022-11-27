@@ -2,7 +2,6 @@ import { useForm } from '@inertiajs/inertia-react';
 import { Multiselect } from 'react-widgets';
 import Layout from '../../Layouts/Layout';
 import CropprtInput from '../../Components/Post/CopperInput';
-import { Link } from '@inertiajs/inertia-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useEffect } from 'react';
