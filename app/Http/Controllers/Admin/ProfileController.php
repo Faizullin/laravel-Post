@@ -40,7 +40,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        $user = Auth::user();
+        $user = User::find(Auth::user()->id);
         $data = $request->validate([
             'name' => ['required', 'max:50','unique:users,name,'.$user->id],
             'email' => ['required', 'max:50','unique:users,email,'.$user->id ],
@@ -64,11 +64,11 @@ class ProfileController extends Controller
     /**
      * Update Password the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateUserRequest  $request
+     * @param  \App\Http\Requests\Rerquest  $request
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function updatePassword(UpdateUserRequest $request)
+    public function updatePassword(Request $request)
     {
         $data = $request->validate([
             'password' => ['required', 'confirmed', Rules\Password::defaults()],

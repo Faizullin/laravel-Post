@@ -16,9 +16,9 @@ use Inertia\Inertia;
 */
 
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', function () {
+    return Inertia::render('Dashboard/Index');
+})->middleware(['auth', 'verified'])->name('dashboard.index');
 
 require __DIR__.'/auth.php';
 
@@ -61,11 +61,23 @@ Route::group([
         return Inertia::render('Profile');
     })->name('profile');
     Route::get("about",\Pages\AboutController::class)->name('pages.about');
+
+    Route::group( ['controller' => 'DashboardController'],function(){
+        Route::get('dashboard','index')->name('dashboard.index');
+        Route::get('dashboard/post','post')->name('dashboard.post.index');
+        Route::get('dashboard/favourite-post','favouritePost')->name('dashboard.favouritePost.index');
+        Route::get('dashboard/comment','comment')->name('dashboard.comment.index');
+    });
+    Route::group( ['controller' => 'ProfileController'],function(){
+        Route::get('dashboard/profile/edit','edit')->name('dashboard.profile.edit');
+        Route::patch('dashboard/profile','update')->name('dashboard.profile.update');
+        Route::patch('dashboard/profilePassword','updatePassword')->name('dashboard.profile.updateProfile');
+    });
+
     Route::group(['prefix' => 'contact','controller'=>"Pages\ContactController"],function(){
         Route::get("/",'index')->name("pages.contact.index");
         Route::post("/",'store')->name("pages.contact.store");
     });
-
 
     Route::group(["prefix"=>"post","controller" => "PostController"],function(){
         Route::get("", "index")->name("post.index");

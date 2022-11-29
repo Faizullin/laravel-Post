@@ -82,31 +82,30 @@ export default function Index(props) {
                             </thead>
                             <tbody>
                             { props.categories.data.map((category,index) => (
-                                    <tr key={category.id}>
-                                        <td>{ category.id }</td>
-                                        <td data-label="Name">{ category.title }</td>
-                                        <td data-label="Email">{ category.slug }</td>
-                                        <td data-label="Posts Count">{ category.posts_count }</td>
-                                        <td data-label="Last Updated">
-                                            <small className="text-gray-500" title="Dec 30, 2021">{ category.updated_at }</small>
-                                        </td>
-                                        <td data-label="Created">
-                                            <small className="text-gray-500" title="Dec 30, 2021">{ category.created_at }</small>
-                                        </td>
-                                        <td className="actions-cell">
-                                            <div className="buttons right nowrap">
-                                                <button className="button small blue --jb-modal"  data-target="sample-modal-2" type="button" onClick={ (e) => handleEditClick(category.id) }>
-                                                    <span className="icon"><i className="mdi mdi-eye"></i></span>
-                                                </button>
-                                                <button className="button small red --jb-modal" data-target="sample-modal" type="button"
-                                                    onClick={ (e) => handleDestroyClick(category.id) }>
-                                                    <span className="icon"><i className="mdi mdi-trash-can"></i></span>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            )}
+                                <tr key={category.id}>
+                                    <td>{ category.id }</td>
+                                    <td data-label="Name">{ category.title }</td>
+                                    <td data-label="Email">{ category.slug }</td>
+                                    <td data-label="Posts Count">{ category.posts_count }</td>
+                                    <td data-label="Last Updated">
+                                        <small className="text-gray-500" title="Dec 30, 2021">{ category.updated_at }</small>
+                                    </td>
+                                    <td data-label="Created">
+                                        <small className="text-gray-500" title="Dec 30, 2021">{ category.created_at }</small>
+                                    </td>
+                                    <td className="actions-cell">
+                                        <div className="buttons right nowrap">
+                                            <button className="button small blue --jb-modal"  data-target="sample-modal-2" type="button" onClick={ (e) => handleEditClick(category.id) }>
+                                                <span className="icon"><i className="mdi mdi-eye"></i></span>
+                                            </button>
+                                            <button className="button small red --jb-modal" data-target="sample-modal" type="button"
+                                                onClick={ (e) => handleDestroyClick(category.id) }>
+                                                <span className="icon"><i className="mdi mdi-trash-can"></i></span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) )}
                             </tbody>
                         </table>
                         <Pagination items={props.categories}/>

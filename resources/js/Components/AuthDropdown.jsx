@@ -48,6 +48,11 @@ export default function AuthDropdown({auth}) {
                         <>
                             <li><a href="#">Profile</a></li>
                             <li>
+                                <Link href={ route(`dashboard.index`)  }>
+                                    Dashboard
+                                </Link>
+                            </li>
+                            <li>
                                 <a href="#" onClick={ handleLogout }>
                                     Log out
                                 </a>

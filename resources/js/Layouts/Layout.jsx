@@ -13,7 +13,7 @@ export default function Layout({children}){
                 <Navbar auth={auth}/>
             </Header>
             {children}
-            <Footer />
+            {/* <Footer /> */}
         </>
     );
 }
