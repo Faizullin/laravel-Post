@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\DB;
 
 class CommentController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['auth'], ['only' => ['create', 'store','edit','update','destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,6 +52,7 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
+        $this->authorize('create', Comment::class);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -60,7 +67,7 @@ class CommentController extends Controller
             throw $e;
         }
 
-        return back()->with([
+        return response()->json([
             'type' => 'success',
             'message' => 'Comment has been created',
         ]);
@@ -69,6 +76,7 @@ class CommentController extends Controller
 
     public function storeReply(StoreCommentRequest $request)
     {
+        $this->authorize('create', Comment::class);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -122,6 +130,7 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request,Comment $comment)
     {
+        $this->authorize('update', $comment);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -147,6 +156,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        $this->authorize('delete', $comment);
         try{
             DB::beginTransaction();
             $comment->delete();

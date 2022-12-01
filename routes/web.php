@@ -81,12 +81,12 @@ Route::group([
 
     Route::group(["prefix"=>"post","controller" => "PostController"],function(){
         Route::get("", "index")->name("post.index");
-        Route::get("create", "create")->name("post.create");
+        Route::get("create", "create")->name("post.create")->middleware(["auth","can:create,".\App\Models\Post::class]);
         Route::get("{post}", "show")->name("post.show");
-        Route::post("", "store")->name("post.store");
-        Route::get("{post}/edit", "edit")->name("post.edit");
-        Route::patch("{post}/edit", "update")->name("post.update");
-        Route::delete("{post}", "destroy")->name("post.destroy");
+        Route::post("", "store")->name("post.store")->middleware(["auth","can:create,".\App\Models\Post::class]);
+        Route::get("{post}/edit", "edit")->name("post.edit")->middleware(["auth","can:update,post"]);
+        Route::patch("{post}/edit", "update")->name("post.update")->middleware(["auth","can:update,post"]);;
+        Route::delete("{post}", "destroy")->name("post.destroy")->middleware(["auth","can:delete,post"]);
     });
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');

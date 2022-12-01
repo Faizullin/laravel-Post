@@ -60,6 +60,7 @@ const Table = ({ columns, fetchUrl, wrap }) => {
                 const items = response.props[wrap];
                 setData(items.data)
                 setPagination(items.meta)
+                console.log("Page:",response)
                 setLoading(false)
             },
         });

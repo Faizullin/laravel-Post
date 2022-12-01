@@ -22,8 +22,7 @@ class PostController extends Controller
 
     public function __construct()
     {
-        //$this->middleware(['post'], ['only' => ['index', 'show']]);
-        $this->middleware(['auth'], ['only' => ['create', 'store','edit','update','destroy']]);
+        //$this->middleware(['auth'], ['only' => ['create', 'store','edit','update','destroy']]);
     }
 
 
@@ -66,6 +65,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+
         $data = $request->validated();
         $user = Auth::user();
 
@@ -87,7 +87,7 @@ class PostController extends Controller
             throw $e;
         }
 
-        return back()->with([
+        return redirect()->route("post.edit",$post)->with([
             'type' => 'success',
             'message' => 'Post has been created',
         ]);
@@ -116,7 +116,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        return Inertia::render('Post/Index', [
+        return Inertia::render('Post/Edit', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
             'post' => new EditPostResource($post),
@@ -134,7 +134,6 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $user = Auth::user();
-
         try {
             DB::beginTransaction();
             $data['category_id']=$data['category'];

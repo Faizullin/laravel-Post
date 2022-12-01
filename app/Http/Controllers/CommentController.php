@@ -89,7 +89,7 @@ class CommentController extends Controller
 
         return back()->with([
             'type' => 'success',
-            'message' => 'Comment has been created',
+            'message' => 'Comment Reply has been created',
         ]);
     }
 

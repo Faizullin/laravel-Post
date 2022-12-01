@@ -1,4 +1,5 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
+import apiRequestError from "@/services/apiRequestError";
 import { Dialog, Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-react";
@@ -18,7 +19,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(route(`api.comment.storeReply`),{
+        apiRequestError.post(route(`api.comment.storeReply`),{
             ...data
         }).then(response => {
             reload().then(response => {

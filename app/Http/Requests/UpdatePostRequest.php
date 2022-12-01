@@ -30,7 +30,7 @@ class UpdatePostRequest extends FormRequest
             'category'=>['required','integer','exists:categories,id'],
             'tags'=>['nullable','array'],
             'tags.*'=>['integer','exists:tags,id'],
-            'image_path'=>['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'],
+            //'image_path'=>['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'],
         ];
     }
 }

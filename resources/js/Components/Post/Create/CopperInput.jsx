@@ -4,7 +4,7 @@ import "cropperjs/dist/cropper.css";
 import CropperModal from "./CropperModal";
 
 
-export default function CropprtInput({defaultValue,id,onChange}){
+export default function CropperInput({defaultValue,id,onChange}){
     const [st,setSt] = useState(false);
     const [image, setImage] = useState("");
     const [cropData, setCropData] = useState("");
@@ -73,6 +73,7 @@ export default function CropprtInput({defaultValue,id,onChange}){
             </div>
             <CropperModal st={st} setSt={setSt} title={`Crop Logo Image`} onSubmit={handleCrop}>
                 <Cropper
+
                     src={image}
                     style={{ height: 400, width: "100%" }}
                     // Cropper.js options

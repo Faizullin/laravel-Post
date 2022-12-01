@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
 {
@@ -18,7 +19,7 @@ class CommentPolicy
      */
     public function viewAny(User $user)
     {
-        //
+
     }
 
     /**
@@ -30,7 +31,7 @@ class CommentPolicy
      */
     public function view(User $user, Comment $comment)
     {
-        //
+
     }
 
     /**
@@ -41,7 +42,7 @@ class CommentPolicy
      */
     public function create(User $user)
     {
-        //
+        return Response::allow();
     }
 
     /**
@@ -53,7 +54,8 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
-        //
+        return Response::deny("You have no rights to edit this comment");
+        return $user->id === $comment->user_id ? Response::allow() : Response::deny();
     }
 
     /**
@@ -65,7 +67,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment)
     {
-        //
+        return $user->id === $comment->user_id ? Response::allow() : Response::deny();
     }
 
     /**

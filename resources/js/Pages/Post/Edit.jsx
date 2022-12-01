@@ -1,30 +1,31 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import Layout from "@/Layouts/Layout";
-import Sidebar from '@/Components/Sidebar';
-import PostItem from "@/Components/Post/Index/PostItem";
+
+import { useForm } from '@inertiajs/inertia-react';
+import { Multiselect } from 'react-widgets';
+import CropperInput from "@/Components/Post/Create/CopperInput";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import Breadcrumb from "@/Components/Breadcrumb";
-import CommentList from "@/Components/Comment/CommentList";
+import { Inertia } from "@inertiajs/inertia";
 
 
-export default function Index({post,errors,auth,categories,tags}){
+
+export default function Edit({tags,categories,post}){
     tags = tags.data;
     categories = categories.data;
+    post = post.data
 
-    const [isPreview,setIsPreview] = useState(false);
-    const {data,setData,errors,post,progress } = useForm({
-        title: post.title,
-        description: post.description,
-        body: post.body,
-        category: post.category || null,
-        tags: post.tags || [],
+    const {data,setData,errors,patch,progress } = useForm({
+        title: post.title || "",
+        description: post.description || "",
+        body: post.body || "",
+        category: post.category?.id || null,
+        tags: post.tags?.map(item => item.id),
         image_path: post.imageUrl || null,
     });
 
-
-    const handlePreview = (e) => {
-        setIsPreview(!isPreview)
-    }
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
 
     const setTags = (values) => {
@@ -34,84 +35,139 @@ export default function Index({post,errors,auth,categories,tags}){
         }));
     };
     const setQuillText = (value,column) => {
+        console.log("CHange quill",value,column)
         handleChange({target:{name:column,value,}});
     };
 
     function handleSubmit(e){
         e.preventDefault();
-        post(route('post.store'),data);
+        console.log("Submit",data)
+        patch(route(`post.update`,post), data);
     }
 
-    useEffect(()=>console.log("Data => ",data),[data])
-    const [filtersSidebarOpen,setFiltersSidebarOpen] = useState(false);
 
+    const convertToPreviewPost = () => {
+        console.log("Convert to postt")
+        const tmpPost = {...data};
+        tmpPost.imageUrl = tmpPost.image_path;
+        tmpPost.tags = [];
+        tmpPost.category = {id:tmpPost.category}
+
+        return tmpPost
+    }
+
+
+    useEffect(()=>{console.log(data)},[data])
     return (
-        <Layout>
-            <Head title={"Posts"} />
-            <Breadcrumb title="Posts">
-                <h2>Post</h2>
-                <p>Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas consequatur ut a odio voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi ratione sint. Sit quaerat ipsum dolorem.</p>
-            </Breadcrumb>
-            <section id="blog" className="blog">
-                <div className="container mx-auto sm:px-4" data-aos="fade-up">
-                    <div className="flex flex-wrap  g-5">
-                        <div className="lg:w-2/3 pr-4 pl-4">
+        <Layout linkTitle="Post">
+            <Head title={"Create New Post"} />
+            <Breadcrumb title={`Posts`} />
+            <section className="">
+                <div className="container mx-auto" data-aos="fade-up">
+                    <div className="card w-full lg:w-1/2 md:2/3 ">
+                        <header className="card-header">
+                            <p className="card-header-title">
+                                <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
+                                Create New Post
+                            </p>
+                        </header>
+                        <div className="card-content">
+                            <div className="sm:px-6 lg:px-8">
+                                <div className="bg-white overflow-hidden">
+                                    <form onSubmit={handleSubmit}
+                                        className="p-6 w-full">
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2"
+                                                htmlFor='title'>Title</label>
+                                            <input type="text" className="border-2 border-gray-300 p-2 w-full"
+                                                name="title" id="title"
+                                                value={data.title} onChange={handleChange}/>
+                                            { errors.title && <p className="text-red-500 text-xs italic mt-2">{ errors.title }</p> }
+                                        </div>
 
-                            <article className="blog-details">
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2">Description</label>
+                                            <ReactQuill theme="snow" name="description"
+                                                defaultValue={data.description} onChange={(value) => setQuillText(value,'description')} />
+                                            { errors.description && <p className="text-red-500 text-xs  italic mt-2">{ errors.description }</p> }
+                                        </div>
 
-                                <div className="post-img">
-                                    <img src={ post.imageUrl } alt="" className="max-w-full h-auto"/>
-                                </div>
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2">Body</label>
+                                            <ReactQuill theme="snow" name="body"
+                                                defaultValue={data.body} onChange={(value) => setQuillText(value,'body')} />
+                                            { errors.body && <p className="text-red-500 text-xs  italic mt-2">{ errors.body }</p> }
+                                        </div>
 
-                                <h2 className="title">Dolorum optio tempore voluptas dignissimos cumque fuga qui quibusdam quia</h2>
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2"
+                                                htmlFor="category">Category</label>
+                                            <select className='block'
+                                                name="category" id="category" onChange={handleChange} defaultValue={''}>
+                                                <option value={''} disabled={true}>Choose category</option>
+                                                { categories.map((category,index) => (
+                                                    <option key={category.id} value={category.id}>{category.title}</option>
+                                                )) }
+                                            </select>
+                                            { errors.category ? <p className="text-red-500 text-xs  italic mt-2">{ errors.category }</p> : "" }
+                                        </div>
 
-                                <div className="meta-top">
-                                    <ul>
-                                        <li className="flex items-center"><i className="bi bi-person"></i> <a href="blog-details.html">John Doe</a></li>
-                                        <li className="flex items-center"><i className="bi bi-clock"></i> <a href="blog-details.html"><time dateTime="2020-01-01">Jan 1, 2022</time></a></li>
-                                        <li className="flex items-center"><i className="bi bi-chat-dots"></i> <a href="blog-details.html">12 Comments</a></li>
-                                    </ul>
-                                </div>
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2"
+                                                htmlFor="tags">
+                                                Tags
+                                            </label>
+                                            <div className="relative">
+                                                <Multiselect
+                                                    id='tags'
+                                                    dataKey="id"
+                                                    textField="title"
+                                                    data={ tags }
+                                                    filter='contains'
+                                                    onChange={value => setTags(value)}
+                                                />
+                                            </div>
+                                            { errors.tags ?
+                                                <p className="text-red-500 text-xs  italic mt-2">{ errors.tags }</p>
+                                                :
+                                                <p className="text-gray-600 text-xs  italic mt-2">Select Tags</p>
+                                            }
+                                        </div>
 
-                                <div className="content">
-                                    { data.Breadcrumb.body }
-                                </div>
+                                        <div className="mb-10">
+                                            <label className="text-xl text-gray-600 block mb-2"
+                                                htmlFor="logo-image">
+                                                Logo Image
+                                            </label>
+                                            <CropperInput id="logo-image"
+                                                defaultValue={post.imageUrl}
+                                                onChange={(file) => setData(data => ({
+                                                ...data,
+                                                image_path:file,
+                                            }))}/>
+                                            { errors.image_path ?
+                                                <p className="text-red-500 text-xs  italic mt-2">{ errors.image_path }</p>
+                                                :
+                                                <p className="text-gray-600 text-xs  italic mt-2">Upload Logo Image</p>
+                                            }
+                                            {progress && (
+                                                <progress value={progress.percentage} max="100">
+                                                    {progress.percentage}%
+                                                </progress>
+                                            )}
+                                        </div>
 
-                                <div className="meta-bottom">
-                                    <i className="bi bi-folder"></i>
-                                    <ul className="cats">
-                                        <li><a href="#">Business</a></li>
-                                    </ul>
-
-                                    <i className="bi bi-tags"></i>
-                                    <ul className="tags">
-                                        <li><a href="#">Creative</a></li>
-                                        <li><a href="#">Tips</a></li>
-                                        <li><a href="#">Marketing</a></li>
-                                    </ul>
-                                </div>
-                            </article>
-
-                            <div className="post-author flex items-center">
-                                <img src="assets/img/blog/blog-author.jpg" className="rounded-full flex-shrink-0" alt=""/>
-                                <div>
-                                    <h4>Jane Smith</h4>
-                                    <div className="social-links">
-                                    <a href="https://twitters.com/#"><i className="bi bi-twitter"></i></a>
-                                    <a href="https://facebook.com/#"><i className="bi bi-facebook"></i></a>
-                                    <a href="https://instagram.com/#"><i className="biu bi-instagram"></i></a>
-                                    </div>
-                                    <p>
-                                    Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.
-                                    </p>
+                                        <div className="flex justify-start p-1">
+                                            <button role="submit" className="p-3 bg-blue-500 text-white hover:bg-blue-400"
+                                                type='submit'>Submit</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                            <CommentList post={post}/>
                         </div>
-                        <Sidebar />
                     </div>
                 </div>
             </section>
         </Layout>
-    )
+    );
 }

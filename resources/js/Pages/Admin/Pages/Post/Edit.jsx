@@ -66,7 +66,7 @@ export default function Edit(props){
                                     <div className="mb-10">
                                         <label className="text-xl text-gray-600 block mb-2">Description</label>
                                         <ReactQuill theme="snow"
-                                            defaultValue={data.description}onChange={(value) => setQuillText(value,'description')} />
+                                            defaultValue={data.description} onChange={(value) => setQuillText(value,'description')} />
                                         { errors.description ? <p className="text-red-500 text-xs  italic mt-2">{ errors.description }</p> : "" }
                                     </div>
 
