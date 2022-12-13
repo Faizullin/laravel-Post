@@ -13,7 +13,7 @@ import { createInertiaApp } from '@inertiajs/inertia-react';
 import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import NiceModal from '@ebay/nice-modal-react';
-import registerModals from './Components/Dialog/registerModals';
+import registerModals from '@/Components/Dialog/registerModals';
 
 
 

@@ -52,7 +52,10 @@ class TagController extends Controller
      */
     public function create()
     {
-
+        return Inertia::render('Tag/Index', [
+            'editTag' => $tag,
+            'activeForm' => 'create',
+        ]);
     }
 
     /**
@@ -99,6 +102,11 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
+        return Inertia::render('Tag/Index', [
+            'editTag' => $tag,
+            'activeForm' => 'edit',
+        ]);
+
         return [
             "tag"=> new EditTagResource($tag),
         ];

@@ -3,19 +3,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { usePage } from "@inertiajs/inertia-react";
 import useDidMountEffect from "../../Hooks/useDidMountEffect";
 
-export default function GlobalFilter({setSearchItem}){
-    const { filters } = usePage().props;
-    const [value,setValue] = useState("");
-
-    useEffect(function(){
-        setValue(filters.filter?.search || "");
-    },[]);
-
-    const handleChange = (e) => {
-        setValue(e.target.value);
-        setSearchItem(e.target.value);
-    }
-
+export default function GlobalFilter({value,onChange}){
     return (
         <div className="p-4">
 			<label htmlFor="table-search" className="sr-only">Search</label>
@@ -28,9 +16,15 @@ export default function GlobalFilter({setSearchItem}){
 							clipRule="evenodd"/>
 					</svg>
 				</div>
-                <input type="search" name="search" id="table-search" autoComplete="search"
-                    className="block rounded-lg  shadow-sm sm:text-sm  focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5" placeholder={`Search here...`}
-                    onChange={handleChange} value={value}/>
+                <input type="search" name="search" id="table-search"
+                    className="block rounded-lg shadow-sm sm:text-sm  focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5" placeholder={`Search here...`}
+                    onChange={onChange} value={value}/>
+                <input
+                    className="form-control"
+                    placeholder="Search..."
+                    type="search"
+                    onChange={(e) => onChange(e.target.value)}
+                />
 			</div>
         </div>
 
