@@ -9,9 +9,11 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\Category\CategoryMinResource;
 use App\Http\Resources\Post\EditPostResource;
 use App\Http\Resources\Post\IndexPostResource;
+use App\Http\Resources\Post\ShowPostResource;
 use App\Http\Resources\Tag\TagMinResource;
 use App\Models\Category;
 use App\Models\Tag;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -104,7 +106,7 @@ class PostController extends Controller
         return Inertia::render('Post/Show', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
-            'post' => new EditPostResource($post),
+            'post' => new ShowPostResource($post),
         ]);
     }
 
@@ -139,10 +141,19 @@ class PostController extends Controller
             $data['category_id']=$data['category'];
             $data['user_id']=$user->id;
             $post_tags = $data['tags'];
-            unset($data['category'],$data['user'],$data['tags']);
             if ($request->hasFile('image_path')) {
-                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+
+                $data['image_path'] = $request->file('image_path')->store('img','public');
+                $image_disk = Storage::disk('public');
+
+                if ($post->image_path && $image_disk->exists($post->image_path)) {
+                    $image_disk->delete($post->image_path);
+                }
+            } else {
+                unset($data['image_path']);
             }
+
+            unset($data['category'],$data['user'],$data['tags']);
             $post->update($data);
             $post->tags()->sync($post_tags);
 
@@ -168,8 +179,9 @@ class PostController extends Controller
     {
         try {
             DB::beginTransaction();
-            if(Storage::disk('public')->exists($post->image_path)){
-                Storage::disk('public')->delete($post->image_path);
+            $image_disk = Storage::disk('public');
+            if($post->image_path && $image_disk->exists($post->image_path)){
+                $image_disk->delete($post->image_path);
             }
             $post->delete();
             DB::commit();
@@ -177,7 +189,7 @@ class PostController extends Controller
             DB::rollback();
             throw $e;
         }
-        return back()->with([
+        return redirect()->route('dashboard.post.index')->with([
             'type' => 'success',
             'message' => 'Post has been deleted',
         ]);

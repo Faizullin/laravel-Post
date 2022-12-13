@@ -1,9 +1,8 @@
 //import { Modal } from 'antd';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import ErrorDialog from '../Error/ErrorDialog';
+import ErrorDialog from './ErrorDialog';
 
 export default NiceModal.create(({ name }) => {
-  // Use a hook to manage the modal state
   const modal = useModal();
   return (
 

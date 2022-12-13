@@ -1,9 +1,8 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
-import apiRequestError from "@/services/apiRequestError";
 import { Dialog, Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-react";
-import axios from "axios";
+import apiPost from "@/services/apiPost";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";
@@ -19,7 +18,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
     const handleSubmit = (e) => {
         e.preventDefault();
-        apiRequestError.post(route(`api.comment.storeReply`),{
+        apiPost.post(route(`api.comment.storeReply`),{
             ...data
         }).then(response => {
             reload().then(response => {
@@ -55,7 +54,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
 					enter="ease-out duration-300"
 					enterFrom="opacity-0"
 					enterTo="opacity-100"
-					leave="ease-in duration-200"
+					leave="ease-in duration-300"
 					leaveFrom="opacity-100"
 					leaveTo="opacity-0"
 				>

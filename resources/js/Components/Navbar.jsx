@@ -7,9 +7,14 @@ import AuthDropdown from "./AuthDropdown";
 
 export default function Navbar({auth}){
     const [isOpenNavbar,setIsOpenNavbar] = useState(false);
-    const handleMobileToggle = () => {
-        setIsOpenNavbar(!isOpenNavbar);
-    }
+    const handleMobileToggle = () => setIsOpenNavbar(!isOpenNavbar);
+    useEffect(function(){
+        if(isOpenNavbar) {
+            document.body.classList.add('mobile-nav-active');
+        } else {
+            document.body.classList.remove('mobile-nav-active');
+        }
+    },[isOpenNavbar])
 
     return (
         <div className="container mx-auto flex items-center justify-between px-4">
@@ -18,10 +23,8 @@ export default function Navbar({auth}){
                 <h1>Impact<span>.</span></h1>
             </Link>
             <div className={`${ isOpenNavbar ? "" : "hidden" } fixed inset-0 mobile-nav-bg`}>
-
             </div>
-            <nav id="navbar" className={` navbar ease-out duration-300
-                ${ isOpenNavbar ? "translate-x-0 " : "translate-x-full" }  md:transform-none md:transition-none`} >
+            <nav id="navbar" className="navbar">
                 <ul className="flex flex-col p-4 mt-4 md:flex-row m-bg-green-basic">
                     <li>
                         <Link href={route('pages.home')} className={ route().current('pages.home') ? `active` : `` }>Home</Link>

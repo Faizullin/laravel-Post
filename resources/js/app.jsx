@@ -1,9 +1,9 @@
 import './bootstrap';
 import '../css/app.css';
-import '../css/main.css';
-import '../css/header.css'
+
 import "react-widgets/scss/styles.scss";
 //import '../scss/app.sass';
+
 import './main';
 
 
@@ -13,7 +13,7 @@ import { createInertiaApp } from '@inertiajs/inertia-react';
 import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import NiceModal from '@ebay/nice-modal-react';
-import {registerModals} from "@/Components/Modals/registerModals"
+import registerModals from './Components/Dialog/registerModals';
 
 
 

@@ -1,5 +1,6 @@
 import { useForm, usePage } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
+import apiPost from "@/services/apiPost";
 
 
 export default function CommentCreateForm({reload}) {
@@ -12,16 +13,19 @@ export default function CommentCreateForm({reload}) {
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post(route(`api.comment.store`),{
+        apiPost.post(route(`api.comment.store`),{
             ...data
         }).then(response => {
             reload();
         }).catch(error => {
+            console.log("Error",error)
             if(error.response.status == 422){
                 const tmp = {}
+                //console.log('E',error.response.data)
                 Object.keys(error.response.data.errors).forEach(function(key, index) {
                     tmp[key] = error.response.data.errors[key][0];
                 });
+
                 setErrors(tmp)
             }
         })
@@ -30,7 +34,7 @@ export default function CommentCreateForm({reload}) {
         setErrors({...data})
     },[])
 	return (
-		<div className="reply-form">
+		<div className="reply-form m-0">
 
             <h4>Leave a Reply</h4>
             <p>Your email address will not be published. Required fields are marked * </p>

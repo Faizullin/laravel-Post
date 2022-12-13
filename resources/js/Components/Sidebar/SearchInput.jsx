@@ -1,4 +1,6 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
 
@@ -31,12 +33,12 @@ export default function SearchInput(){
     const handleSubmit = (e) => {
         e.preventDefault();
         if(value){
-            post(route(`search`,{keyword:value}));
+            Inertia.post(route(`post.search`,{keyword:value}));
         }
-        
+
     }
     useEffect(()=>{
-        setValue(filters?.filter?.search || "")
+        setValue(filters?.search || "")
     },[]);
     useDidMountEffect(() => {
         if(value){
@@ -45,6 +47,7 @@ export default function SearchInput(){
             setIsResultOpen(false);
         }
     },[value])
+
     return (
         <div className="sidebar-item search-form relative">
             <h3 className="sidebar-title">Search</h3>
@@ -52,32 +55,29 @@ export default function SearchInput(){
                 <input type="text"
                     value={value} onChange={ handleChange } className="border-none focus:ring-0"/>
                 <button type="submit">
-                    <i className="bi bi-search">
-                    </i>
+                    <MagnifyingGlassIcon className=" text-white w-6 h-6"/>
                 </button>
             </form>
-            <div className={`${ isResultOpen ? "" : "hidden" } w-full absolute top-full left-0 `}>
-                <div className="w-full px-5 py-4 bg-green-basic">
-                    <div className="h-[100px] bg-white">
-                        <ul>
+            <div id="search-results" className={`${ isResultOpen ? "" : "hidden" } w-full absolute top-full left-0 `}>
+                <div className="w-full border divide-y shadow max-h-72 bg-white">
+                        <div id="search-results-posts" className="">
                             { searchResult.posts.map((post,i)=>{
                                 return (
-                                    <li key={post.id}>
-                                        <Link href={route(`post.show`,post)}>{ post.title }</Link>
-                                    </li>
+                                    <div key={post.id} >
+                                        <Link href={route(`post.show`,post)} className="block p-2 hover:bg-indigo-50">{ post.title }</Link>
+                                    </div>
                                 )
                             }) }
-                        </ul>
-                        <ul>
+                        </div>
+                        <div id="search-results-tags">
                             { searchResult.tags.map((tag,i)=>{
                                 return (
-                                    <li key={tag.id}>
-                                        <Link href={``}>#{ tag.title }</Link>
-                                    </li>
+                                    <div key={tag.id} className="">
+                                        <Link href={``} className="block p-2 hover:bg-indigo-50">#{ tag.title }</Link>
+                                    </div>
                                 )
                             }) }
-                        </ul>
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>

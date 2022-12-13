@@ -1,32 +1,27 @@
-import { Inertia } from '@inertiajs/inertia';
-import { usePage } from '@inertiajs/inertia-react';
-import axios from 'axios';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import apiPost from '@/services/apiPost';
+import { useState,useEffect } from 'react';
 import CommentCreateForm from './CommentCreateForm';
 import CommentEditModalForm from './CommentEditModalForm';
 import CommentItem from './CommentItem';
 import CommentReplyModalForm from './CommentReplyModalForm';
 import Pagination from './Pagination';
-import apiAuth from '@/services/apiAuth';
+import { useModal } from '@ebay/nice-modal-react';
+import { DeleteConfirmModal } from '../Dialog/DeleteConfirmModal';
 
 export default function CommentList({post}){
-    const {user} = usePage().props.auth;
     const [createReplyParentId,setCreateReplyParentId] = useState(null);
     const [editItem,setEditItem] = useState({});
     const [openEditModal,setOpenEditModal] = useState(false);
-    const [openDeleteModal,setOpenDeleteModal] = useState(false);
+    const modal = useModal(DeleteConfirmModal);
     const [openCreateReplyModal,setOpenCreateReplyModal] = useState(false);
 
-    console.log(user)
     const [comments,setComments] = useState({
         data:[]
     });
 
     const getComments = (page=1) => {
-        return axios.get(route (`api.comment.index`),{params:{post_id:post.id,page,}}).then(response => {
+        return apiPost.get(route (`api.comment.index`),{params:{post_id:post.id,page,}}).then(response => {
             setComments(response.data || {data:[]});
-            console.log(response.data,post)
         });
     }
     const handleReply =(e,parent_id) => {
@@ -39,10 +34,17 @@ export default function CommentList({post}){
         setOpenEditModal(true)
     }
 
-    const handleDelete = (comment) => {
-        axios.delete(route(`api.comment.destroy`,comment)).then(response => {
+    const handleDelete = (confirmData) => {
+        modal.show({ onConfirm: handleDeleteConfirm,confirmData, });
+    }
+
+    const handleDeleteConfirm = (comment) => {
+        apiPost.delete(route(`api.comment.destroy`,comment)).then(response => {
             getComments();
-        });
+        }).then(() => {
+            modal.hide()
+        })
+
     }
     useEffect(function(){
         getComments();
@@ -55,7 +57,7 @@ export default function CommentList({post}){
 
             { comments.data.map((comment,index) => (
                 <CommentItem comment={comment}
-                    key={comment.id}
+                    key={`comment-${comment.id}`}
                     openCreateReplyModal={openCreateReplyModal}
                     setOpenCreateReplyModal={setOpenCreateReplyModal}
                     onReply={handleReply}

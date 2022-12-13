@@ -52,7 +52,6 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        $this->authorize('create', Comment::class);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -76,7 +75,6 @@ class CommentController extends Controller
 
     public function storeReply(StoreCommentRequest $request)
     {
-        $this->authorize('create', Comment::class);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -93,7 +91,7 @@ class CommentController extends Controller
             throw $e;
         }
 
-        return back()->with([
+        return response()->json([
             'type' => 'success',
             'message' => 'Comment has been created',
         ]);
@@ -130,7 +128,6 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request,Comment $comment)
     {
-        $this->authorize('update', $comment);
         $data = $request->validated();
         try{
             DB::beginTransaction();
@@ -142,7 +139,7 @@ class CommentController extends Controller
             throw $e;
         }
 
-        return back()->with([
+        return response()->json([
             'type' => 'success',
             'message' => 'Comment has been updated',
         ]);

@@ -35,7 +35,7 @@ class ContactMailJob implements ShouldQueue
     public function handle()
     {
         $email = new ContactMail();
-        Mail::to("Admin@example.com")->send($email);
+        \Mail::to("Admin@example.com")->send($email);
     }
 
 }

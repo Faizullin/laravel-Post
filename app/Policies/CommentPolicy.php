@@ -54,8 +54,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment)
     {
-        return Response::deny("You have no rights to edit this comment");
-        return $user->id === $comment->user_id ? Response::allow() : Response::deny();
+        return $user->id === $comment->user_id ? Response::allow() : Response::deny("You have no rights to edit this comment");
     }
 
     /**
@@ -67,7 +66,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment)
     {
-        return $user->id === $comment->user_id ? Response::allow() : Response::deny();
+        return $user->id === $comment->user_id ? Response::allow() : Response::deny("You have no rights to delete this comment");
     }
 
     /**

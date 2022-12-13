@@ -39,10 +39,6 @@ export default function About(){
                             velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident
                         </p>
 
-                        <div className="relative mt-4">
-                            <img src="assets/img/about-2.jpg" className="max-w-full h-auto rounded-4" alt=""/>
-                            <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" className="glightbox play-btn"></a>
-                        </div>
                         </div>
                     </div>
                     </div>

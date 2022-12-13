@@ -1,6 +1,8 @@
 import { usePage } from '@inertiajs/inertia-react';
 import { useState } from 'react';
+import CommentAuthorImage from './CommentAuthorImage';
 import CommentReplyItem from './CommentReplyItem';
+import { ChevronDownIcon, ChevronUpIcon, PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
 
 export default function CommentItem({
         comment,
@@ -12,9 +14,7 @@ export default function CommentItem({
 	return (
 		<div id={`comment-${comment.id}`} className="comment">
 			<div className="flex">
-				<div className="comment-img">
-					<img src="/img/blog/comments-1.jpg" alt=""/>
-				</div>
+				<CommentAuthorImage src={comment.author.imageUrl}/>
 				<div>
 					<h5>
 						<a href="">{ comment.author.name }</a>
@@ -33,28 +33,42 @@ export default function CommentItem({
                     <div className="flex">
                         <div className={`${ (auth.user?.id != comment.author.id ) ? "hidden" : ""} flex pr-4` }>
                             <button onClick={(e) => onEdit(comment)}
-                                className={` mr-3`}>Edit</button>
+                                className={` mr-3`}>
+                                <PencilIcon className='w-5 h-5 text-sky-500'/>
+                            </button>
                             <button onClick={(e) => onDelete(comment)}
-                                className={` `}>Delete</button>
+                                className={` `}>
+                                <TrashIcon className='w-5 h-5 text-gray-700'/>
+                            </button>
                         </div>
                         <div className={`${(comment.replies?.length == 0) ? "hidden" : ""} `}>
-                            <button onClick={(e) => setShowDiscussion(!showDiscussion)}>Click me</button>
+                            <button onClick={(e) => setShowDiscussion(!showDiscussion)} className="align-middle">
+                                { showDiscussion ? (
+                                    <ChevronUpIcon className='w-5 h-5'/>
+                                ) : (
+                                    <ChevronDownIcon className='w-5 h-5'/>
+                                ) }
+                            </button>
                         </div>
                     </div>
 				</div>
 			</div>
             { showDiscussion ?
-                (comment.replies?.length>0) ?
-                    comment.replies.map((comment_reply,index) => (
-                        <CommentReplyItem key={`reply-${comment_reply.id}`}
-                            comment={comment_reply}
-                            onReply={onReply}
-                            openCreateReplyModal={openCreateReplyModal}
-                            setOpenCreateReplyModal={setOpenCreateReplyModal}
-                            onEdit={onEdit}
-                            onDelete={onDelete}
-                            />
-                    )
+                (comment.replies?.length>0) ? (
+                    <div className="ml-6">
+                        { comment.replies.map((comment_reply,index) => (
+                            <CommentReplyItem
+                                key={`comment-reply-${comment_reply.id}`}
+                                comment={comment_reply}
+                                onReply={onReply}
+                                openCreateReplyModal={openCreateReplyModal}
+                                setOpenCreateReplyModal={setOpenCreateReplyModal}
+                                onEdit={onEdit}
+                                onDelete={onDelete}
+                                auth={auth}
+                                />
+                        )) }
+                    </div>
                 ) : ""
             : "" }
 		</div>

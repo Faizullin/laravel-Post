@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Head, Link } from "@inertiajs/inertia-react";
 import Layout from "@/Layouts/Layout";
-import Sidebar from '@/Components/Sidebar'
+import Sidebar from '@/Components/Sidebar/Sidebar'
 import PostItem from "@/Components/Post/Index/PostItem";
 import Pagination from "@/Components/Post/Index/Pagination";
 import SortDropdown from "@/Components/Post/Index/SortDropdown"
@@ -26,7 +26,7 @@ export default function Index({posts,errors,auth}){
             <section id="blog" className="blog">
                 <div className="container mx-auto" data-aos="fade-up">
                     <div className="flex justify-end  items-center items-baseline border-b border-gray-200 px-6 pb-4 md:px-0">
-                        <SortDropdown />
+                        <SortDropdown/>
                         <Sidebar.TriggerButton onClick={ () => setFiltersSidebarOpen(!filtersSidebarOpen) } />
                     </div>
 
@@ -34,7 +34,7 @@ export default function Index({posts,errors,auth}){
                         <div className="md:w-2/3 ">
                             <div className="flex flex-wrap mx-auto  posts-list">
                                 { posts.data.map((post,index) => (
-                                    <PostItem post={post} />
+                                    <PostItem key={post.id} post={post} />
                                 ))}
 
                             </div>
@@ -46,7 +46,9 @@ export default function Index({posts,errors,auth}){
                                 </ul>
                             </div>
                         </div>
-                        <Sidebar open={filtersSidebarOpen}/>
+                        <Sidebar
+                            open={filtersSidebarOpen}
+                            setOpen={setFiltersSidebarOpen}/>
                     </div>
                 </div>
             </section>

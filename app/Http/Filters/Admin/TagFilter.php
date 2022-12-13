@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters\Admin;
 
-use App\Http\Filters\AbstractFilter;
+use App\Http\Filters\Admin\AbstractFilter;
 
 class TagFilter extends AbstractFilter
 {

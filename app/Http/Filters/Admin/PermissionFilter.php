@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters\Admin;
 
-use App\Http\Filters\AbstractFilter;
+use App\Http\Filters\Admin\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
 
 class PermissionFilter extends AbstractFilter

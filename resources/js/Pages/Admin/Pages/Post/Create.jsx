@@ -5,6 +5,7 @@ import CropprtInput from '../../Components/Post/CopperInput';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useEffect } from 'react';
+import InputBlock from '@/Components/Post/Form/InputBlock';
 
 
 
@@ -53,14 +54,21 @@ export default function Create(props){
                             <div className="bg-white overflow-hidden">
                                 <form onSubmit={handleSubmit}
                                     className="p-6 w-full">
-                                    <div className="mb-10">
+                                    <InputBlock
+                                        label="Title"
+                                        name="title"
+                                        value={data.title}
+                                        onChange={handleChange}
+                                        error={errors.title}
+                                        />
+                                    {/* <div className="mb-10">
                                         <label className="text-xl text-gray-600 block mb-2"
                                             htmlFor='title'>Title</label>
                                         <input type="text" className="border-2 border-gray-300 p-2 w-full"
                                             name="title" id="title"
                                             value={data.title} onChange={handleChange}/>
                                         { errors.title ? <p className="text-red-500 text-xs italic mt-2">{ errors.title }</p> : "" }
-                                    </div>
+                                    </div> */}
 
                                     <div className="mb-10">
                                         <label className="text-xl text-gray-600 block mb-2">Description</label>

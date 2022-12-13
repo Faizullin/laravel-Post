@@ -1,47 +1,44 @@
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
-import { useRef, useEffect } from "react";
-
+import { useRef, useEffect, useState } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 
 export default function AuthDropdown({auth}) {
     const ref = useRef(null);
+    const [openDropdown,setOpenDropdown] = useState(false);
     useEffect(function(){
         const el = ref.current;
-        if (auth.user) {
-
-        }
         el.addEventListener('click', function(event) {
-            console.log("Click",auth)
-            // if (document.querySelector('.mobile-nav-active')) {
-            //     event.preventDefault();
-            //     this.classList.toggle('active');
-            //     this.nextElementSibling.classList.toggle('dropdown-active');
-
-            //     let dropDownIndicator = this.querySelector('.dropdown-indicator');
-            //     dropDownIndicator.classList.toggle('bi-chevron-up');
-            //     dropDownIndicator.classList.toggle('bi-chevron-down');
-            // }
+            if (document.querySelector('.mobile-nav-active')) {
+                event.preventDefault();
+                this.classList.toggle('active')
+                this.nextElementSibling.classList.toggle('dropdown-active');
+                setOpenDropdown(openDropdown => !openDropdown);
+            }
         });
+
     }, [])
     const handleLogout = (e) => {
         e.preventDefault()
         Inertia.post(route(`logout`))
     }
     return (
-        <li className="dropdown"
-            ref={ref}>
-            <a href="#">
-                <span>
-                    { (auth.user) ? auth.user.name : (
-                        <li>
-                            <Link href={route('login')}>
-                                Log In
-                            </Link>
-                        </li>
-                     ) }
-                </span>
-                <i className="bi bi-chevron-down dropdown-indicator"></i>
-            </a>
+        <li className="dropdown">
+            { (auth.user) ? (
+
+                <a href="#" ref={ref}>
+                    <span>{ auth.user.name }</span>
+                    { openDropdown ? (
+                        <ChevronUpIcon className="h-5 w-5 md:hidden" />
+                    ) : (
+                        <ChevronDownIcon className="h-5 w-5 md:hidden" />
+                    ) }
+                </a>
+            ) : (
+                <Link href={route('login')} ref={ref}>
+                    <span>Log In</span>
+                </Link>
+            ) }
             <ul>
                 { (auth.user) ?
                     (

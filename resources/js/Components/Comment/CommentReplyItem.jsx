@@ -1,12 +1,12 @@
+import { PencilIcon, TrashIcon } from "@heroicons/react/20/solid";
+import CommentAuthorImage from "./CommentAuthorImage";
 
 
-export default function CommentReplyItem({comment,onReply,onEdit,onDelete}) {
+export default function CommentReplyItem({comment,onReply,onEdit,onDelete,auth,}) {
 	return (
 		<div id="comment-reply-2" className="comment comment-reply">
 	        <div className="flex">
-				<div className="comment-img min-w-[60px]">
-					<img src="assets/img/blog/comments-4.jpg" alt="" className=""/>
-				</div>
+				<CommentAuthorImage src={comment.author.imageUrl} />
 				<div>
 					<h5>
                         <a href="">{ comment.author.name }</a>
@@ -20,13 +20,18 @@ export default function CommentReplyItem({comment,onReply,onEdit,onDelete}) {
                     </h5>
 					<time dateTime="2020-01-01">{ comment.created_at }01 Jan,2022</time>
 					<div>
-					 	<span >@{ comment.parent?.author?.name }</span> {comment.message}
+					 	<span className="text-sky-500 underline decoration-sky-500 cursor-pointer">@{ comment.parent?.author?.name }</span> {comment.message}
                     </div>
                     <div className="flex">
-                        <div className="flex">
+                        <div className={`${ (auth.user?.id != comment.author.id ) ? "hidden" : ""} flex pr-4` }>
                             <button onClick={(e) => onEdit(comment)}
-                                className="mr-3">Edit</button>
-                            <button onClick={(e) => onDelete(comment)}>Delete</button>
+                                className={` mr-3`}>
+                                <PencilIcon className='w-5 h-5 text-sky-500'/>
+                            </button>
+                            <button onClick={(e) => onDelete(comment)}
+                                className={` `}>
+                                <TrashIcon className='w-5 h-5 text-gray-700'/>
+                            </button>
                         </div>
                     </div>
 				</div>
@@ -38,6 +43,7 @@ export default function CommentReplyItem({comment,onReply,onEdit,onDelete}) {
                         onReply={onReply}
                         onEdit={onEdit}
                         onDelete={onDelete}
+                        auth={auth}
 						/>
 				))
 

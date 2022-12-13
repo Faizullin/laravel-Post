@@ -23,6 +23,9 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\Admin','as'=>'api.admin.','
 });
 Route::group(['namespace'=>'App\Http\Controllers\Api','as'=>'api.',],function(){
     Route::get('search', \Search\SearchController::class)->name('search');
+    Route::group(['controller'=>\Like\LikeController::class],function(){
+        Route::post("/like",'like')->name("like.store")->middleware(["auth"]);
+    });
     Route::group(['prefix' => 'comment','controller'=>\Comment\CommentController::class],function(){
         Route::get("/",'index')->name("comment.index");
         Route::post("/add",'store')->name("comment.store")->middleware(["auth","can:create,".\App\Models\Comment::class]);

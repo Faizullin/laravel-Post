@@ -91,13 +91,15 @@ Route::group([
     Route::get('post/category/{category:slug}', 'CategoryController')->name('post.category.index');
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
 
-    Route::get('search', 'SearchController')->name('post.search');
+    Route::match(array('GET', 'POST'),'search', 'SearchController')->name('post.search');
 
     Route::group(["prefix" => 'comment','controller'=>"CommentController"],function(){
         Route::get("/",'index')->name("comment.index");
         Route::post("/add",'store')->name("comment.store");
         Route::post("/reply/add",'storeReply')->name("comment.reply.store");
     });
+
+
     Route::get("/test",function(){
         return Inertia::render('Test');
     })->name('test');

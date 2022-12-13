@@ -17,18 +17,21 @@ class ShowPostResource extends JsonResource
      */
     public function toArray($request)
     {
+        //dd($this->likers);
         return [
-            "id" => $this->id,
-            "title" => $this->title,
-            "description"  => $this->description,
-            "body"  => $this->body,
-            "author"   => $this->user ? new UserMinResource($this->user) : null,
-            "category" => new CategoryMinResource($this->category),
-            "tags" => TagMinResource::collection($this->tags),
-            "comments_count" => $this->comments_count,
-            "imageUrl" => $this->imageUrl,
-            "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            'id' => $this->id,
+            'title' => $this->title,
+            'description'  => $this->description,
+            'body'  => $this->body,
+            'author'   => $this->user ? new UserMinResource($this->user) : null,
+            'category' => new CategoryMinResource($this->category),
+            'tags' => TagMinResource::collection($this->tags),
+            'comments_count' => $this->comments_count,
+            'likes_count' => $this->likers()->count(),
+            'isLikedByCurrentUser' => auth()->user() ? $this->isLikedBy(auth()->user()) : false,
+            'imageUrl' => $this->imageUrl,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

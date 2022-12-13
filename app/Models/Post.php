@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Filterable;
+use App\Models\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +12,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    use Filterable;
+    use Filterable,Likeable;
 
     protected $fillable = ["title","description", "body", "image_path","user_id","category_id", "created_at", "updated_at"];
 

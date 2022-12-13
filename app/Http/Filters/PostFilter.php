@@ -9,20 +9,22 @@ class PostFilter extends AbstractFilter
 {
 
 
-    public $filterable = [  'title'=>"title", 'description'=>'description'];
+    public $filterable = ['title'=>"title", 'description'=>'description'];
 
-	public $sortable = [ "most_liked", "most_recent"];
+	public $sortable = [ "most_liked", "most_recent",'most_old'];
 
 
-    /**
-     * @param string $user
-     */
     public function mostRecentSort($value)
     {
         $this->builder->orderBy("updated_at","DESC");
     }
-    
-     public function mostLikedSort($value)
+
+    public function mostOldFilter($value)
+    {
+        $this->builder->orderBy("updated_at","ASC");
+    }
+
+    public function mostLikedSort($value)
     {
         $this->builder->orderBy("likes_count","DESC");
     }

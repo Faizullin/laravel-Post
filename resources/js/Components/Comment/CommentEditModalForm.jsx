@@ -1,7 +1,7 @@
 import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/inertia-react";
-import axios from "axios";
+import apiPost from "@/services/apiPost";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";
@@ -17,7 +17,7 @@ export default function CommentEditModalForm({show,setShow,title,item,reload}) {
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.patch(route(`api.comment.update`,item),{
+        apiPost.patch(route(`api.comment.update`,item),{
             ...data
         }).then(response => {
             reload().then(response => {
