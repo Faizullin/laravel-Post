@@ -9,6 +9,8 @@ import Pagination from '../../Components/Table/Pagination';
 import useFilterable from '../../Hooks/useFilterable';
 
 
+
+
 export default function Index(props) {
     const [sortAttrs,searchAttrs] = useFilterable(props.filters);
     const [DestroyModal,deleteAttrs] = useDialog(Destroy,{

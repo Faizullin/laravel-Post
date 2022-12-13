@@ -37,30 +37,47 @@ export default function DeleteConfirmDialog({open,title,message,onCancel,afterCl
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
                             <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div className="sm:flex sm:items-start">
-                                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                            <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z" />
-                                            </svg>
-                                        </div>
-                                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                            <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-title">{ title }</h3>
-                                            <div className="mt-2">
-                                                <p className="text-sm text-gray-500">{ message }</p>
-                                            </div>
-                                        </div>
+                                <div className="md:flex items-center">
+                                    <div className="rounded-full border border-gray-300 flex items-center justify-center w-16 h-16 flex-shrink-0 mx-auto">
+                                    <i className="bx bx-error text-3xl"></i>
+                                    </div>
+                                    <div className="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
+                                    <p className="font-bold">{ title }</p>
+                                    <p className="text-sm text-gray-700 mt-1">{children}
+                                    </p>
                                     </div>
                                 </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                                    { onConfirm && <button className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={ handleConfirm }>{ confirmText }</button> }
-                                    <button className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                                        onClick={handleClose}
-                                    >
-                                        Cancel
-                                    </button>
+                                <div className="text-center md:text-right mt-4 md:flex md:justify-end">
+                                    <button className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-red-200 text-red-700 rounded-lg font-semibold text-sm md:ml-2 md:order-2"
+                                        onClick={ handleConfirm }>Delete Item</button>
+                                    <button className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-gray-200 rounded-lg font-semibold text-sm mt-4
+                                    md:mt-0 md:order-1"
+                                        onClick={closeModal}>Cancel</button>
                                 </div>
+                                // <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                //     <div className="sm:flex sm:items-start">
+                                //         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                //             <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+                                //                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z" />
+                                //             </svg>
+                                //         </div>
+                                //         <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                //             <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-title">{ title }</h3>
+                                //             <div className="mt-2">
+                                //                 <p className="text-sm text-gray-500">{ message }</p>
+                                //             </div>
+                                //         </div>
+                                //     </div>
+                                // </div>
+                                // <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                //     { onConfirm && <button className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                                //         onClick={ handleConfirm }>{ confirmText }</button> }
+                                //     <button className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                //         onClick={handleClose}
+                                //     >
+                                //         Cancel
+                                //     </button>
+                                // </div>
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>

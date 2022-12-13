@@ -1,6 +1,6 @@
 
 
-export default function EditDialog({open,title,message,onCancel,afterClose,onSubmit,confirmText,confirmData}){
+export default function EditDialog({children,title,open,onCancel,afterClose,onSubmit,confirmText,confirmData}){
     title = title ? title : 'Are you sure to delete this item?';
     message = message ? message : 'Are you sure to delete this item?';
     confirmText = 'Delete'

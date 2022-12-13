@@ -1,5 +1,10 @@
 import { Link, usePage } from "@inertiajs/inertia-react";
 
+const DropDown = ({children,className,onClick,}) => {
+    return (
+        <div onClick={onClick} className={className}>{children}</div>
+    );
+}
 
 export default function Navbar(){
     const { user } = usePage().props.auth;
@@ -25,11 +30,7 @@ export default function Navbar(){
             dropdownIcon.classList.toggle('mdi-minus');
         }
     }
-    const DropDown = (props) => {
-        return (
-            <div onClick={handleDropdownClick} className={props.className}>{props.children}</div>
-        );
-    }
+    
     return (
         <nav id="navbar-main" className="navbar is-fixed-top">
             <div className="navbar-brand">
@@ -47,7 +48,8 @@ export default function Navbar(){
             </div>
             <div className="navbar-menu" id="navbar-menu">
                 <div className="navbar-end">
-                    <DropDown className="navbar-item dropdown has-divider">
+                    <DropDown className="navbar-item dropdown has-divider"
+                        onClick={handleDropdownClick}>
                         <a className="navbar-link">
                         <span className="icon"><i className="mdi mdi-menu"></i></span>
                         <span>Sample Menu</span>

@@ -1,18 +1,17 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useEffect, useState } from 'react'
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 
-
-export default function EditModal({children,st,setSt,title,onSubmit}){
-    function closeModal() {
-        setSt(false);
+export default function CropperModal({children,open,setOpen,title,onSubmit}){
+    function handleClose() {
+        setOpen(false);
     }
-    function openModal() {
-        setSt(true);
+    function handleOpen() {
+        setOpen(true);
     }
     return (
-        <Transition appear show={ st } as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Transition appear show={st} as={Fragment}>
+            <Dialog as="div" className="relative z-10" onClose={handleClose}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -48,7 +47,7 @@ export default function EditModal({children,st,setSt,title,onSubmit}){
                                         { children }
                                         <div className="mt-4 flex">
                                             <button
-                                                type="button" onClick={onSubmit}
+                                                type="button" onClick={ onSubmit }
                                                 className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                             >
                                                 Save
@@ -56,7 +55,7 @@ export default function EditModal({children,st,setSt,title,onSubmit}){
                                             <button
                                                 type="button"
                                                 className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                                onClick={closeModal}
+                                                onClick={handleClose}
                                             >
                                                 Close
                                             </button>
