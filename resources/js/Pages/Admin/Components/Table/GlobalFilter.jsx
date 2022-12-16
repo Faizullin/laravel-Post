@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import { usePage } from "@inertiajs/inertia-react";
-import useDidMountEffect from "../../Hooks/useDidMountEffect";
+import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 
 export default function GlobalFilter({value,onChange}){
     return (
@@ -18,13 +18,9 @@ export default function GlobalFilter({value,onChange}){
 				</div>
                 <input type="search" name="search" id="table-search"
                     className="block rounded-lg shadow-sm sm:text-sm  focus:ring-blue-500 focus:border-blue-500 block w-80 pl-10 p-2.5" placeholder={`Search here...`}
-                    onChange={onChange} value={value}/>
-                <input
-                    className="form-control"
-                    placeholder="Search..."
-                    type="search"
-                    onChange={(e) => onChange(e.target.value)}
-                />
+                    onChange={onChange}
+                    defaultValue={value}
+                    />
 			</div>
         </div>
 

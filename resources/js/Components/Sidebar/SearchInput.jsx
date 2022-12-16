@@ -1,4 +1,4 @@
-import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
+import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
@@ -40,7 +40,7 @@ export default function SearchInput(){
     useEffect(()=>{
         setValue(filters?.search || "")
     },[]);
-    useDidMountEffect(() => {
+    useDidUpdateEffect(() => {
         if(value){
             getSearchResult();
         }else{

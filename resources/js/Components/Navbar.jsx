@@ -1,4 +1,4 @@
-import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
+import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { Link } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";

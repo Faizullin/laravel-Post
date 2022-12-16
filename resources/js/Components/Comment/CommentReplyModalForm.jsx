@@ -1,4 +1,4 @@
-import useDidMountEffect from "@/Pages/Admin/Hooks/useDidMountEffect";
+import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { Dialog, Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-react";
@@ -37,7 +37,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
     const closeModal = (e) => {
         setShow(false);
     }
-    useDidMountEffect(() => {
+    useDidUpdateEffect(() => {
         setData(data => ({
             ...data,
             parent_id:createReplyParentId,

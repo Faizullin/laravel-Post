@@ -1,4 +1,5 @@
-
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function DeleteConfirmDialog({open,title,message,onCancel,afterClose,onConfirm,confirmText,confirmData}){
     title = title ? title : 'Are you sure to delete this item?';
@@ -13,7 +14,7 @@ export default function DeleteConfirmDialog({open,title,message,onCancel,afterCl
     }
     return (
         <Transition appear show={ open } as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={onCancel}>
+            <Dialog as="div" className="relative z-10" onClose={handleClose}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -43,7 +44,8 @@ export default function DeleteConfirmDialog({open,title,message,onCancel,afterCl
                                     </div>
                                     <div className="mt-4 md:mt-0 md:ml-6 text-center md:text-left">
                                     <p className="font-bold">{ title }</p>
-                                    <p className="text-sm text-gray-700 mt-1">{children}
+                                    <p className="text-sm text-gray-700 mt-1">
+                                        {message}
                                     </p>
                                     </div>
                                 </div>
@@ -52,9 +54,9 @@ export default function DeleteConfirmDialog({open,title,message,onCancel,afterCl
                                         onClick={ handleConfirm }>Delete Item</button>
                                     <button className="block w-full md:inline-block md:w-auto px-4 py-3 md:py-2 bg-gray-200 rounded-lg font-semibold text-sm mt-4
                                     md:mt-0 md:order-1"
-                                        onClick={closeModal}>Cancel</button>
+                                        onClick={handleClose}>Cancel</button>
                                 </div>
-                                // <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                {/* // <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 //     <div className="sm:flex sm:items-start">
                                 //         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
                                 //             <svg className="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
@@ -77,7 +79,7 @@ export default function DeleteConfirmDialog({open,title,message,onCancel,afterCl
                                 //     >
                                 //         Cancel
                                 //     </button>
-                                // </div>
+                                // </div> */}
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>

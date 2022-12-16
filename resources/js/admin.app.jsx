@@ -1,7 +1,7 @@
 import './bootstrap';
 
 import '../css/admin.app.css';
-import '../css/admin.css';
+//import '../css/admin.css';
 import "react-widgets/scss/styles.scss";
 
 import React from 'react';
@@ -9,6 +9,8 @@ import { createInertiaApp } from '@inertiajs/inertia-react';
 import { InertiaProgress } from '@inertiajs/progress';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import registerModals from '@Admin/Components/Dialog/registerModals';
+import { createRoot } from 'react-dom/client';
+import NiceModal from '@ebay/nice-modal-react';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 registerModals()

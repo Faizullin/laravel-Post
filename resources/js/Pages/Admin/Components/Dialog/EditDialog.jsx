@@ -1,9 +1,10 @@
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 
-export default function EditDialog({children,title,open,onCancel,afterClose,onSubmit,confirmText,confirmData}){
+export default function EditDialog({children,title,open,onCancel,afterClose,onSubmit,submitText,confirmData}){
     title = title ? title : 'Are you sure to delete this item?';
-    message = message ? message : 'Are you sure to delete this item?';
-    confirmText = 'Delete'
+    submitText = 'Update'
 
     const handleClose = () => {
         onCancel()

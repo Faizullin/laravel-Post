@@ -33,7 +33,11 @@ class TagController extends Controller
     {
         $tags = (new Tag)->newQuery();
         $tags->filter($filter);
-        $tags = $tags->paginate(2)->onEachSide(2)->appends(request()->query());
+        if (array_key_exists('per_page',$filter->input) && in_array($filter->input['per_page'],['1','10','20','50'])) {
+            $tags = $tags->paginate($filter->input['per_page'])->onEachSide(2)->appends(request()->query());
+        } else {
+            $tags = $tags->paginate(1)->onEachSide(2)->appends(request()->query());
+        }
         return Inertia::render('Tag/Index', [
             'tags' => IndexTagResource ::collection($tags),
             'can' => [
@@ -102,11 +106,6 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        return Inertia::render('Tag/Index', [
-            'editTag' => $tag,
-            'activeForm' => 'edit',
-        ]);
-
         return [
             "tag"=> new EditTagResource($tag),
         ];

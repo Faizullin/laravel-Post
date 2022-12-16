@@ -13,8 +13,6 @@ export default function EditProfileForm(){
     },[]);
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        console.log(data)
         patch(route('admin.profile.update'),data);
     }
     const handleChange = (e) => {
