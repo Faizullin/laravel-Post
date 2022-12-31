@@ -46,11 +46,11 @@ export default function EditProfileForm(){
                     </div>
                     <hr />
                     <div className="field">
-                        <label className="label">Name</label>
+                        <label className="label" htmlFor="input-name">Name</label>
                         <div className="field-body">
                             <div className="field">
                                 <div className="control">
-                                    <input type="text" autoComplete="on" className="input" required
+                                    <input id="input-name" type="text" autoComplete="on" className="input" required
                                         name='name' value={ data.name } onChange={ handleChange }/>
                                 </div>
                                 { errors.name ? (
@@ -63,11 +63,11 @@ export default function EditProfileForm(){
                         </div>
                     </div>
                     <div className="field">
-                        <label className="label">E-mail</label>
+                        <label className="label" htmlFor="input-email">E-mail</label>
                         <div className="field-body">
                             <div className="field">
                                 <div className="control">
-                                    <input type="email" autoComplete="on" className="input" required
+                                    <input id="input-email" type="email" autoComplete="on" className="input" required
                                         name='email' value={ data.email } onChange={ handleChange }/>
                                 </div>
                                 { errors.email ? (

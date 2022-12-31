@@ -1,29 +1,32 @@
-import NiceModal from "@ebay/nice-modal-react";
+import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { debounce } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import GlobalFilter from "../Components/Table/GlobalFilter";
-import apiClient from "../services/apiClient";
 import Layout from "./Layout";
 import Pagination from "../Components/Table/Pagination";
+import Breadcrumb from "../Components/Dashboard/Breadcrumb";
+import HeroBar from "../Components/Dashboard/HeroBar";
 
 const SORT_ASC = "asc"
 const SORT_DESC = "desc"
 const perPageList = [1,10,20,50];
 
-export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,items}) {
-	const {filters:appliedFilters} = usePage().props
+export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title}) {
+	const {appliedFilters} = usePage().props
     const {data} = items
 
     const [perPage, setPerPage] = useState(appliedFilters.per_page || perPageList[0])
-    const [sortColumn, setSortColumn] = useState(appliedFilters.sort_field || columns[0].name)
-    const [sortOrder, setSortOrder] = useState(appliedFilters.sort_order || "asc")
-    const [search, setSearch] = useState(appliedFilters.search || "")
+    const [sortColumn, setSortColumn] = useState(appliedFilters.sorts?.column || columns[0].name)
+    const [sortOrder, setSortOrder] = useState(appliedFilters.sorts?.order || "asc")
+    const [search, setSearch] = useState(appliedFilters.filters?.search || "")
     const [currentPage, setCurrentPage] = useState(1)
 
     const [loading, setLoading] = useState(true)
+
+    const delete_modal = useModal("deleteConfirm-table-item-modal")
 
     const handleSort = (column) => {
         if (column.name === sortColumn) {
@@ -69,10 +72,11 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
 
 
     const handleDestroyClick = (item_id) => {
-        NiceModal.show("deleteConfirm-table-item-modal",{
+        delete_modal.show({
             onConfirm: () => {
-                Inertia.delete(fetchUrls.delete(item_id),item_id);
-                console.log(this)
+                Inertia.delete(fetchUrls.delete(item_id),{
+                    onSuccess: () => delete_modal.hide()
+                });
             }
         })
     }
@@ -86,7 +90,9 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
     },[])
 
     return (
-        <Layout linkTitle="s">
+        <Layout>
+            <Breadcrumb links={breadcrumbLinks}/>
+            <HeroBar title={title}/>
             <DeleteConfirmModal id="deleteConfirm-table-item-modal"/>
             <section className="section main-section">
                 <div className="card has-table">
@@ -97,8 +103,8 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
                         </p>
                         <Link
                             className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
-                            href={route(fetchUrls.create)}>
-                            Create New Tag
+                            href={fetchUrls.create}>
+                            Create New {title}
                         </Link>
                         <Link href="#" className="card-header-icon">
                             <span className="icon"><i className="mdi mdi-reload"></i></span>
@@ -127,19 +133,22 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
 		                                    <th key={index}>
                                                 <span className="flex items-center">
                                                     { column.label }
-                                                    { column.name === sortColumn ? (
+                                                    { column.sortable ?
+                                                        column.name === sortColumn ? (
 
-                                                            sortOrder === SORT_ASC ? (
-                                                                <i className="ms-1 mdi mdi-chevron-down" aria-hidden="true"
-                                                                onClick={(e) => handleSort(column)}></i>
-                                                            ) : (
-                                                                <i className="ms-1 mdi mdi-chevron-up" aria-hidden="true"
-                                                                onClick={(e) => handleSort(column)}></i>
-                                                            )
+                                                                sortOrder === SORT_ASC ? (
+                                                                    <i className="ms-1 mdi mdi-chevron-down" aria-hidden="true"
+                                                                    onClick={(e) => handleSort(column)}></i>
+                                                                ) : (
+                                                                    <i className="ms-1 mdi mdi-chevron-up" aria-hidden="true"
+                                                                    onClick={(e) => handleSort(column)}></i>
+                                                                )
 
-                                                    ) : (
-                                                        <i className="ms-1 mdi mdi-chevron-down" aria-hidden="true"
-                                                        onClick={(e) => handleSort(column)}></i>) }
+                                                        ) : (
+                                                            <i className="ms-1 mdi mdi-chevron-down" aria-hidden="true"
+                                                            onClick={(e) => handleSort(column)}></i>
+                                                        )
+                                                    : ""}
                                                  </span>
 		                                    </th>
 		                                )
@@ -164,7 +173,7 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
                                                 { columns.map((column,index) => {
                                                     if (column.render) {
                                                         return (
-                                                            <column.render key={index} />
+                                                            <column.render key={index} item={d}/>
                                                          )
                                                      } else if (column.type === "time") {
                                                          return (
@@ -180,7 +189,7 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
                                                 <td className="actions-cell">
                                                     <div className="buttons right nowrap">
                                                         <Link className="button small blue --jb-modal"  data-target="sample-modal-2" type="button"
-                                                            href={route(fetchUrls.edit(d.id))}>
+                                                            href={fetchUrls.edit(d.id)}>
                                                             <span className="icon"><i className="mdi mdi-eye"></i></span>
                                                         </Link>
                                                         <button className="button small red --jb-modal" data-target="sample-modal" type="button"

@@ -9,10 +9,10 @@ const sortOptions = [
     { label:'Oldest',name: 'most_old', href: route(route().current(),{_query:{sort:"most_old"}}), current: false },
 ];
 export default function SortDropdown(){
-    const filters = usePage().props.filters;
+    const { appliedFilters } = usePage().props;
     useEffect(function(){
         sortOptions.map((option) => {
-            option.current = (option.name === filters.sort || option.name === `-${filters.sort}`);
+            option.current = (option.name === appliedFilters.sorts?.column || "");
         })
     },[])
     return (

@@ -17,7 +17,7 @@ class PostFilter extends AbstractFilter
     /**
      * @param string $user
      */
-    public function userFilter($value)
+    public function userSortFilter($value)
     {
         $this->builder->whereHas("users",function (Builder $query) use ($value) {
             $query->where('name', 'like', "%$value%");
@@ -28,14 +28,14 @@ class PostFilter extends AbstractFilter
     /**
      * @param string $user
      */
-    public function authorSort($value)
+    public function authorSortFilter($value)
     {
         $this->builder->with(['user' => function ($query) use ($value) {
             $query->orderBy('name', $value);
         }]);
     }
 
-    public function categorySort($value)
+    public function categorySortFilter($value)
     {
         $this->builder->with(['category' => function ($query) use ($value) {
             $query->orderBy('title', $value);

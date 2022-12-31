@@ -1,10 +1,8 @@
 import { useForm, usePage } from "@inertiajs/inertia-react";
-import { useEffect } from "react";
-
 
 export default function EditPasswordForm(){
     const { user } = usePage().props.auth;
-    const {data,setData,errors,patch} = useForm({
+    const {data,setData,errors,patch,reset} = useForm({
         password_current: '',
         password: '',
         password_confirmation:'',
@@ -14,12 +12,13 @@ export default function EditPasswordForm(){
         patch(route('admin.profile.updateProfile'),{
             data,
             onSuccess:(response) => {
-                console.log(response,'ok')
-                const tmp = {...data};
-                Object.keys(tmp).forEach(key => {
-                    tmp[key] = '';
-                });
-                setData(tmp);
+                reset();
+                // console.log(response,'ok')
+                // const tmp = {...data};
+                // Object.keys(tmp).forEach(key => {
+                //     tmp[key] = '';
+                // });
+                // setData(tmp);
             }
         })
     }
@@ -41,9 +40,9 @@ export default function EditPasswordForm(){
             <div className="card-content">
                 <form onSubmit={handleSubmit}>
                     <div className="field">
-                        <label className="label">Current password</label>
+                        <label className="label" htmlFor="input-password_current">Current password</label>
                         <div className="control">
-                            <input type="password" autoComplete="current-password" className="input" required
+                            <input id="input-password_current" type="password" autoComplete="password_current" className="input" required
                                 name="password_current" onChange={handleChange} value={data.password_current}/>
                         </div>
                         { errors.password_current ? (
@@ -54,9 +53,9 @@ export default function EditPasswordForm(){
                     </div>
                     <hr />
                     <div className="field">
-                        <label className="label">New password</label>
+                        <label className="label" htmlFor="input-password">New password</label>
                         <div className="control">
-                            <input type="password" autoComplete="new-password" className="input" required
+                            <input id="input-password" type="password" autoComplete="password" className="input" required
                                 name="password" onChange={handleChange} value={data.password}/>
                         </div>
                         { errors.password ? (
@@ -66,9 +65,9 @@ export default function EditPasswordForm(){
                         ) }
                     </div>
                     <div className="field">
-                        <label className="label">Confirm password</label>
+                        <label className="label" htmlFor="input-password_confirmation">Confirm password</label>
                         <div className="control">
-                            <input type="password" autoComplete="new-password" className="input" required
+                            <input id="input-password_confirmation" type="password" autoComplete="password_confirmation" className="input" required
                                 name="password_confirmation" onChange={handleChange} value={data.password_confirmation}/>
                         </div>
                         <p className="help">Required. New password one more time</p>

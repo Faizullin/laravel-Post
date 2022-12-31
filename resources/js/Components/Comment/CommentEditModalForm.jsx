@@ -1,7 +1,7 @@
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm, usePage } from "@inertiajs/inertia-react";
-import apiPost from "@/services/apiPost";
+import apiPost from "@/services/apiClient";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";

@@ -13,85 +13,117 @@ abstract class AbstractFilter
 
     protected $builder;
 
-
     public $input = [];
-    protected $acceptedFilters = [];
 
-    public function __construct(Request $request)
+    public $appliedFilters = [
+        'per_page' => 1,
+    ];
+
+    public $filterable = [];
+    public $sortable = [];
+
+    /**
+     * Filter constructor.
+     *
+     * @param Request|null $request
+     */
+    public function __construct(Request $request = null)
     {
-        $this->request = $request;
-    }
+        $this->request = $request ?? request();
 
-    public function apply(Builder $builder)
-    {
-
-        $this->builder = $builder;
-        $fields = $this->fields();
-        $this->acceptedFilters = $fields;
-        $this->input = $fields;
-        foreach ($fields as $name => $value) {
-            if (method_exists($this, Str::camel($name).'Filter')) {
-                call_user_func_array([$this, Str::camel($name).'Filter'],[ $value]);
-            } elseif(in_array($name,$this->filterable)) {
-                $this->basicFilter($name,$value);
+        $this->input = [
+            'filters' => $this->request->collect()->except(['sort_field','sort_order'])
+                ->map(fn ($item) => $this->parseHttpValue($item))
+                ->filter(fn ($item) => $item !== null),
+            'sorts' => [
+                'column' => $this->request->get('sort_field', ''),
+                'order' => $this->request->get('sort_order', ''),
+            ],
+        ];
+        foreach ($this->request->except(['filter','sort_field','sort_order']) as $column => $value) {
+            if(array_key_exists($column,$this->appliedFilters)) {
+                $this->appliedFilters[$column] = $value;
             }
         }
-        // foreach ($fields["filter"] as $field => $value) {
-        //     if (method_exists($this, Str::camel($field).'Filter')) {
-        //         call_user_func_array([$this, Str::camel($field).'Filter'],[ $value]);
-        //     } elseif(in_array($field,$this->filterable)) {
-        //         $this->basicFilter($field,$value);
-        //     }
-        // }
-        // if(array_key_exists("sort",$fields) && $fields['sort']){
-        //     $field = $fields["sort"];
-        //     $direction="ASC";
-        //     if(Str::startsWith($field,"-")){
-        //         $field = Str::substr($field,1);
-        //         $direction="DESC";
-        //     }
-        //     if(!empty($field)){
-        //         if(method_exists($this, Str::camel($field).'Sort')){
-        //             call_user_func_array([$this, Str::camel($field).'Sort'],[$direction]);
-        //         } elseif (in_array($field,$this->sortable)) {
-        //             $this->basicSort($field,$direction);
-        //         }
-        //     }
-        // }
     }
 
-    public function getFilters()
+        /**
+     * @param string|null|array $query
+     *
+     * @return string|array|null
+     */
+    protected function parseHttpValue($query)
     {
-        return $this->acceptedFilters;
+        if (is_string($query)) {
+            $item = explode(',', $query);
+            //dd("Item",$item, $query);
+            if (count($item) > 1) {
+                return $item;
+            }
+        }
+
+        return $query;
     }
 
-    protected function fields(): array
+
+    /**
+     * @param Builder $builder
+     */
+    public function apply(Builder $builder)
     {
-        return $this->request->all();
-        $r = $this->request->only(['sort']);
-        $res = [];
-        // dd($r, $this->request->except(['sort']),array_map('trim', $this->request->except(['sort'])),array_map('trim', Arr::except($r,'filter')));
-        $res['filter'] = array_filter(
-            array_map('trim', $this->request->except(['sort'])),
-        );
-
-        $res['sort'] = array_filter(
-            array_map('trim', Arr::except($r,'filter'))
-        );
-        //dd($res);
-        return $res;
+        $this->builder = $builder;
+        $this->filterQuery();
+        $this->sortQuery();
     }
 
-
-    public function basicSort($column,$direction)
+    public function basicSortFilter($column,$direction)
     {
         $this->builder->orderBy($column,$direction);
     }
 
-
     public function basicFilter($column,$value)
     {
         $this->builder->where($column,"LIKE","%".$value."%");
+    }
+
+    protected function sortQuery()
+    {
+        $column = $this->input['sorts']['column'];
+        $order = $this->input['sorts']['order'];
+        if ($order && $column && in_array(strtolower($order),["asc","desc"])) {
+            if(in_array($column,$this->sortable)) {
+                if (method_exists($this, Str::camel($column).'SortFilter')) {
+                    call_user_func_array([$this, Str::camel($column).'SortFilter'],[ $order]);
+                    $this->appliedFilters['sorts']['order'] = $order;
+                    $this->appliedFilters['sorts']['column'] = $column;
+                } else {
+                    $this->basicSortFilter($column, $order);
+                    $this->appliedFilters['sorts']['order'] = $order;
+                    $this->appliedFilters['sorts']['column'] = $column;
+                }
+            }
+        }
+
+    }
+    protected function filterQuery()
+    {
+        $this->input['filters']->each(function ($value, $column) {
+            if (is_string($column) && is_string($value)) {
+                if(in_array($column,$this->filterable)) {
+                    if (method_exists($this, Str::camel($column).'Filter')) {
+                        call_user_func_array([$this, Str::camel($column).'Filter'],[ $value]);
+                        $this->appliedFilters['filters'][$column] = $value;
+                    } else {
+                        $this->basicFilter($column,$value);
+                        $this->appliedFilters['filters'][$column] = $value;
+                    }
+                }
+            }
+        });
+    }
+    public function getAppliedFilters()
+    {
+        return $this->appliedFilters;
     }
 
 }

@@ -30,4 +30,9 @@ trait Likeable {
             'user_id',
         )->where('likeable_type', $this->getMorphClass());
     }
+
+    // public function likeable()
+    // {
+    //     return $this->morphTo();
+    // }
 }

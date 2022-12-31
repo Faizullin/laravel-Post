@@ -11,4 +11,9 @@ class Like extends Model
     use HasFactory;
 
     use Filterable;
+
+    public function likeable()
+    {
+        return $this->morphTo();
+    }
 }

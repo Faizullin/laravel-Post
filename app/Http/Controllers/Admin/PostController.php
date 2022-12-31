@@ -41,7 +41,12 @@ class PostController extends Controller
     {
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
-        $posts = $posts->paginate(2)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $posts = $posts->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $posts = $posts->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('Post/Index', [
             'posts' => IndexPostResource::collection($posts),
             'can' => [
@@ -49,7 +54,7 @@ class PostController extends Controller
                 'edit' => Auth::user()->can('post edit'),
                 'delete' => Auth::user()->can('post delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 
@@ -98,7 +103,7 @@ class PostController extends Controller
             throw $e;
         }
 
-        return back()->with([
+        return redirect()->route('admin.post.edit',$post)->with([
             'type' => 'success',
             'message' => 'Post has been created',
         ]);
@@ -144,16 +149,24 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $data = $request->validated();
-
+        $user = Auth::user();
         try {
             DB::beginTransaction();
             $data['category_id']=$data['category'];
-            $data['user_id']=$data['user'];
-            $post_tags = $data['tags'];
-            unset($data['category'],$data['user'],$data['tags']);
+            $data['user_id'] = $user->id;
+            $post_tags = isset($data['tags']) ? $data['tags'] : [];
             if ($request->hasFile('image_path')) {
-                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+                $data['image_path'] = $request->file('image_path')->store('img','public');
+                $image_disk = Storage::disk('public');
+
+                if ($post->image_path && $image_disk->exists($post->image_path)) {
+                    $image_disk->delete($post->image_path);
+                }
+            } else {
+                unset($data['image_path']);
             }
+
+            unset($data['category'],$data['user'],$data['tags']);
             $post->update($data);
             $post->tags()->sync($post_tags);
 
@@ -179,8 +192,9 @@ class PostController extends Controller
     {
         try {
             DB::beginTransaction();
-            if(Storage::disk('public')->exists($post->image_path)){
-                Storage::disk('public')->delete($post->image_path);
+            $image_disk = Storage::disk('public');
+            if($post->image_path && $image_disk->exists($post->image_path)){
+                $image_disk->delete($post->image_path);
             }
             $post->delete();
             DB::commit();
@@ -188,7 +202,7 @@ class PostController extends Controller
             DB::rollback();
             throw $e;
         }
-        return back()->with([
+        return redirect()->route('admin.post.index')->with([
             'type' => 'success',
             'message' => 'Post has been deleted',
         ]);

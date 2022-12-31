@@ -1,49 +1,68 @@
-import CreateModal from '../../Components/Table/CreateModal';
+import { EditModal } from '../../Components/Dialog/TableEditModal';
 import { useForm, usePage } from '@inertiajs/inertia-react';
-import { useEffect } from 'react';
-import { Multiselect } from 'react-widgets';
+import InputBlock from '../../Components/Form/InputBlock';
 
 
 
-export default function Create({st,setSt,title}){
+export default function Create(){
     const {data,setData,errors,post} = useForm({
-        title:"",
-        slug:"",
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
     });
 
     const handleChange = (e) => setData({ ...data, [e.target.name]: e.target.value });
 
-    function handleSubmit(e){
+    function handleSubmit(e,{onSuccess}){
         e.preventDefault()
         post(route('admin.contact.store'),{
             data,
-            onSuccess:()=>{setSt(false)},
+            onSuccess,
         });
     }
 
     return (
-        <CreateModal title={`Create New Contact`} st={st} setSt={setSt} onSubmit={handleSubmit} >
+        <EditModal id="create-table-item-modal" title="Create New Contact" onSubmit={handleSubmit} >
             <form className='w-full max-w-lg'
                 onSubmit={handleSubmit}>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-name">
-                            Name
-                        </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-name" type="text"
-                            onChange={handleChange} value={data.title} name="name"/>
-                        { errors.name && <p className="text-red-500 text-xs italic">{ errors.name }</p> }
-                    </div>
-                    <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-slug">
-                            Slug
-                        </label>
-                        <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-slug" type="text"
-                            onChange={handleChange} value={data.slug} name="slug"/>
-                        { errors.slug && <p className="text-red-500 text-xs italic">{ errors.slug }</p> }
-                    </div>
+                    <InputBlock
+                        label="Name"
+                        name="name"
+                        value={data.name}
+                        onChange={handleChange}
+                        error={errors.name}
+                        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                        />
+                    <InputBlock
+                        label="Email"
+                        name="email"
+                        value={data.email}
+                        onChange={handleChange}
+                        error={errors.email}
+                        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                        />
+                    <InputBlock
+                        label="Subject"
+                        name="subject"
+                        value={data.subject}
+                        onChange={handleChange}
+                        error={errors.subject}
+                        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                        />
+                    <InputBlock
+                        label="Message"
+                        name="message"
+                        value={data.message}
+                        onChange={handleChange}
+                        error={errors.message}
+                        className="w-full md:w-1/2 px-3 mb-6 md:mb-0"
+                        >
+
+                    </InputBlock>
                 </div>
             </form>
-        </CreateModal>
+        </EditModal>
     );
 }

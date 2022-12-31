@@ -33,7 +33,12 @@ class PermissionController extends Controller
     {
         $permissions = (new Permission)->newQuery();
         $permissions->filter($filter);
-        $permissions = $permissions->paginate(5)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $permissions = $permissions->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $permissions = $permissions->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('Permission/Index', [
             'permissions' => IndexPermissionResource::collection($permissions),
             'can' => [
@@ -41,7 +46,7 @@ class PermissionController extends Controller
                 'edit' => Auth::user()->can('permission edit'),
                 'delete' => Auth::user()->can('permission delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

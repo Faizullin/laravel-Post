@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Filters\PostFilter;
+use App\Http\Filters\Dashboard\CommentFilter;
+use App\Http\Filters\Dashboard\PostFilter;
 use App\Http\Resources\Comment\IndexCommentResource;
 use App\Http\Resources\Post\IndexPostResource;
+use App\Http\Resources\User\IndexUserDashboardResource;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 
@@ -19,50 +21,64 @@ class DashboardController extends Controller
     public function index()
     {
         return Inertia::render('Dashboard/Index', [
-            'user' => Auth::user(),
+            'user' => new IndexUserDashboardResource(Auth::user()),
         ]);
     }
 
-    public function post(Request $request, PostFilter $filter)
+    public function post(PostFilter $filter)
     {
-        $posts = Auth::user()->posts();
+        $user = Auth::user();
+        $posts = $user->posts();
+
         $posts->filter($filter);
-        if ($request->has("per_page")) {
-            $posts = $posts->paginate($request->input("per_page"))->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+
+            $posts = $posts->paginate($appliedFilters['per_page'])->appends(request()->query());
         } else {
-            $posts = $posts->paginate(2)->onEachSide(2)->appends(request()->query());
+            $posts = $posts->paginate(1)->appends(request()->query());
         }
-
-
         return Inertia::render('Dashboard/Post/Index', [
             'posts' => IndexPostResource::collection($posts),
-            'user' => Auth::user(),
+            'user' => new IndexUserDashboardResource(Auth::user()),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 
-    public function comment(Request $request)
+    public function comment(CommentFilter $filter)
     {
-        $comments = Auth::user()->comments();
-        //$comments->filter($filter);
-        if ($request->has("per_page")) {
-            $comments = $comments->paginate($request->input("per_page"))->onEachSide(2)->appends(request()->query());
+        $user = Auth::user();
+        $comments = $user->comments();
+        $comments->filter($filter);
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $comments = $comments->paginate($appliedFilters['per_page'])->appends(request()->query());
         } else {
-            $comments = $comments->paginate(2)->onEachSide(2)->appends(request()->query());
+            $comments = $comments->paginate(1)->appends(request()->query());
         }
-
-
         return Inertia::render('Dashboard/Comment/Index', [
             'comments' => IndexCommentResource::collection($comments),
-            'user' => Auth::user(),
+            'user' => new IndexUserDashboardResource(Auth::user()),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 
-    public function favouritePost()
+    public function favouritePost(PostFilter $filter)
     {
-        $posts = Auth::user()->posts;
-        return Inertia::render('Dashboard/Index', [
+
+        $user = Auth::user();
+        $posts = $user->likedPosts();
+        $posts->filter($filter);
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $posts = $posts->paginate($appliedFilters['per_page'])->onEachSide(1)->appends(request()->query());
+        } else {
+            $posts = $posts->paginate(1)->onEachSide(1)->appends(request()->query());
+        }
+        return Inertia::render('Dashboard/FavouritePost/Index', [
             'posts' => IndexPostResource::collection($posts),
-            'user' => Auth::user(),
+            'user' => new IndexUserDashboardResource(Auth::user()),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 }

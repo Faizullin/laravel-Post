@@ -2,9 +2,9 @@ import { useForm, usePage } from '@inertiajs/inertia-react';
 import { EditModal } from "../../Components/Dialog/TableEditModal";
 
 import InputBlock from "../../Components/Form/InputBlock";
-import MultiSelect from '../../Components/Form/MultiSelect';
+import { Multiselect } from 'react-widgets';
 
-const Create = ({}) => {
+const Create = () => {
     const { permissions } = usePage().props
     const {data,setData,errors,post} = useForm({
         name: "",
@@ -57,7 +57,7 @@ const Create = ({}) => {
                         onChange={handleChange}
                         error={errors.slug}
                         className="w-full px-3">
-                        <MultiSelect
+                        <Multiselect
                             id="input-permissions"
                             dataKey="id"
                             textField="name"

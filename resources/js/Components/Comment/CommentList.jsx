@@ -1,4 +1,4 @@
-import apiPost from '@/services/apiPost';
+import apiPost from '@/services/apiClient';
 import { useState,useEffect } from 'react';
 import CommentCreateForm from './CommentCreateForm';
 import CommentEditModalForm from './CommentEditModalForm';

@@ -1,12 +1,12 @@
 import CreateModal from './Create'
 import EditModal from './Edit';
 import { DeleteConfirmModal } from '../../Components/Dialog/TableEditModal';
-import TableLayout from '../../Layouts/TableLayout';
+import TableModalLayout from '../../Layouts/TableModalLayout';
 
 
-export default function Index({tags,filters}) {
+export default function Index({tags}) {
     return (
-        <TableLayout
+        <TableModalLayout
             wrap="tag"
             fetchUrls={{
                 get:route(`admin.tag.index`),
@@ -25,6 +25,8 @@ export default function Index({tags,filters}) {
             CreateModal={CreateModal}
             EditModal={EditModal}
             DeleteConfirmModal={DeleteConfirmModal}
+            title="Tag"
+            breadcrumbLinks={[{label:"Tag"}]}
         />
     )
 }

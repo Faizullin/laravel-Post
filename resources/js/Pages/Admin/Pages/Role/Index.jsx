@@ -1,16 +1,12 @@
 import CreateModal from './Create'
 import EditModal from './Edit';
 import { DeleteConfirmModal } from '../../Components/Dialog/TableEditModal';
-import TableLayout from '../../Layouts/TableLayout';
-import { useEffect } from 'react';
+import TableModalLayout from '../../Layouts/TableModalLayout';
 
 
-export default function Index({roles,filters}) {
-    useEffect(()=>{
-        console.log("Roles",roles,filters)
-    },[])
+export default function Index({roles}) {
     return (
-        <TableLayout
+        <TableModalLayout
             wrap="role"
             fetchUrls={{
                 get:route(`admin.role.index`),
@@ -28,6 +24,8 @@ export default function Index({roles,filters}) {
             CreateModal={CreateModal}
             EditModal={EditModal}
             DeleteConfirmModal={DeleteConfirmModal}
+            title="Role"
+            breadcrumbLinks={[{label:"Role"}]}
         />
     )
 }

@@ -6,29 +6,74 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use App\Http\Filters\AbstractFilter as OriginalAbastractFilter;
+use Illuminate\Http\Response;
 
-abstract class AbstractFilter
+abstract class AbstractFilter extends OriginalAbastractFilter
 {
     /**
-     * @var Request
+     * Column names are alphanumeric strings that can contain
+     * underscores (`_`) but can't start with a number.
      */
-    protected $request;
+    private const VALID_COLUMN_NAME_REGEX = '/^(?![\d])[A-Za-z0-9_>-]*$/';
+
+    public $appliedFilters = [
+        'per_page' => 1,
+    ];
 
     /**
-     * @var Builder
+     * Filter constructor.
+     *
+     * @param Request|null $request
      */
-    protected $builder;
-
-
-
-    protected $acceptedFilters = [];
-
-    /**
-     * @param Request $request
-     */
-    public function __construct(Request $request)
+    public function __construct(Request $request = null)
     {
-        $this->request = $request;
+        $this->request = $request ?? request();
+
+        $this->input = [
+            'filters' => $this->request->collect('filter')
+                ->map(fn ($item) => $this->parseHttpValue($item))
+                ->filter(fn ($item) => $item !== null),
+            'sorts' => [
+                'column' => $this->request->get('sort_field', ''),
+                'order' => $this->request->get('sort_order', ''),
+            ],
+        ];
+        foreach ($this->request->except(['filter','sort_field','sort_order']) as $column => $value) {
+            if(array_key_exists($column,$this->appliedFilters)) {
+                $this->appliedFilters[$column] = $value;
+            }
+        }
+    }
+
+    /**
+     * @param string|null|array $query
+     *
+     * @return string|array|null
+     */
+    protected function parseHttpValue($query)
+    {
+        if (is_string($query)) {
+            $item = explode(',', $query);
+
+            if (count($item) > 1) {
+                return $item;
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param string $column
+     *
+     * @return string
+     */
+    public static function sanitize(string $column): string
+    {
+        abort_unless(preg_match(self::VALID_COLUMN_NAME_REGEX, $column), Response::HTTP_BAD_REQUEST);
+
+        return $column;
     }
 
     /**
@@ -37,82 +82,7 @@ abstract class AbstractFilter
     public function apply(Builder $builder)
     {
         $this->builder = $builder;
-        $fields = $this->fields();
-        $this->acceptedFilters = $fields;
-        if(array_key_exists("filter",$fields)){
-            foreach ($fields["filter"] as $field => $value) {
-                if (method_exists($this, Str::camel($field).'Filter')) {
-                    call_user_func_array([$this, Str::camel($field).'Filter'],[ $value]);
-                } elseif(in_array($field,$this->filterable)) {
-                    $this->basicFilter($field,$value);
-                }
-            }
-        }
-        if(array_key_exists("sort",$fields)){
-            $field = $fields["sort"];
-            $direction="ASC";
-            if(Str::startsWith($field,"-")){
-                $field = Str::substr($field,1);
-                $direction="DESC";
-            }
-            if(!empty($field)){
-                if(method_exists($this, Str::camel($field).'Sort')){
-                    call_user_func_array([$this, Str::camel($field).'Sort'],[$direction]);
-                } elseif (in_array($field,$this->sortable)) {
-                    $this->basicSort($field,$direction);
-                }
-            }
-        }
-    }
-
-    /**
-     * @return array
-     */
-
-    public function getFilters()
-    {
-        return $this->acceptedFilters;
-    }
-
-    protected function fields(): array
-    {
-        $r = $this->request->only(['sort','filter']);
-        $res = [];
-
-        if(array_key_exists("filter",$r) && $r["filter"]){
-            if(is_array($r["filter"]) || is_object($r["filter"])){
-                $res['filter'] = array_filter(
-                    array_map('trim', $r['filter']),
-                );
-            }
-        }
-        $res = array_merge($res,array_filter(
-            array_map('trim', Arr::except($r,'filter'))
-        ));
-
-        return $res;
-    }
-
-
-    public function basicSort($column,$direction)
-    {
-        $this->builder->orderBy($column,$direction);
-    }
-
-
-    public function basicFilter($column,$value)
-    {
-        $this->builder->where($column,"LIKE","%".$value."%");
-    }
-
-
-    public function configPagination($label='page')
-    {
-        // if(array_key_exists($label,$this->acceptedFilters) && array_key_exists('filter',$this->acceptedFilters)){
-        //     if($length < $this->acceptedFilters[$label]){
-        //         unset($this->acceptedFilters[$label]);
-        //     }
-        // }
-        return $this;
+        $this->filterQuery();
+        $this->sortQuery();
     }
 }

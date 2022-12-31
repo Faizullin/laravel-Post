@@ -36,7 +36,12 @@ class UserController extends Controller
     {
         $users = (new User)->newQuery();
         $users->filter($filter);
-        $users = $users->paginate(2)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $users = $users->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $users = $users->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('User/Index', [
             'users' => IndexUserResource::collection($users),
             'roles'=>RoleMinResource::collection(Role::all()),
@@ -45,7 +50,7 @@ class UserController extends Controller
                 'edit' => Auth::user()->can('user edit'),
                 'delete' => Auth::user()->can('user delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

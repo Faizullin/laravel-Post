@@ -7,8 +7,17 @@ import { usePage } from "@inertiajs/inertia-react";
 import { useEffect } from "react";
 
 
+const FlashMessage = ({className}) => {
+    return (
+        <div className={`message ${className}`}><div className="message-body">{ children }</div></div>
+    )
+}
+
+
 export default function Layout({children}){
-    const { auth, props: flash } = usePage().props;
+    const { auth } = usePage().props;
+    const flash = usePage().props.flash || null
+    console.log("Props",usePage().props)
     useEffect(() => {
         AOS.init({
             duration: 1000,
@@ -22,9 +31,24 @@ export default function Layout({children}){
             <Header>
                 <Navbar auth={auth}/>
             </Header>
-            {/* { flash.error !== null && <div className='message is-danger'><div className="message-body">{ flash.error}</div></div>}
-            { flash.warning !== null && <div className='message is-warning'><div className="message-body">{ flash.warning}</div></div>}
-            { flash.success !== null && <div className='message is-success'><div className="message-body">{ flash.success}</div></div>} */}
+            <div id="flash-message">
+                { flash?.error &&
+                    <FlashMessage className="is-danger">
+                        { flash.error }
+                    </FlashMessage>
+                }
+                { flash?.warning &&
+                    <FlashMessage className="is-warning">
+                        { flash.warning }
+                    </FlashMessage>
+                }
+                { flash?.success  &&
+                    <FlashMessage className="is-success">
+                        { flash.success }
+                    </FlashMessage>
+                }
+            </div>
+
             {children}
             <Footer />
         </>

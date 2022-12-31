@@ -1,4 +1,4 @@
-import NiceModal from "@ebay/nice-modal-react";
+import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { debounce } from "lodash";
@@ -8,23 +8,27 @@ import GlobalFilter from "../Components/Table/GlobalFilter";
 import apiClient from "../services/apiClient";
 import Layout from "./Layout";
 import Pagination from "../Components/Table/Pagination";
+import Breadcrumb from "../Components/Dashboard/Breadcrumb";
+import HeroBar from "../Components/Dashboard/HeroBar";
 
 const SORT_ASC = "asc"
 const SORT_DESC = "desc"
 const perPageList = [1,10,20,50];
 
-export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,DeleteConfirmModal,columns,wrap,items}) {
-	const {filters:appliedFilters} = usePage().props
+export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title}) {
+	const {appliedFilters} = usePage().props
     const {data} = items
 
     const [editItem,setEditItem] = useState({})
     const [perPage, setPerPage] = useState(appliedFilters.per_page || perPageList[0])
-    const [sortColumn, setSortColumn] = useState(appliedFilters.sort_field || columns[0].name)
-    const [sortOrder, setSortOrder] = useState(appliedFilters.sort_order || "asc")
-    const [search, setSearch] = useState(appliedFilters.search || "")
+    const [sortColumn, setSortColumn] = useState(appliedFilters.sorts?.column || columns[0].name)
+    const [sortOrder, setSortOrder] = useState(appliedFilters.sorts?.order || "asc")
+    const [search, setSearch] = useState(appliedFilters.filters?.search || "")
     const [currentPage, setCurrentPage] = useState(1)
 
     const [loading, setLoading] = useState(true)
+
+    const delete_modal = useModal("deleteConfirm-table-item-modal")
 
     const handleSort = (column) => {
         if (column.name === sortColumn) {
@@ -50,7 +54,9 @@ export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,Delet
 
     const fetchData = () => {
         const params = {
-            search,
+            filter:{
+                search,
+            },
             sort_field: sortColumn,
             sort_order: sortOrder,
             per_page: perPage,
@@ -85,10 +91,12 @@ export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,Delet
         NiceModal.show("create-table-item-modal")
     }
     const handleDestroyClick = (item_id) => {
-        NiceModal.show("deleteConfirm-table-item-modal",{
+
+        delete_modal.show({
             onConfirm: () => {
-                Inertia.delete(fetchUrls.delete(item_id),item_id);
-                console.log(this)
+                Inertia.delete(fetchUrls.delete(item_id),{
+                    onSuccess: () => delete_modal.hide()
+                });
             }
         })
     }
@@ -107,10 +115,12 @@ export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,Delet
     },[])
 
     return (
-        <Layout linkTitle="s">
+        <Layout>
             <CreateModal />
             <EditModal item={editItem} />
             <DeleteConfirmModal id="deleteConfirm-table-item-modal"/>
+            <Breadcrumb links={breadcrumbLinks}/>
+            <HeroBar title={title}/>
             <section className="section main-section">
                 <div className="card has-table">
                     <header className="card-header">

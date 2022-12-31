@@ -27,8 +27,8 @@ class IndexPostResource extends JsonResource
             'tags' => TagMinResource::collection($this->tags),
             "comments_count" => $this->comments_count,
             "imageUrl" => $this->imageUrl,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->format('d M, Y'),
+            'updated_at' => $this->updated_at->format('d M, Y'),
         ];
     }
 }

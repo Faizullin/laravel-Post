@@ -1,5 +1,5 @@
-import { useForm } from "@inertiajs/inertia-react"
-import { useEffect } from "react";
+import Breadcrumb from "../../Components/Dashboard/Breadcrumb";
+import HeroBar from "../../Components/Dashboard/HeroBar";
 import Layout from "../../Layouts/Layout";
 import EditPasswordForm from "./EditPasswordForm";
 import EditProfileForm from "./EditProfileForm";
@@ -7,7 +7,9 @@ import EditProfileForm from "./EditProfileForm";
 export default function Profile(props){
     const { user } = props.auth;
     return (
-        <Layout linkTitle="Profile">
+        <Layout>
+            <Breadcrumb links={[{label:"Profile"}]}/>
+            <HeroBar title="Profile"/>
             <section className="section main-section">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-6">
                     <div className="card">

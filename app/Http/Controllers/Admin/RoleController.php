@@ -30,11 +30,16 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request,RoleFilter $filter)
+    public function index(RoleFilter $filter)
     {
         $roles = (new Role)->newQuery();
         $roles->filter($filter);
-        $roles = $roles->paginate(2)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $roles = $roles->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $roles = $roles->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('Role/Index', [
             'roles' => IndexRoleResource::collection($roles),
             'permissions'=>Permission::all(),
@@ -43,7 +48,7 @@ class RoleController extends Controller
                 'edit' => Auth::user()->can('role edit'),
                 'delete' => Auth::user()->can('role delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

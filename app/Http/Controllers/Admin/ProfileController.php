@@ -45,7 +45,6 @@ class ProfileController extends Controller
             'name' => ['required', 'max:50','unique:users,name,'.$user->id],
             'email' => ['required', 'max:50','unique:users,email,'.$user->id ],
         ]);
-
         try {
             DB::beginTransaction();
             $user->update($data);

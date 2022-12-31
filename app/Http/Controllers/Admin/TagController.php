@@ -33,10 +33,11 @@ class TagController extends Controller
     {
         $tags = (new Tag)->newQuery();
         $tags->filter($filter);
-        if (array_key_exists('per_page',$filter->input) && in_array($filter->input['per_page'],['1','10','20','50'])) {
-            $tags = $tags->paginate($filter->input['per_page'])->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $tags = $tags->paginate($appliedFilters['per_page'])->appends(request()->query());
         } else {
-            $tags = $tags->paginate(1)->onEachSide(2)->appends(request()->query());
+            $tags = $tags->paginate(1)->appends(request()->query());
         }
         return Inertia::render('Tag/Index', [
             'tags' => IndexTagResource ::collection($tags),
@@ -45,7 +46,7 @@ class TagController extends Controller
                 'edit' => Auth::user()->can('tag edit'),
                 'delete' => Auth::user()->can('tag delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 
@@ -56,10 +57,6 @@ class TagController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Tag/Index', [
-            'editTag' => $tag,
-            'activeForm' => 'create',
-        ]);
     }
 
     /**

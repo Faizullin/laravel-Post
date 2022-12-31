@@ -70,4 +70,9 @@ class User extends Authenticatable
         //return Storage::url($this->image_path ? $this->image_path : 'img/unknown.jpg');
         return Storage::url($this->image_path ? $this->image_path : 'img/unknown.jpg');
     }
+
+    public function likedPosts()
+    {
+        return $this->getLikedItems(Post::class);
+    }
 }

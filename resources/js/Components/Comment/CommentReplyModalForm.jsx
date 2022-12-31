@@ -2,7 +2,7 @@ import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { Dialog, Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import { useForm, usePage } from "@inertiajs/inertia-react";
-import apiPost from "@/services/apiPost";
+import apiPost from "@/services/apiClient";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Fragment } from "react";
@@ -10,7 +10,7 @@ import { Fragment } from "react";
 
 export default function CommentReplyModalForm({show,setShow,title,createReplyParentId,reload}) {
     const [errors,setErrors] = useState({})
-    const {data,setData,post} = useForm({
+    const {data,setData,post,reset} = useForm({
         message:"",
         post_id:usePage().props.post.data.id,
         parent_id:null,
@@ -21,6 +21,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
         apiPost.post(route(`api.comment.storeReply`),{
             ...data
         }).then(response => {
+            reset();
             reload().then(response => {
                 setShow(false)
             })

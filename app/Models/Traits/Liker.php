@@ -69,4 +69,20 @@ trait Liker {
     {
         return $this->hasMany(Like::class);
     }
+
+    /**
+     * Get Query Builder for likes
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getLikedItems(string $model)
+    {
+        //dd($this->getKey());
+        return app($model)->whereHas(
+            'likers',
+            function ($query) {
+                return $query->where('user_id', $this->getKey());
+            }
+        );
+    }
 }

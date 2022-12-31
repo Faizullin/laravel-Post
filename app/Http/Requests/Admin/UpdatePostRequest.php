@@ -26,22 +26,19 @@ class UpdatePostRequest extends FormRequest
      */
     public function rules()
     {
-        $image_path_string = False;
-        if($this->has('image_path') && $this->input('image_path')){
-            if(is_string($this->input('image_path'))){
-                $image_path_string = True;
-                $this->request->remove('image_path');
-            }
+        $image_rules = ['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'];
+        if($this->image_path && is_string($this->image_path)) {
+            $image_rules = [];
         }
         return [
-            'title'=>['required','string','max:255','min:3','unique:posts,title,'.$this->id],
+            'title'=>['required','string','max:255','min:3','unique:posts,title,'.$this->post->id],
             'description'=>['required','string','max:255'],
             'body'=>['required','string'],
             'category'=>['required','integer','exists:categories,id'],
             'user'=>['required','integer','exists:users,id'],
             'tags'=>['nullable','array'],
             'tags.*'=>['integer','exists:tags,id'],
-            'image_path'=> ['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'],
+            'image_path'=>  $image_rules,
         ];
     }
 }

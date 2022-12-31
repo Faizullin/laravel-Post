@@ -30,8 +30,8 @@ class ShowPostResource extends JsonResource
             'likes_count' => $this->likers()->count(),
             'isLikedByCurrentUser' => auth()->user() ? $this->isLikedBy(auth()->user()) : false,
             'imageUrl' => $this->imageUrl,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->format('d M, Y'),
+            'updated_at' => $this->updated_at->format('d M, Y'),
         ];
     }
 }

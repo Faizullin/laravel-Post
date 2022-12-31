@@ -6,7 +6,8 @@ import Breadcrumb from "@/Components/Breadcrumb";
 import CommentList from "@/Components/Comment/CommentList";
 
 import { HeartIcon } from "@heroicons/react/24/solid";
-import apiPost from "@/services/apiPost";
+import apiClient from "@/services/apiClient";
+import DOMPurify from "dompurify";
 
 export default function Index({post,errors,auth}){
     post = post.data;
@@ -17,10 +18,9 @@ export default function Index({post,errors,auth}){
 
 
     const getIsLiked = () => {
-        apiPost.post(route(`api.like.store`) ,{
+        apiClient.post(route(`api.like.store`) ,{
             post:post.id,
         }).then(response => {
-            console.log("E",response)
             if(response.data.type === 'like') {
                 setIsLikedByCurrentUser(response.data.status);
                 setCount(response.data.count)
@@ -71,9 +71,11 @@ export default function Index({post,errors,auth}){
                                     </ul>
                                 </div>
 
-                                <div className="content">
-                                    { post.body }
-                                </div>
+                                <div className="content" dangerouslySetInnerHTML={{
+                                    __html: DOMPurify.sanitize(post.body, {
+                                        USE_PROFILES: { html: true }
+                                    } ),
+                                }} />
 
                                 <div className="meta-bottom">
                                     <i className="bi bi-folder"></i>

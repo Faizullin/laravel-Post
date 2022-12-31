@@ -30,7 +30,7 @@ export default function Navbar(){
             dropdownIcon.classList.toggle('mdi-minus');
         }
     }
-    
+
     return (
         <nav id="navbar-main" className="navbar is-fixed-top">
             <div className="navbar-brand">
@@ -48,25 +48,21 @@ export default function Navbar(){
             </div>
             <div className="navbar-menu" id="navbar-menu">
                 <div className="navbar-end">
-                    <DropDown className="navbar-item dropdown has-divider"
+                    <DropDown className="navbar-item dropdown has-divider has-user-avatar"
                         onClick={handleDropdownClick}>
                         <a className="navbar-link">
-                        <span className="icon"><i className="mdi mdi-menu"></i></span>
-                        <span>Sample Menu</span>
-                        <span className="icon">
-                            <i className="mdi mdi-chevron-down"></i>
-                        </span>
+                            <div className="user-avatar">
+                                <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" className="rounded-full"/>
+                            </div>
+                            <div className="is-user-name"><span>{ user.name }</span></div>
+                            <span className="icon"><i className="mdi mdi-chevron-down"></i></span>
                         </a>
                         <div className="navbar-dropdown">
                             <Link href={route('admin.profile.index')} className="navbar-item">
                                 <span className="icon"><i className="mdi mdi-account"></i></span>
                                 <span>My Profile</span>
                             </Link>
-                            <Link className="navbar-item">
-                                <span className="icon"><i className="mdi mdi-settings"></i></span>
-                                <span>Settings</span>
-                            </Link>
-                            <Link className="navbar-item">
+                            <Link href={route('admin.contact.index')} className="navbar-item">
                                 <span className="icon"><i className="mdi mdi-email"></i></span>
                                 <span>Messages</span>
                             </Link>
@@ -78,42 +74,9 @@ export default function Navbar(){
                             </Link>
                         </div>
                     </DropDown>
-                    <DropDown className="navbar-item dropdown has-divider has-user-avatar">
-                        <a className="navbar-link">
-                            <div className="user-avatar">
-                                <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" className="rounded-full"/>
-                            </div>
-                            <div className="is-user-name"><span>{ user.name }</span></div>
-                            <span className="icon"><i className="mdi mdi-chevron-down"></i></span>
-                        </a>
-                        <div className="navbar-dropdown">
-                        <Link href={ route('admin.profile.index') } className="navbar-item --set-active-profile-html">
-                            <span className="icon"><i className="mdi mdi-account"></i></span>
-                            <span>My Profile</span>
-                        </Link>
-                        <Link className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-settings"></i></span>
-                            <span>Settings</span>
-                        </Link>
-                        <Link className="navbar-item">
-                            <span className="icon"><i className="mdi mdi-email"></i></span>
-                            <span>Messages</span>
-                        </Link>
-                        <hr className="navbar-divider"/>
-                        <Link className="navbar-item"
-                            method="post" href={route('logout')} as="button">
-                            <span className="icon"><i className="mdi mdi-logout"></i></span>
-                            <span>Log Out</span>
-                        </Link>
-                        </div>
-                    </DropDown>
                     <Link href="https://github.com/Faizullin/laravel-Post" className="navbar-item has-divider desktop-icon-only">
                         <span className="icon"><i className="mdi mdi-github-circle"></i></span>
                         <span>GitHub</span>
-                    </Link>
-                    <Link title="Log out" className="navbar-item desktop-icon-only" href={ route('logout') }>
-                        <span className="icon"><i className="mdi mdi-logout"></i></span>
-                        <span>Log out</span>
                     </Link>
                 </div>
             </div>

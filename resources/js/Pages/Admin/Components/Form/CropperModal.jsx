@@ -10,7 +10,7 @@ export default function CropperModal({children,open,setOpen,title,onSubmit}){
         setOpen(true);
     }
     return (
-        <Transition appear show={st} as={Fragment}>
+        <Transition appear show={open} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={handleClose}>
                 <Transition.Child
                     as={Fragment}

@@ -33,7 +33,12 @@ class CategoryController extends Controller
     {
         $categories = (new Category)->newQuery();
         $categories->filter($filter);
-        $categories = $categories->paginate(2)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $categories = $categories->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $categories = $categories->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('Category/Index', [
             'categories' => IndexCategoryResource ::collection($categories),
             'can' => [
@@ -41,7 +46,7 @@ class CategoryController extends Controller
                 'edit' => Auth::user()->can('category edit'),
                 'delete' => Auth::user()->can('category delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

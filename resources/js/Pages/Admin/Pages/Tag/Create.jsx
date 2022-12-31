@@ -1,9 +1,8 @@
 import { useForm } from '@inertiajs/inertia-react';
 import { EditModal } from "../../Components/Dialog/TableEditModal";
-
 import InputBlock from "../../Components/Form/InputBlock";
 
-const Create = ({}) => {
+const Create = () => {
     const {data,setData,errors,post} = useForm({
         title: "",
         slug: "",

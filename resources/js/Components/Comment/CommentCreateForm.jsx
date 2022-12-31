@@ -1,11 +1,11 @@
 import { useForm, usePage } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
-import apiPost from "@/services/apiPost";
+import apiPost from "@/services/apiClient";
 
 
 export default function CommentCreateForm({reload}) {
 	const [errors,setErrors] = useState({})
-    const {data,setData} = useForm({
+    const {data,setData,reset} = useForm({
         message:"",
         post_id:usePage().props.post.data.id,
         parent_id:null,
@@ -16,6 +16,7 @@ export default function CommentCreateForm({reload}) {
         apiPost.post(route(`api.comment.store`),{
             ...data
         }).then(response => {
+            reset();
             reload();
         }).catch(error => {
             console.log("Error",error)

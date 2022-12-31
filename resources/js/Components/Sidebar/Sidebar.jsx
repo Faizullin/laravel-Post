@@ -1,9 +1,10 @@
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { FunnelIcon, MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/inertia-react"
-import { Fragment, useState } from "react";
 import MobileSidebar from "./MobileSidebar";
 import SearchInput from "./SearchInput";
+import Img1 from "../../../img/blog/blog-recent-1.jpg"
+
 
 const sortOptions = [
 
@@ -72,6 +73,9 @@ const Sidebar = ({open,setOpen}) => {
     const props = usePage().props;
     const {data:categories} = props.categories;
     const {data:tags} = props.tags;
+    const {data:recentPosts} = props.recentPosts;
+
+    console.log("img",Img1)
 
 
     return (
@@ -101,14 +105,30 @@ const Sidebar = ({open,setOpen}) => {
 
                         <div className="mt-3">
 
-                            <div className="post-item mt-3">
-                            <img src="assets/img/blog/blog-recent-1.jpg" alt=""/>
+                            {/* <div className="post-item mt-3">
+                            <img src={ Img1 } alt=""/>
                             <div>
                                 <h4><a href="blog-details.html">Nihil blanditiis at in nihil autem</a></h4>
                                 <time dateTime="2020-01-01">Jan 1, 2020</time>
                             </div>
-                            </div>
+                            </div> */}
 
+                            { recentPosts.map((recentPost,index) => (
+                                <div key={recentPost.id}
+                                    className="post-item">
+                                    <img src={recentPost.imageUrl} alt="" className="max-h-[60px]"/>
+                                    <div>
+                                        <h4>
+                                            <Link href={route(`post.show`,recentPost)}>
+                                                { recentPost.description }
+                                            </Link>
+                                        </h4>
+                                        <time dateTime="2020-01-01">{ recentPost.created_at }</time>
+                                    </div>
+                                </div>
+                            )) }
+
+{/*
                             <div className="post-item">
                             <img src="assets/img/blog/blog-recent-2.jpg" alt=""/>
                             <div>
@@ -125,6 +145,8 @@ const Sidebar = ({open,setOpen}) => {
                             </div>
                             </div>
 
+
+
                             <div className="post-item">
                             <img src="assets/img/blog/blog-recent-4.jpg" alt=""/>
                             <div>
@@ -139,7 +161,7 @@ const Sidebar = ({open,setOpen}) => {
                                 <h4><a href="blog-details.html">Et dolores corrupti quae illo quod dolor</a></h4>
                                 <time dateTime="2020-01-01">Jan 1, 2020</time>
                             </div>
-                            </div>
+                            </div> */}
 
                         </div>
 

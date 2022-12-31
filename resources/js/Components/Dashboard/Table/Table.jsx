@@ -1,176 +1,239 @@
-import { Inertia } from "@inertiajs/inertia"
-import { debounce } from "lodash"
-import { useRef, useState, useEffect } from "react"
-import Pagination from "./Pagination"
+import { useModal } from "@ebay/nice-modal-react";
+import { Inertia } from "@inertiajs/inertia";
+import { Link, usePage } from "@inertiajs/inertia-react";
+import { debounce } from "lodash";
+import { useEffect, useRef, useState } from "react";
+import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
+import Pagination from "./Pagination";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 
 const SORT_ASC = "asc"
 const SORT_DESC = "desc"
+const perPageList = [1,10,20,50];
 
-const Table = ({ columns, fetchUrl, wrap }) => {
-    const [data, setData] = useState([])
-    const [perPage, setPerPage] = useState(10)
-    const [sortColumn, setSortColumn] = useState(columns[0])
-    const [sortOrder, setSortOrder] = useState("asc")
-    const [search, setSearch] = useState("")
-    const [pagination, setPagination] = useState({})
+export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title}) {
+	const {appliedFilters} = usePage().props
+    const {data} = items
+
+    const [perPage, setPerPage] = useState(appliedFilters.per_page || perPageList[0])
+    const [sortColumn, setSortColumn] = useState(appliedFilters.sort_field || columns[0].name)
+    const [sortOrder, setSortOrder] = useState(appliedFilters.sort_order || "asc")
     const [currentPage, setCurrentPage] = useState(1)
 
     const [loading, setLoading] = useState(true)
 
+    const delete_modal = useModal("deleteConfirm-table-item-modal")
+
     const handleSort = (column) => {
-        if (column === sortColumn) {
+        if (column.name === sortColumn) {
             sortOrder === SORT_ASC ? setSortOrder(SORT_DESC) : setSortOrder(SORT_ASC)
         } else {
-            setSortColumn(column)
+            setSortColumn(column.name)
             setSortOrder(SORT_ASC)
         }
     }
-
-    const handleSearch = useRef(
-        debounce((query) => {
-            setSearch(query)
-            setCurrentPage(1)
-            setSortOrder(SORT_ASC)
-            setSortColumn(columns[0])
-        }, 500)
-    ).current
 
     const handlePerPage = (perPage) => {
         setCurrentPage(1)
         setPerPage(perPage)
     }
 
-    const loaderStyle = { width: "4rem", height: "4rem" }
     const fetchData = () => {
-        setLoading(true);
-        Inertia.get(fetchUrl || route(route().current()), {
-            filter:{
-                search
-            },
+        const params = {
             sort_field: sortColumn,
             sort_order: sortOrder,
             per_page: perPage,
             page: currentPage,
-        }, {
+        }
+        setLoading(true);
+        Inertia.get(fetchUrls.get || route(route().current()), params, {
             preserveState: true,
             replace: true,
-            only:["posts"],
             onSuccess: response => {
-
-                const items = response.props[wrap];
-                setData(items.data)
-                setPagination(items.meta)
-                console.log("Page:",response)
-                setLoading(false)
+	            setTimeout(() => {
+	                setLoading(false)
+	            }, 300)
             },
         });
-        // Inertia.get(fetchUrl, { params }).then(response => {
-        //     setData(response.data.data)
-        //     setPagination(response.data.meta)
-        //     setTimeout(() => {
-        //         setLoading(false)
-        //     }, 300)
-        // })
-
     }
-    useEffect(() => {
-        fetchData();
-    }, [perPage, sortColumn, sortOrder, search, currentPage])
-    useEffect(() => {
-        console.log("data",data)
-    }, [data])
-    return (
-        <div>
-            <div className="row mb-3">
-                <div className="col-md-3">
-                    <div className="input-group">
-                        <input
-                            className="form-control"
-                            placeholder="Search..."
-                            type="search"
-                            onChange={(e) => handleSearch(e.target.value)}
-                        />
-                    </div>
-                </div>
-                <div className="col-md-2">
-                    <div className="input-group">
-                        <label className="mt-2 me-2">Per page</label>
-                        <select className="form-select" value={perPage} onChange={(e) => handlePerPage(e.target.value)}>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div className="tableFixHead">
-                <table className="table table-hover">
-                    <thead className="table-dark">
-                        <tr>
-                            {columns.map((column) => {
-                                return (
-                                    <th key={column} onClick={(e) => handleSort(column)}>
-                                        {column.toUpperCase().replace("_", " ")}
-                                        {column === sortColumn ? (
-                                            <span>
-                                                {sortOrder === SORT_ASC ? (
-                                                    <i className="ms-1 fa fa-arrow-up" aria-hidden="true"></i>
-                                                ) : (
-                                                    <i className="ms-1 fa fa-arrow-down" aria-hidden="true"></i>
-                                                )}
-                                            </span>
-                                        ) : null}
-                                    </th>
-                                )
-                            })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {data.length === 0 ? (
-                            <tr>
-                                <td colSpan={columns.length}>No items found</td>
-                            </tr>
-                        ) : (
-                            ""
-                        )}
 
-                        {!loading ? (
-                            data.map((d, index) => {
-                                return (
-                                    <tr key={index}>
-                                        {columns.map((column) => {
-                                            return <td key={column}>{d[column]}</td>
-                                        })}
+
+    const handleDestroyClick = (item_id) => {
+        delete_modal.show({
+            onConfirm: () => {
+                Inertia.delete(fetchUrls.delete(item_id),{
+                    onSuccess: () => delete_modal.hide()
+                });
+            }
+        })
+    }
+
+    useDidUpdateEffect(() => {
+        fetchData();
+    }, [perPage, sortColumn, sortOrder, currentPage])
+
+    useEffect(function() {
+        console.log(appliedFilters)
+        setLoading(false);
+    },[])
+
+    return (
+        <>
+            <DeleteConfirmModal id="deleteConfirm-table-item-modal"/>
+            <section className="section main-section">
+                <div className="card has-table">
+                    <header className="card-header">
+                        <p className="card-header-title">
+                            <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
+                            Tags
+                        </p>
+                        <Link
+                            className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
+                            href={fetchUrls.create}>
+                            Create New {title}
+                        </Link>
+                        <Link href="#" className="card-header-icon">
+                            <span className="icon"><i className="mdi mdi-reload"></i></span>
+                        </Link>
+                    </header>
+                    <div className="card-content">
+                    	<div className="lg:w-full mt-3">
+                            <label className="m-2">Per page</label>
+                            <select className="form-select"
+                                value={perPage} onChange={(e) => handlePerPage(e.target.value)}>
+                                { perPageList.map((perPageItem,index) => (
+                                    <option key={index} value={perPageItem}>{perPageItem}</option>
+                                ))}
+                            </select>
+		                </div>
+                        <table>
+                            <thead>
+                                <tr>
+		                            { columns.map((column,index) => {
+		                                return (
+		                                    <th key={index}>
+                                                <span className="flex items-center">
+                                                    { column.label }
+                                                    { column.sortable ?
+                                                        column.name === sortColumn ? (
+
+                                                                sortOrder === SORT_ASC ? (
+                                                                    <ChevronDownIcon className="ms-1 w-6 h-6"
+                                                                        onClick={(e) => handleSort(column)}/>
+                                                                ) : (
+                                                                    <ChevronUpIcon className="ms-1 w-6 h-6"
+                                                                        onClick={(e) => handleSort(column)}/>
+                                                                )
+
+                                                        ) : (
+                                                            <ChevronDownIcon className="ms-1 w-6 h-6"
+                                                                onClick={(e) => handleSort(column)}/>
+                                                        )
+                                                    : ""}
+                                                 </span>
+		                                    </th>
+		                                )
+		                            }) }
+		                            <th>Actions</th>
+		                        </tr>
+                            </thead>
+                            <tbody>
+                                { data.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={columns.length}>No items found</td>
                                     </tr>
-                                )
-                            })
-                        ) : (
-                            <tr>
-                                <td colSpan={columns.length + 1}>
-                                    <div className="d-flex justify-content-center">
-                                        <div className="spinner-border" style={loaderStyle} role="status">
-                                            <span className="sr-only">Loading...</span>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-            {data.length > 0 && !loading ? (
-                <div className="mt-2">
-                    <Pagination
-                        pagination={pagination}
-                        pageChanged={(page) => setCurrentPage(page)}
-                        totalItems={data.length}
-                    />
+                                ) : (
+                                    ""
+                                )}
+
+                                { (!loading) ?
+                                    data.map((d, indexCol) => {
+                                        return (
+                                            <tr key={`tr-${indexCol}`}>
+
+                                                { columns.map((column,index) => {
+                                                    if (column.render) {
+                                                        return (
+                                                            <column.render key={index} item={d}/>
+                                                         )
+                                                     } else if (column.type === "time") {
+                                                         return (
+                                                            <td key={index}>
+                                                                <small className="text-gray-500" title="Dec 30, 2021">{ d[column.name] }</small>
+                                                            </td>
+                                                         );
+                                                     }
+                                                     return (
+                                                        <td key={index}>{d[column.name]}</td>
+                                                     )
+                                                }) }
+                                                <td className="actions-cell">
+                                                    <div className="buttons right nowrap">
+                                                        <Link className="button small blue --jb-modal"  data-target="sample-modal-2" type="button"
+                                                            href={fetchUrls.edit(d.id)}>
+                                                            <span className="icon"><i className="mdi mdi-eye"></i></span>
+                                                        </Link>
+                                                        <button className="button small red --jb-modal" data-target="sample-modal" type="button"
+                                                            onClick={ (e) => handleDestroyClick(d.id) }>
+                                                            <span className="icon"><i className="mdi mdi-trash-can"></i></span>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )
+                                    } )
+                                 : (
+                                    <tr>
+                                        <td colSpan={columns.length + 1}>
+                                            <div className="d-flex justify-content-center">
+                                                <div className="spinner-border" role="status">
+                                                    <span className="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ) }
+                            </tbody>
+                        </table>
+
+                        {/* <style>
+                        html,
+                        body {
+                            height: 100%;
+                        }
+
+                        @media (min-width: 640px) {
+                            table {
+                            display: inline-table !important;
+                            }
+
+                            thead tr:not(:first-child) {
+                            display: none;
+                            }
+                        }
+
+                        td:not(:last-child) {
+                            border-bottom: 0;
+                        }
+
+                        th:not(:last-child) {
+                            border-bottom: 2px solid rgba(0, 0, 0, .1);
+                        }
+                        </style> */}
+
+                        { data.length > 0 && !loading ? (
+			                <div className="mt-2">
+			                    <Pagination
+			                        items={items}
+			                        onChange={(page) => setCurrentPage(page)}
+			                        // totalItems={data.length}
+			                    />
+			                </div>
+			            ) : null}
+
+                    </div>
                 </div>
-            ) : null}
-        </div>
+            </section>
+        </>
     )
 }
-
-
-export default Table;

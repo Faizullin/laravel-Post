@@ -30,6 +30,11 @@ class SearchController extends Controller
             'categories' => CategoryMinResource::collection(Category::all()),
             'posts' => IndexPostResource::collection($posts),
             'filters' => [],
+            'appliedFilters' => [
+                'filters' => [
+                    'search' => $keyword,
+                ]
+            ];
         ]);
     }
 }

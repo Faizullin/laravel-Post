@@ -26,25 +26,7 @@ import { Link } from "@inertiajs/inertia-react";
 export default function Index({user}) {
   return (
     <DashboardLayout>
-        {/* <style>
-            :root {
-                --main-color: #4a76a8;
-            }
-
-            .bg-main-color {
-                background-color: var(--main-color);
-            }
-
-            .text-main-color {
-                color: var(--main-color);
-            }
-
-            .border-main-color {
-                border-color: var(--main-color);
-            }
-        </style> */}
         <div className="bg-white p-3 shadow-sm rounded-sm">
-
             <div className="grid grid-cols-2">
                 <div>
                     <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3">

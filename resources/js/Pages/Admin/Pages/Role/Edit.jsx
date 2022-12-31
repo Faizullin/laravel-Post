@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { EditModal } from "../../Components/Dialog/TableEditModal";
 
 import InputBlock from "../../Components/Form/InputBlock";
-import MultiSelect from '../../Components/Form/MultiSelect';
+import { Multiselect } from 'react-widgets';
 
 const Edit = ({item:role}) => {
     const { permissions } = usePage().props
@@ -65,7 +65,7 @@ const Edit = ({item:role}) => {
                         onChange={handleChange}
                         error={errors.slug}
                         className="w-full px-3">
-                        <MultiSelect
+                        <Multiselect
                             id="input-permissions"
                             dataKey="id"
                             textField="name"

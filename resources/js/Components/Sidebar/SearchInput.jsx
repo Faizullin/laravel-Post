@@ -1,13 +1,15 @@
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { Inertia } from "@inertiajs/inertia";
-import { Link, usePage } from "@inertiajs/inertia-react";
-import { useEffect, useState } from "react";
+import { Link, useForm, usePage } from "@inertiajs/inertia-react";
+import { useState } from "react";
 
 
 export default function SearchInput(){
-    const { filters} = usePage().props;
-    const [value,setValue] = useState("");
+    const { appliedFilters } = usePage().props;
+    console.log(appliedFilters)
+    const {data,setData,post} = useForm({
+        keyword:""
+    });
     const [isResultOpen,setIsResultOpen] = useState(false)
     const [searchResult,setSearchResult] = useState({
         tags:[],posts:[],
@@ -16,7 +18,7 @@ export default function SearchInput(){
     const getSearchResult = () => {
         axios.get(route(`api.search`),{
             params:{
-                keyword:value,
+                keyword:data,
             }
         }).then(response=>{
             const {posts,tags} = response.data;
@@ -29,31 +31,30 @@ export default function SearchInput(){
         });
     }
 
-    const handleChange = (e) => setValue(e.target.value);
+    const handleChange = useDebouncedInput(function() {
+        setData(data => ({"keyword":e.target.data}));
+    },500)
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(value){
-            Inertia.post(route(`post.search`,{keyword:value}));
+        if(data){
+            post(route(`post.search`,{keyword:data.keyword}));
         }
 
     }
-    useEffect(()=>{
-        setValue(filters?.search || "")
-    },[]);
     useDidUpdateEffect(() => {
-        if(value){
+        if(data){
             getSearchResult();
         }else{
             setIsResultOpen(false);
         }
-    },[value])
+    },[data])
 
     return (
         <div className="sidebar-item search-form relative">
             <h3 className="sidebar-title">Search</h3>
             <form className="mt-3" onSubmit={handleSubmit}>
                 <input type="text"
-                    value={value} onChange={ handleChange } className="border-none focus:ring-0"/>
+                    value={data.keyword} onChange={ handleChange } className="border-none focus:ring-0"/>
                 <button type="submit">
                     <MagnifyingGlassIcon className=" text-white w-6 h-6"/>
                 </button>

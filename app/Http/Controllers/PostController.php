@@ -22,12 +22,6 @@ use Inertia\Inertia;
 class PostController extends Controller
 {
 
-    public function __construct()
-    {
-        //$this->middleware(['auth'], ['only' => ['create', 'store','edit','update','destroy']]);
-    }
-
-
     /**
      * Display a listing of the resource.
      *
@@ -37,12 +31,14 @@ class PostController extends Controller
     {
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
-        $posts = $posts->paginate(6)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        $posts = $posts->paginate(6)->appends(request()->query());
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
+            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
             'posts' => IndexPostResource::collection($posts),
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 
@@ -101,12 +97,15 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+    public function show(PostFilter $filter, Post $post)
     {
+        $appliedFilters = $filter->getAppliedFilters();
         return Inertia::render('Post/Show', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
             'post' => new ShowPostResource($post),
+            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

@@ -63,15 +63,15 @@ Route::group([
     Route::get("about",\Pages\AboutController::class)->name('pages.about');
 
     Route::group( ['controller' => 'DashboardController'],function(){
-        Route::get('dashboard','index')->name('dashboard.index');
-        Route::get('dashboard/post','post')->name('dashboard.post.index');
-        Route::get('dashboard/favourite-post','favouritePost')->name('dashboard.favouritePost.index');
-        Route::get('dashboard/comment','comment')->name('dashboard.comment.index');
+        Route::get('dashboard','index')->name('dashboard.index')->middleware(["auth"]);
+        Route::get('dashboard/post','post')->name('dashboard.post.index')->middleware(["auth"]);
+        Route::get('dashboard/favourite-post','favouritePost')->name('dashboard.favouritePost.index')->middleware(["auth"]);
+        Route::get('dashboard/comment','comment')->name('dashboard.comment.index')->middleware(["auth"]);
     });
     Route::group( ['controller' => 'ProfileController'],function(){
-        Route::get('dashboard/profile/edit','edit')->name('dashboard.profile.edit');
-        Route::patch('dashboard/profile','update')->name('dashboard.profile.update');
-        Route::patch('dashboard/profilePassword','updatePassword')->name('dashboard.profile.updateProfile');
+        Route::get('dashboard/profile/edit','edit')->name('dashboard.profile.edit')->middleware(["auth"]);
+        Route::patch('dashboard/profile','update')->name('dashboard.profile.update')->middleware(["auth"]);
+        Route::patch('dashboard/profilePassword','updatePassword')->name('dashboard.profile.updateProfile')->middleware(["auth"]);
     });
 
     Route::group(['prefix' => 'contact','controller'=>"Pages\ContactController"],function(){
@@ -92,13 +92,6 @@ Route::group([
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
 
     Route::match(array('GET', 'POST'),'search', 'SearchController')->name('post.search');
-
-    Route::group(["prefix" => 'comment','controller'=>"CommentController"],function(){
-        Route::get("/",'index')->name("comment.index");
-        Route::post("/add",'store')->name("comment.store");
-        Route::post("/reply/add",'storeReply')->name("comment.reply.store");
-    });
-
 
     Route::get("/test",function(){
         return Inertia::render('Test');

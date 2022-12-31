@@ -33,7 +33,12 @@ class ContactController extends Controller
     {
         $contacts = (new Contact)->newQuery();
         $contacts->filter($filter);
-        $contacts = $contacts->paginate(2)->onEachSide(2)->appends(request()->query());
+        $appliedFilters = $filter->getAppliedFilters();
+        if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
+            $contacts = $contacts->paginate($appliedFilters['per_page'])->appends(request()->query());
+        } else {
+            $contacts = $contacts->paginate(1)->appends(request()->query());
+        }
         return Inertia::render('Contact/Index', [
             'contacts' => IndexContactResource ::collection($contacts),
             'can' => [
@@ -41,7 +46,7 @@ class ContactController extends Controller
                 'edit' => Auth::user()->can('contact edit'),
                 'delete' => Auth::user()->can('contact delete'),
             ],
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 

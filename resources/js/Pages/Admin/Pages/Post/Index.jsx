@@ -1,8 +1,9 @@
+import DOMPurify from 'dompurify';
 import { DeleteConfirmModal } from '../../Components/Dialog/TableEditModal';
 import TableLayout from '../../Layouts/TableLayout';
 
 
-export default function Index({posts,filters}) {
+export default function Index({posts}) {
     return (
         <TableLayout
             wrap="post"
@@ -16,27 +17,36 @@ export default function Index({posts,filters}) {
                 {label:"Id",name:"id",sortable:true},
                 {label:"Title",name:"title",sortable:true},
                 {label:"Logo Image",name:"imageUrl",
-                    render: () => (
-                        <td data-label="Logo Image" className="image-cell">
+                    render: ({item:post}) => (
+                        <td className="image-cell">
                             <div className="image">
                                 <img src={post.imageUrl} className="rounded-full"/>
                             </div>
                         </td>
                     ) },
                 {label:"Author",name:"author",sortable:true,
-                    render: (post) => (
-                        <td data-label="Author">{ post.author?.name  || "Unknown" }</td>
+                    render: ({item:post}) => (
+                        <td>{ post.author?.name  || "Unknown" }</td>
                     )},
-                {label:"Description",name:"description"},
+                {label:"Description",name:"description",
+                    render:({item:post}) => (
+                        <td dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(post.description, {
+                                USE_PROFILES: { html: true }
+                            } ),
+                        }} />
+                    ) },
                 {label:"Category",name:"category",sortable:true,
-                    render: (post) => (
-                        <td data-label="Category">{ post.category?.title || "Unknown" }</td>
+                    render: ({item:post}) => (
+                        <td>{ post.category?.title || "Unknown" }</td>
                     )},
                 {label:"Created",name:"created_at",sortable:true,type:"time"},
                 {label:"Last Updated",name:"updated_at",sortable:true,type:"time"},
             ]}
             items={posts}
             DeleteConfirmModal={DeleteConfirmModal}
+            title="Post"
+            breadcrumbLinks={[{label:"Post"}]}
         />
     )
 }

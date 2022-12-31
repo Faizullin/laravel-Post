@@ -1,12 +1,12 @@
 import CreateModal from './Create'
 import EditModal from './Edit';
 import { DeleteConfirmModal } from '../../Components/Dialog/TableEditModal';
-import TableMo
+import TableModalLayout from '../../Layouts/TableModalLayout';
 
 
-export default function Index({categories,filters}) {
+export default function Index({categories}) {
     return (
-        <TableLayout
+        <TableModalLayout
             wrap="category"
             fetchUrls={{
                 get:route(`admin.category.index`),
@@ -25,6 +25,8 @@ export default function Index({categories,filters}) {
             CreateModal={CreateModal}
             EditModal={EditModal}
             DeleteConfirmModal={DeleteConfirmModal}
+            title="Category"
+            breadcrumbLinks={[{label:"Category"}]}
         />
     )
 }

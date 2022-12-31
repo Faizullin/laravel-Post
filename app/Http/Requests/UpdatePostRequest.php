@@ -26,7 +26,6 @@ class UpdatePostRequest extends FormRequest
         $image_rules = ['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'];
         if($this->image_path && is_string($this->image_path)) {
             $image_rules = [];
-            //dd($this->all());
         }
         return [
             'title'=>['required','string','max:255','min:3','unique:posts,title,'.$this->id],

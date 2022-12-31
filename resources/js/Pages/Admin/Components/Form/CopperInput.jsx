@@ -4,12 +4,12 @@ import "cropperjs/dist/cropper.css";
 import CropperModal from "./CropperModal";
 
 
-export default function CropprtInput({defaultValue,id,onChange}){
-    const [st,setSt] = useState(false);
+export default function CropperInput({defaultValue,id,onChange,title}){
+    const [open,setOpen] = useState(false);
     const [image, setImage] = useState("");
     const [cropData, setCropData] = useState("");
-    const [cropper, setCropper] = useState<any>();
-    id=id || "dropzone-id";
+    const [cropper, setCropper] = useState();
+    id = id || "input-file";
 
 
     const handleCrop = (e) => {
@@ -20,7 +20,7 @@ export default function CropprtInput({defaultValue,id,onChange}){
             cropperCanvas.toBlob(function(blob){
                 const file = new File([blob],blob.name || "unknown.jpg",{type:blob.type});
                 onChange(file)
-                setSt(false);
+                setOpen(false);
             });
         }
     }
@@ -34,8 +34,8 @@ export default function CropprtInput({defaultValue,id,onChange}){
         }
         const reader = new FileReader();
         reader.onload = () => {
-            setImage(reader.result as any);
-            setSt(true);
+            setImage(reader.result);
+            setOpen(true);
 
         };
         console.log(files[0])
@@ -71,7 +71,7 @@ export default function CropprtInput({defaultValue,id,onChange}){
                         onChange={handleImageUpload}/>
                 </label>
             </div>
-            <CropperModal st={st} setSt={setSt} title={`Crop Logo Image`} onSubmit={handleCrop}>
+            <CropperModal open={open} setOpen={setOpen} title={title} onSubmit={handleCrop}>
                 <Cropper
                     src={image}
                     style={{ height: 400, width: "100%" }}

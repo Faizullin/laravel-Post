@@ -2,9 +2,10 @@ import { Link } from "@inertiajs/inertia-react";
 
 
 export default function Aside(){
+
+
     const handleDropdownClick = (e) => {
         event.preventDefault();
-        console.log("Click dropwdow")
         if (e.currentTarget.classList.contains('navbar-item')) {
             e.currentTarget.classList.toggle('active');
         } else {
@@ -37,37 +38,37 @@ export default function Aside(){
                             <span className="icon"><i className="mdi mdi-plus"></i></span>
                         </a>
                         <ul>
-                            <li>
+                            <li className={`${route().current('admin.role.*') && 'active'}`}>
                                 <Link href={ route("admin.role.index") }>
                                     <span>Role</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.permission.*') && 'active'}`}>
                                 <Link href={ route("admin.permission.index") }>
                                     <span>Permission</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.user.*') && 'active'}`}>
                                 <Link href={ route("admin.user.index") }>
                                     <span>User</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.post.*') && 'active'}`}>
                                 <Link href={ route("admin.post.index") }>
                                     <span>Post</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.category.*') && 'active'}`}>
                                 <Link href={ route("admin.category.index") }>
                                     <span>Category</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.tag.*') && 'active'}`}>
                                 <Link href={ route("admin.tag.index") }>
                                     <span>Tag</span>
                                 </Link>
                             </li>
-                            <li>
+                            <li className={`${route().current('admin.contact.*') && 'active'}`}>
                                 <Link href={ route("admin.contact.index") }>
                                     <span>Contact</span>
                                 </Link>
@@ -83,37 +84,37 @@ export default function Aside(){
                 </ul>
                 <p className="menu-label">Tables</p>
                 <ul className="menu-list">
-                    <li className={`${route().current('admin.role.index') && 'active'}`}>
+                    <li className={`${route().current('admin.role.*') && 'active'}`}>
                         <Link href={ route("admin.role.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Role</span>
                         </Link>
                     </li>
-                    <li className={`${route().current('admin.permission.index') && 'active'}`}>
+                    <li className={`${route().current('admin.permission.*') && 'active'}`}>
                         <Link href={ route("admin.permission.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Permission</span>
                         </Link>
                     </li>
-                    <li className={`${route().current('admin.user.index') && 'active'}`}>
+                    <li className={`${route().current('admin.user.*') && 'active'}`}>
                         <Link href={ route("admin.user.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">User</span>
                         </Link>
                     </li>
-                    <li className={`${route().current('admin.post.index') && 'active'}`}>
+                    <li className={`${route().current('admin.post.*') && 'active'}`}>
                         <Link href={ route("admin.post.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Post</span>
                         </Link>
                     </li>
-                    <li className={`${route().current('admin.category.index') && 'active'}`}>
+                    <li className={`${route().current('admin.category.*') && 'active'}`}>
                         <Link href={ route("admin.category.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Category</span>
                         </Link>
                     </li>
-                    <li className={`${route().current('admin.tag.index') && 'active'}`}>
+                    <li className={`${route().current('admin.tag.*') && 'active'}`}>
                         <Link href={ route("admin.tag.index") }>
                             <span className="icon"><i className="mdi mdi-square-edit-outline"></i></span>
                             <span className="menu-item-label">Tag</span>
@@ -128,18 +129,6 @@ export default function Aside(){
                 </ul>
                 <p className="menu-label">About</p>
                 <ul className="menu-list">
-                    <li>
-                        <Link href="login.html">
-                            <span className="icon"><i className="mdi mdi-lock"></i></span>
-                            <span className="menu-item-label">Login</span>
-                        </Link>
-                    </li>
-                    <li>
-                        <Link href="https://justboil.me/tailwind-admin-templates/free-dashboard/" className="has-icon">
-                            <span className="icon"><i className="mdi mdi-help-circle"></i></span>
-                            <span className="menu-item-label">About</span>
-                        </Link>
-                    </li>
                     <li>
                         <Link href="https://github.com/justboil/admin-one-tailwind" className="has-icon">
                             <span className="icon"><i className="mdi mdi-github-circle"></i></span>
