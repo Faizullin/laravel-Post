@@ -75,14 +75,4 @@ abstract class AbstractFilter extends OriginalAbastractFilter
 
         return $column;
     }
-
-    /**
-     * @param Builder $builder
-     */
-    public function apply(Builder $builder)
-    {
-        $this->builder = $builder;
-        $this->filterQuery();
-        $this->sortQuery();
-    }
 }

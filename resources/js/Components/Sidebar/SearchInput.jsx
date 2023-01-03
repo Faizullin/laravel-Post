@@ -1,14 +1,14 @@
+import useDebouncedInput from "@/hooks/useDebouncedInput";
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Link, useForm, usePage } from "@inertiajs/inertia-react";
 import { useState } from "react";
 
-
 export default function SearchInput(){
     const { appliedFilters } = usePage().props;
-    console.log(appliedFilters)
+
     const {data,setData,post} = useForm({
-        keyword:""
+        keyword: appliedFilters?.filters?.search || ""
     });
     const [isResultOpen,setIsResultOpen] = useState(false)
     const [searchResult,setSearchResult] = useState({
@@ -18,7 +18,7 @@ export default function SearchInput(){
     const getSearchResult = () => {
         axios.get(route(`api.search`),{
             params:{
-                keyword:data,
+                keyword:data.keyword,
             }
         }).then(response=>{
             const {posts,tags} = response.data;
@@ -31,30 +31,34 @@ export default function SearchInput(){
         });
     }
 
-    const handleChange = useDebouncedInput(function() {
-        setData(data => ({"keyword":e.target.data}));
+    const handleChange = useDebouncedInput(function(e) {
+        setData(data => ({
+            ...data,
+            "keyword":e.target.value,
+        }));
     },500)
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(data){
+        if(data.keyword){
             post(route(`post.search`,{keyword:data.keyword}));
         }
 
     }
     useDidUpdateEffect(() => {
-        if(data){
+        if(data.keyword){
             getSearchResult();
         }else{
             setIsResultOpen(false);
         }
-    },[data])
+    },[data.keyword])
 
     return (
         <div className="sidebar-item search-form relative">
             <h3 className="sidebar-title">Search</h3>
             <form className="mt-3" onSubmit={handleSubmit}>
-                <input type="text"
-                    value={data.keyword} onChange={ handleChange } className="border-none focus:ring-0"/>
+                <input type="text" className="border-none focus:ring-0"
+                    defaultValue={data.keyword} onChange={ handleChange }/>
                 <button type="submit">
                     <MagnifyingGlassIcon className=" text-white w-6 h-6"/>
                 </button>

@@ -9,7 +9,7 @@ class PostFilter extends AbstractFilter
 {
 
 
-    public $filterable = ['title', 'description','search'];
+    public $filterable = ['search'];
 
 	public $sortable = [ "most_liked", "most_recent",'most_old'];
 

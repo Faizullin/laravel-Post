@@ -24,7 +24,7 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'keyword' => ['required','string','max:50'],
+            'keyword' => ['nullable','string','max:50'],
         ];
     }
 }

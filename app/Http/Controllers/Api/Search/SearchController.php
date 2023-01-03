@@ -27,6 +27,6 @@ class SearchController extends Controller
         return response()->json([
             'tags'=>$tags,
             'posts'=>$posts,
-        ]);;
+        ]);
     }
 }

@@ -72,6 +72,7 @@ export default function Edit({item:user}){
                                 id='input-roles'
                                 dataKey="id"
                                 textField="name"
+                                defaultValue={data.roles}
                                 data={ roles }
                                 filter='contains'
                                 onChange={value => setRoles(value)}

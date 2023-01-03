@@ -24,17 +24,21 @@ class SearchController extends Controller
     public function __invoke(SearchRequest $request,)
     {
         $keyword = $request->validated()['keyword'];
-        $posts = Post::where('title','LIKE','%'.$keyword."%")->orderBy('updated_at','DESC')->paginate(5);
+        if(is_null($keyword)) {
+            $posts = Post::orderBy('updated_at','DESC')->paginate(6);
+        } else {
+            $posts = Post::where('title','LIKE','%'.$keyword."%")->orderBy('updated_at','DESC')->paginate(6);
+        }
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
             'posts' => IndexPostResource::collection($posts),
-            'filters' => [],
+            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
             'appliedFilters' => [
                 'filters' => [
                     'search' => $keyword,
                 ]
-            ];
+            ]
         ]);
     }
 }

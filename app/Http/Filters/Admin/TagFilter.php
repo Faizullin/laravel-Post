@@ -11,7 +11,7 @@ class TagFilter extends AbstractFilter
     //     'per_page' => 3,
     // ];
 
-    public $filterable = ['title','search'];
+    public $filterable = [ 'search' ];
 
 	public $sortable = ['id', 'title', 'slug','posts_count','created_at', 'updated_at'];
 

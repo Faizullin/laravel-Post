@@ -9,7 +9,7 @@ class PostFilter extends AbstractFilter
 {
 
 
-    public $filterable = [ 'id' => "id", 'title'=>"title", "user_id"=>"author", 'description'=>'description','category_id'=>'category'];
+    public $filterable = [ 'search' ];
 
 	public $sortable = ['id', 'title', 'author', 'category', 'created_at', 'updated_at'];
 
@@ -17,29 +17,22 @@ class PostFilter extends AbstractFilter
     /**
      * @param string $user
      */
-    public function userSortFilter($value)
-    {
-        $this->builder->whereHas("users",function (Builder $query) use ($value) {
-            $query->where('name', 'like', "%$value%");
-        });
-    }
-
-
-    /**
-     * @param string $user
-     */
     public function authorSortFilter($value)
     {
-        $this->builder->with(['user' => function ($query) use ($value) {
-            $query->orderBy('name', $value);
-        }]);
+        $this->builder->with("user")->join("users","posts.user_id","=","users.id")->orderBy("users.name",$value);
+        // $this->builder->with(['user' => function ($query) use ($value) {
+        //     $query->orderBy('name', $value);
+        // }]);
+        //dd($d);
+
     }
 
     public function categorySortFilter($value)
     {
-        $this->builder->with(['category' => function ($query) use ($value) {
-            $query->orderBy('title', $value);
-        }]);
+        $this->builder->with("category")->join("categories","posts.category_id","=","categories.id")->orderBy("categories.title",$value);
+        // $this->builder->with(['category' => function ($query) use ($value) {
+        //     $query->orderBy('title', $value);
+        // }]);
     }
 
 

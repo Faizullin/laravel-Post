@@ -7,18 +7,16 @@ import { Fragment } from "react";
 
 
 export default function MobileSidebar ({open,setOpen,tags,categories}) {
-    const { filters} = usePage().props;
+    const { appliedFilters} = usePage().props;
     const [value,setValue] = useState("");
     const handleChange = (e) => setValue(e.target.value);
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(value){
-            setOpen(false)
-            Inertia.post(route(`post.search`,{keyword:value}));
-        }
+        setOpen(false)
+        Inertia.post(route(`post.search`,{keyword:value}));
     }
     useEffect(()=>{
-        setValue(filters?.search || "")
+        setValue(appliedFilters?.filters?.search || "")
     },[]);
     return (
         <Transition.Root show={open} as={Fragment}>

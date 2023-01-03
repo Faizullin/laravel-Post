@@ -8,7 +8,7 @@ class ContactFilter extends AbstractFilter
 {
 
 
-    public $filterable = [ 'id' => "id", 'name'=>"name", 'email'=>"email",'subject'=>"subject"];
+    public $filterable = [ 'search'];
 
 	public $sortable = ['id', 'name', 'email', 'created_at', 'updated_at'];
 

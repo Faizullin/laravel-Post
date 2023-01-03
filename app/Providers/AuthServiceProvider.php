@@ -26,12 +26,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Gate::before(function ($user, $ability) {
-        //     //dd(env('APP_SUPER_ADMIN', 'super-admin'),$user,$user->hasRole('super-admin'),$user->hasRole('admin'),$user->roles);
-        //     if ($user->hasRole(env('APP_SUPER_ADMIN', 'super-admin'))) {
-        //         dd("HAS ROLE");
-        //         return true;
-        //     }
-        // });
+        Gate::before(function ($user, $ability) {
+            ///dd(env('APP_SUPER_ADMIN', 'super-admin'),$user,$user->hasRole('super-admin'),$user->hasRole('admin'),$user->roles);
+            if ($user->hasRole(env('APP_SUPER_ADMIN', 'super-admin'))) {
+                //dd("HAS ROLE");
+                return true;
+            }
+        });
     }
 }

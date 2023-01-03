@@ -9,7 +9,7 @@ class UserFilter extends AbstractFilter
 {
 
 
-    public $filterable = [ 'id' => "id", 'name'=>"name", 'email'=>"email"];
+    public $filterable = [ 'search' ];
 
 	public $sortable = ['id', 'name', 'email', 'created_at', 'updated_at'];
 
@@ -20,7 +20,7 @@ class UserFilter extends AbstractFilter
         $this->builder->where("id","LIKE","%".$value."%")->orWhere("name","LIKE","%".$value."%")->orWhere("email","LIKE","%".$value."%");
     }
 
-    public function postsCountSort($value)
+    public function postsCountSortFilter($value)
     {
         $this->builder->withCount('posts')->orderBy('posts_count', $value);
     }

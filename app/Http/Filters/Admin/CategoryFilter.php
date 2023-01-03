@@ -8,12 +8,12 @@ class CategoryFilter extends AbstractFilter
 {
 
 
-    public $filterable = [ 'id' => "id", 'title'=>"title", 'slug'=>"slug"];
+    public $filterable = ['search'];
 
 	public $sortable = ['id', 'title', 'slug', 'posts_count', 'created_at', 'updated_at'];
 
 
-    public function postsCountSort($value)
+    public function postsCountSortFilter($value)
     {
         $this->builder->withCount('posts')->orderBy('posts_count', $value);
     }

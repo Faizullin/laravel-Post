@@ -3,7 +3,7 @@ import { useForm } from "@inertiajs/inertia-react";
 
 
 export default function Contact(){
-    const {data,setData,errors,post} = useForm({
+    const {data,setData,errors,post,reset} = useForm({
         name:"",
         email:"",
         subject:"",
@@ -12,7 +12,12 @@ export default function Contact(){
     const handleChange = (e) => setData({...data,[e.target.name]:e.target.value});
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('pages.contact.store'),data);
+        post(route('pages.contact.store'),{
+            data,
+            onSuccess: () => {
+                reset()
+            }
+        });
     }
     return (
         <Layout>
@@ -35,7 +40,7 @@ export default function Contact(){
                                     </i>
                                     <div>
                                     <h4>Location:</h4>
-                                    <p>A108 Adam Street, New York, NY 535022</p>
+                                    <p>U38 D25, Astana(Kazakhstan), 010000</p>
                                     </div>
                                 </div>
 
@@ -47,7 +52,7 @@ export default function Contact(){
                                     </i>
                                     <div>
                                     <h4>Email:</h4>
-                                    <p>info@example.com</p>
+                                    <p>admin@example.com</p>
                                     </div>
                                 </div>
 
@@ -59,7 +64,7 @@ export default function Contact(){
                                     </i>
                                     <div>
                                     <h4>Call:</h4>
-                                    <p>+1 5589 55488 55</p>
+                                    <p>+7 777 777 77 77</p>
                                     </div>
                                 </div>
 
