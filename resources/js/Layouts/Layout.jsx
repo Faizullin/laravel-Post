@@ -17,7 +17,7 @@ const FlashMessage = ({className}) => {
 export default function Layout({children}){
     const { auth } = usePage().props;
     const flash = usePage().props.flash || null
-    console.log("Props",usePage().props)
+    console.log("Props",usePage().props,flash)
     useEffect(() => {
         AOS.init({
             duration: 1000,

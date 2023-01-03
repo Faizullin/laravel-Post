@@ -103,8 +103,8 @@ abstract class AbstractFilter
                 }
             }
         }
-
     }
+
     protected function filterQuery()
     {
         $this->input['filters']->each(function ($value, $column) {

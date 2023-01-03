@@ -34,9 +34,7 @@ Route::group([
     Route::get('/',function(){
         return redirect()->route('admin.dashboard');
     })->name("index");
-    Route::get('dashboard',function(){
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('dashboard',"DashboardController")->name('dashboard');
     Route::group( ['controller' => 'ProfileController'],function(){
         Route::get('profile','index')->name('profile.index');
         Route::patch('profile','update')->name('profile.update');

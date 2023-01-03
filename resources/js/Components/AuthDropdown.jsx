@@ -8,14 +8,17 @@ export default function AuthDropdown({auth}) {
     const [openDropdown,setOpenDropdown] = useState(false);
     useEffect(function(){
         const el = ref.current;
-        el.addEventListener('click', function(event) {
-            if (document.querySelector('.mobile-nav-active')) {
-                event.preventDefault();
-                this.classList.toggle('active')
-                this.nextElementSibling.classList.toggle('dropdown-active');
-                setOpenDropdown(openDropdown => !openDropdown);
-            }
-        });
+        if(el) {
+            el.addEventListener('click', function(event) {
+                if (document.querySelector('.mobile-nav-active')) {
+                    event.preventDefault();
+                    this.classList.toggle('active')
+                    this.nextElementSibling.classList.toggle('dropdown-active');
+                    setOpenDropdown(openDropdown => !openDropdown);
+                }
+            });
+        }
+
 
     }, [])
     const handleLogout = (e) => {
@@ -26,7 +29,7 @@ export default function AuthDropdown({auth}) {
         <li className="dropdown">
             { (auth.user) ? (
 
-                <a href="#" ref={ref}>
+                <a ref={ref}>
                     <span>{ auth.user.name }</span>
                     { openDropdown ? (
                         <ChevronUpIcon className="h-5 w-5 md:hidden" />
@@ -35,7 +38,7 @@ export default function AuthDropdown({auth}) {
                     ) }
                 </a>
             ) : (
-                <Link href={route('login')} ref={ref}>
+                <Link href={route('login')}>
                     <span>Log In</span>
                 </Link>
             ) }

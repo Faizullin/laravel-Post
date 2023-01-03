@@ -3,10 +3,15 @@ import { ChevronDownIcon, FunnelIcon, Squares2X2Icon } from "@heroicons/react/20
 import { Link, usePage } from "@inertiajs/inertia-react";
 import { useEffect, Fragment } from "react";
 
+const getSortRoute = (data) => {
+    const urlParams = new URLSearchParams(document.location.search);
+    urlParams.set("sort_field",data)
+    return "?"+urlParams.toString()
+}
 const sortOptions = [
-    { label:'Most Liked',name: 'most_liked', href: route(route().current(),{_query:{sort:"most_liked"}}), current: false },
-    { label:'Most Recent',name: 'most_recent', href: route(route().current(),{_query:{sort:"most_recent"}}), current: false },
-    { label:'Oldest',name: 'most_old', href: route(route().current(),{_query:{sort:"most_old"}}), current: false },
+    { label:'Most Liked',name: 'most_liked', current: false },
+    { label:'Most Recent',name: 'most_recent',  current: false },
+    { label:'Oldest',name: 'most_old', current: false },
 ];
 export default function SortDropdown(){
     const { appliedFilters } = usePage().props;
@@ -42,7 +47,7 @@ export default function SortDropdown(){
                         {sortOptions.map((option) => (
                         <Menu.Item key={option.name}>
                             {({ active }) => (
-                            <Link href={option.href}
+                            <Link href={getSortRoute(option.name)}
                                 className={`${option.current ? 'font-medium text-gray-900' : 'text-gray-500'} ${ active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm`}
                             >
                                 {option.label}
@@ -61,19 +66,4 @@ export default function SortDropdown(){
             </button>
         </div>
     );
-    return (
-        <>
-            <button type="button" className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                Sort
-                <ChevronDownIcon
-                    className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                />
-            </button>
-            <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-            </button>
-        </>
-    )
 }

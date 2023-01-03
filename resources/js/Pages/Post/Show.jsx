@@ -8,6 +8,7 @@ import CommentList from "@/Components/Comment/CommentList";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import apiClient from "@/services/apiClient";
 import DOMPurify from "dompurify";
+import 'react-quill/dist/quill.snow.css';
 
 export default function Index({post,errors,auth}){
     post = post.data;
@@ -55,27 +56,31 @@ export default function Index({post,errors,auth}){
                                     <ul>
                                         <li className="flex items-center">
                                             <i className="bi bi-person"></i>
-                                            <a href="blog-details.html">
+                                            <a>
                                                 { post.title }
                                             </a>
                                         </li>
                                         <li className="flex items-center">
                                             <i className="bi bi-clock"></i>
-                                            <a href="blog-details.html">
+                                            <a>
                                                 <time dateTime="2020-01-01">
-                                                    Jan 1, 2022 { post.created_at }
+                                                    { post.created_at }
                                                 </time>
                                             </a>
                                         </li>
-                                        <li className="flex items-center"><i className="bi bi-chat-dots"></i> <a href="blog-details.html">12 Comments</a></li>
+                                        <li className="flex items-center"><i className="bi bi-chat-dots"></i> <a>12 Comments</a></li>
                                     </ul>
                                 </div>
-
-                                <div className="content" dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(post.body, {
-                                        USE_PROFILES: { html: true }
-                                    } ),
-                                }} />
+                                <div className="content">
+                                    <div class="ql-snow">
+                                        <div class="ql-editor" dangerouslySetInnerHTML={{
+                                            __html: DOMPurify.sanitize(post.body, {
+                                                USE_PROFILES: { html: true }
+                                            } ),
+                                        }}>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div className="meta-bottom">
                                     <i className="bi bi-folder"></i>

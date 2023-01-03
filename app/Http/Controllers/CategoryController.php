@@ -7,6 +7,7 @@ use App\Http\Resources\Category\CategoryMinResource;
 use App\Http\Resources\Post\IndexPostResource;
 use App\Http\Resources\Tag\TagMinResource;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,12 +21,15 @@ class CategoryController extends Controller
      */
     public function __invoke(PostFilter $filter, Category $category)
     {
-        $posts = $category->posts()->paginate(config('var.post_pagination'));
+
+        $posts = $category->posts()->paginate(6);
+        $appliedFilters = $filter->getAppliedFilters();
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
+            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
             'posts' => IndexPostResource::collection($posts),
-            'filters' => $filter->getFilters(),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 }

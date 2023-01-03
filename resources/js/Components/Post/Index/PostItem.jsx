@@ -3,11 +3,8 @@ import { Link } from "@inertiajs/inertia-react";
 
 export default function PostItem({post}){
     return (
-        <div className="xl:w-1/3 lg:w-1/2 px-2 md:px-4 mb-5 mx-auto">
+        <div className="w-full sm:w-1/2 xl:w-1/3 px-2 md:px-4 mb-5">
             <article className="bg-white border rounded-lg">
-                    {/* <div className="h-48 bg-cover bg-center" style={{ backgroundImage: `url('${post.imageUrl}')`}}>
-
-                    </div> */}
                 <div className="post-img">
                     <img className="h-[240px] w-full object-cover mx-auto" src={ post.imageUrl } alt={ post.imageUrl }/>
                 </div>
@@ -17,7 +14,7 @@ export default function PostItem({post}){
                 </h2>
 
                 <div className="flex items-center">
-                    <img src={post.imageUrl} alt="" className="max-w-full h-auto post-author-img flex-shrink-0"/>
+                    <img src={post.imageUrl} alt="" className="max-w-full flex-shrink-0 post-author-img object-contain"/>
                     <div className="post-meta">
                         <p className="post-author-list">{  post.author?.name || "Unknown" }</p>
                         <p className="post-date">

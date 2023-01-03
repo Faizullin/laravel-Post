@@ -4,6 +4,7 @@ namespace App\Http\Filters;
 
 use App\Http\Filters\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class PostFilter extends AbstractFilter
 {
@@ -14,19 +15,20 @@ class PostFilter extends AbstractFilter
 	public $sortable = [ "most_liked", "most_recent",'most_old'];
 
 
-    public function mostRecentSortFilter($value)
+    public function mostRecentSortFilter()
     {
-        $this->builder->orderBy("updated_at","DESC");
+        $this->builder->latest();
     }
 
-    public function mostOldSortFilter($value)
+    public function mostOldSortFilter()
     {
-        $this->builder->orderBy("updated_at","ASC");
+        $this->builder->oldest();
     }
 
-    public function mostLikedSortFilter($value)
+    public function mostLikedSortFilter()
     {
-        $this->builder->orderBy("likes_count","DESC");
+
+        $this->builder->withCount('likers')->orderBy("likers_count","DESC");
     }
 
 
@@ -41,4 +43,14 @@ class PostFilter extends AbstractFilter
          });
     }
 
+
+    protected function sortQuery()
+    {
+        $column = $this->input['sorts']['column'];
+        if ($column && in_array($column,$this->sortable) && method_exists($this, Str::camel($column).'SortFilter')) {
+            call_user_func_array([$this, Str::camel($column).'SortFilter'],[]);
+            $this->appliedFilters['sorts']['column'] = $column;
+        }
+
+    }
 }

@@ -40,9 +40,7 @@ export default function Edit({post,tags,categories,users}){
 
     function handleSubmit(e){
         e.preventDefault()
-        console.log(data)
         postRequest(route('admin.post.update',post),{
-
             data,
         });
     }

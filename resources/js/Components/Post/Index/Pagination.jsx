@@ -1,64 +1,70 @@
+import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
 
 
 
-export default function Pagination({items,pageCount}){
-    pageCount = pageCount ? pageCount : 2;
-    const pageLimit = 1;
-    const getClassName = (item) => {
-        if(item.active){
-            return "active";
-        }
-        return ""
+export default function Pagination({items}){
+    const current_page = items.meta.current_page;
+    if(current_page < 1 || current_page > items.meta.last_page) {
+        Inertia.get(items.links.first);
     }
+
     return (
-        (items.meta?.links.length > pageCount) && (
+        (items.meta?.links?.length > 1) && (
             <div className="blog-pagination">
                 <ul className="justify-center">
                     {
                         items.links.prev === null  ? (
                             <li>
-                                <a className="">
+                                <a>
                                     {"<"}
                                 </a>
                             </li>
                         ) : (
                             <li>
-                                <Link href={items.links.prev} type="button"
-                                    disabled={items.links.prev === null ? true : false} className={`button`}>
+                                <Link href={items.links.prev}
+                                    disabled={items.links.prev === null ? true : false}>
                                     {"<"}
                                 </Link>
                             </li>
                         )
                     }
-                    { items.meta.links.map((item, key) => (
-                            Number(item.label) ? ( items.meta.current_page!=items.meta.last_page-pageLimit && items.meta.current_page!=(pageLimit+1) && ((items.meta.current_page-item.label == pageLimit) || (items.meta.current_page-item.label === -pageLimit)) ? (
-                                <div key={key}
-                                    className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
-                                    >...</div>
-                            ) : (
-                                // <a onClick={ (e) => handleClick(e,item) }
-                                //     key={key}
-                                //     className={getClassName(item.active)}
-                                //         >{item.label}</a>
+                    { (current_page > 2) && (
+                        <li>
+                            <Link href={items.links.first}>1</Link>
+                        </li>
+                    ) }
+                    { (items.links.prev) && (
+                        <li>
+                            <Link href={items.links.prev}>{ current_page - 1 }</Link>
+                        </li>
+                    ) }
 
-                                <li key={key}>
-                                    <Link href={item.url || ''} type="button"
-                                        disabled={item.url == null ? true : false} className={`${ item.active && 'active' }  ${item.url == null && ''} button`}>{item.label}</Link>
-                                </li>
-                            ))
-                            : ""
+                    <li className="active">
+                        <a>{current_page}</a>
+                    </li>
 
-                    ))}
+                    { (items.links.next !== null) && (
+                        <li>
+                            <Link href={items.links.next}>{ current_page + 1 }</Link>
+                        </li>
+                    ) }
+                    { (current_page + 1 < items.meta.last_page) && (
+                        <li>
+                            <Link href={items.links.last}>{ items.meta.last_page }</Link>
+                        </li>
+                    ) }
                     {
                         items.links.next === null ? (
-                            <div className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded">
-                                {">"}
-                            </div>
+                            <li>
+                                <a className="text-gray-100">
+                                    {">"}
+                                </a>
+                            </li>
                         ) : (
                             <li>
-                                <Link href={items.links.next} type="button"
-                                    disabled={items.links.next === null ? true : false} className={`button`}>
+                                <Link href={items.links.next}
+                                    disabled={items.links.next === null ? true : false}>
                                     {">"}
                                 </Link>
                             </li>
@@ -68,5 +74,5 @@ export default function Pagination({items,pageCount}){
                 </ul>
             </div>
         )
-    );
+    )
 }

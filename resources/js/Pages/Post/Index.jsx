@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, Link } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/inertia-react";
 import Layout from "@/Layouts/Layout";
 import Sidebar from '@/Components/Sidebar/Sidebar'
 import PostItem from "@/Components/Post/Index/PostItem";
@@ -9,15 +9,11 @@ import Breadcrumb from "@/Components/Breadcrumb";
 
 
 
+
 export default function Index({posts,errors,auth}){
     const [filtersSidebarOpen,setFiltersSidebarOpen] = useState(false);
-
-    const getPosts = () => {
-        ;
-    }
     return (
         <Layout>
-            {/* errors={ errors } */}
             <Head title={"Posts"} />
             <Breadcrumb title={`Posts`} >
                 <h2>Post</h2>
@@ -31,20 +27,14 @@ export default function Index({posts,errors,auth}){
                     </div>
 
                     <div className="flex mt-8">
-                        <div className="md:w-2/3 ">
-                            <div className="flex flex-wrap mx-auto  posts-list">
+                        <div className="lg:w-2/3 ">
+                            <div className="flex flex-wrap mx-auto justify-between posts-list">
                                 { posts.data.map((post,index) => (
                                     <PostItem key={post.id} post={post} />
                                 ))}
 
                             </div>
-                            <div className="blog-pagination">
-                                <ul className="justify-center">
-                                    <li><a href="#">1</a></li>
-                                    <li className="active"><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                </ul>
-                            </div>
+                            <Pagination items={posts}/>
                         </div>
                         <Sidebar
                             open={filtersSidebarOpen}

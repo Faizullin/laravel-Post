@@ -75,4 +75,24 @@ abstract class AbstractFilter extends OriginalAbastractFilter
 
         return $column;
     }
+
+    protected function sortQuery()
+    {
+        $column = $this->input['sorts']['column'];
+        $order = $this->input['sorts']['order'];
+        if ($order && $column && in_array(strtolower($order),["asc","desc"])) {
+            if(in_array($column,$this->sortable)) {
+                if (method_exists($this, Str::camel($column).'SortFilter')) {
+                    call_user_func_array([$this, Str::camel($column).'SortFilter'],[ $order]);
+                    $this->appliedFilters['sorts']['order'] = $order;
+                    $this->appliedFilters['sorts']['column'] = $column;
+                } else {
+                    $this->basicSortFilter($column, $order);
+                    $this->appliedFilters['sorts']['order'] = $order;
+                    $this->appliedFilters['sorts']['column'] = $column;
+                }
+            }
+        }
+
+    }
 }
