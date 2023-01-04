@@ -4,7 +4,7 @@ import { Fragment } from "react";
 
 function DeleteConfirmDialog({open,title,message,onCancel,afterClose,onConfirm,confirmText,confirmData}){
     title = title ? title : 'Are you sure to delete this item?';
-    message = message ? message : 'Are you sure to delete this item?';
+    message = message ? message : 'This item will be deleted';
     confirmText = 'Delete'
 
     const handleClose = () => {
@@ -38,7 +38,7 @@ function DeleteConfirmDialog({open,title,message,onCancel,afterClose,onConfirm,c
                             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all">
                                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div className="sm:flex sm:items-start">
                                         <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">

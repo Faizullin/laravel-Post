@@ -22,7 +22,7 @@ export default function Breadcrumb({links}) {
                         </li>
                     )) }
                 </ul>
-                <a href="https://github.com/justboil/admin-one-tailwind" target="_blank" className="button blue">
+                <a href="https://github.com/Faizullin/laravel-Post" target="_blank" className="button blue">
                 <span className="icon"><i className="mdi mdi-github-circle"></i></span>
                 <span>GitHub</span>
                 </a>

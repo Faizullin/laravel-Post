@@ -15,6 +15,7 @@ export default function Index({post,errors,auth}){
     const [filtersSidebarOpen,setFiltersSidebarOpen] = useState(false);
     const [isLikedByCurrentUser,setIsLikedByCurrentUser] = useState(false);
     const [count,setCount] = useState(post.likes_count);
+    const [commentsCount,setCommentsCount] = useState(post.comments_count || 0);
 
 
 
@@ -29,6 +30,9 @@ export default function Index({post,errors,auth}){
         });
     }
     const handleToggleLike = () => getIsLiked();
+    const onGetComments = (response) => {
+        setCommentsCount(response.data.meta?.total || 0)
+    }
 
     useEffect(function() {
         setIsLikedByCurrentUser(post.isLikedByCurrentUser)
@@ -68,12 +72,12 @@ export default function Index({post,errors,auth}){
                                                 </time>
                                             </a>
                                         </li>
-                                        <li className="flex items-center"><i className="bi bi-chat-dots"></i> <a>12 Comments</a></li>
+                                        <li className="flex items-center"><i className="bi bi-chat-dots"></i> <a>{commentsCount} Comments</a></li>
                                     </ul>
                                 </div>
                                 <div className="content">
-                                    <div class="ql-snow">
-                                        <div class="ql-editor" dangerouslySetInnerHTML={{
+                                    <div className="ql-snow">
+                                        <div className="ql-editor" dangerouslySetInnerHTML={{
                                             __html: DOMPurify.sanitize(post.body, {
                                                 USE_PROFILES: { html: true }
                                             } ),
@@ -94,7 +98,7 @@ export default function Index({post,errors,auth}){
                                     <i className="bi bi-tags"></i>
                                     <ul className="tags">
                                         { post.tags.map((post_tag,index) => (
-                                            <li key={`post_tag-${post_tag.id}`}>
+                                            <li key={`post_tag-${index}`}>
                                                 <Link href={ route(`post.tag.index`,post_tag) }>{ post_tag.title }</Link>
                                             </li>
                                         )) }
@@ -103,9 +107,9 @@ export default function Index({post,errors,auth}){
                             </article>
 
                             <div className="post-author flex items-center">
-                                <img src="assets/img/blog/blog-author.jpg" className="rounded-full flex-shrink-0" alt=""/>
+                                <img src={post.author?.imageUrl } className="rounded-full flex-shrink-0" alt=""/>
                                 <div>
-                                    <h4>Jane Smith</h4>
+                                    <h4>{ post.author?.name }</h4>
                                     <div className="social-links">
                                         <a href="https://twitters.com/#"><i className="bi bi-twitter"></i></a>
                                         <a href="https://facebook.com/#"><i className="bi bi-facebook"></i></a>
@@ -122,7 +126,7 @@ export default function Index({post,errors,auth}){
                                     </div>
                                 </div>
                             </div>
-                            <CommentList post={post}/>
+                            <CommentList post={post} commentsCount={commentsCount} onGetComments={onGetComments}/>
                         </div>
                         <Sidebar
                             open={filtersSidebarOpen}

@@ -130,10 +130,10 @@ export default function Aside(){
                 <p className="menu-label">About</p>
                 <ul className="menu-list">
                     <li>
-                        <Link href="https://github.com/justboil/admin-one-tailwind" className="has-icon">
+                        <a href="https://github.com/Faizullin/laravel-Post" className="has-icon">
                             <span className="icon"><i className="mdi mdi-github-circle"></i></span>
                             <span className="menu-item-label">GitHub</span>
-                        </Link>
+                        </a>
                     </li>
                 </ul>
             </div>

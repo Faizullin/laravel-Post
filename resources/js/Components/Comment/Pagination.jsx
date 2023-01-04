@@ -3,7 +3,7 @@ import { Link } from "@inertiajs/inertia-react";
 
 
 export default function Pagination({items,pageCount,onPaginate}){
-    pageCount = pageCount ? pageCount : 2;
+    pageCount = pageCount ? pageCount : 1;
     const pageLimit = 2;
     const handleClick = (e,link) => {
         e.preventDefault()
@@ -12,74 +12,56 @@ export default function Pagination({items,pageCount,onPaginate}){
         }
 
     }
-    function getClassName(active) {
-
-        if(active) {
-
-            return "mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded hover:bg-white focus:border-primary focus:text-primary text-white bg-green-basic";
-
-        } else{
-
-            return "mr-1 mb-1 px-4 py-3 text-sm leading-4 border rounded focus:border-primary focus:text-primary hover:bg-green-basic hover:text-white";
-
-        }
-
-    }
     return (
-        (items.meta?.links.length > pageCount) && (
-            <div className="table-pagination mb-4">
-                <div className="flex mt-8">
+        (items.meta?.last_page > 1) ? (
+            <div className="blog-pagination mb-4">
+                <ul className="mt-8">
                     {
                         items.links.prev === null ? (
-                            <div className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded">
-                                {"<"}
-                            </div>
+                            <li>
+                                <a>{"<"}</a>
+                            </li>
                         ) : (
-                            <a onClick={ (e) => handleClick(e,{url:true,label:items.meta.current_page-1}) }
-                                className={getClassName(false)}
-                                >
-                                {"<"}
-                            </a>
+                            <li>
+                                <a onClick={ (e) => handleClick(e,{url:true,label:items.meta.current_page-1}) }
+                                    >
+                                    {"<"}
+                                </a>
+                            </li>
                         )
                     }
-                    { items.meta.links.map((item, key) => (
-                            Number(item.label) ? ( items.meta.current_page!=items.meta.last_page-pageLimit && items.meta.current_page!=(pageLimit+1) && ((items.meta.current_page-item.label == pageLimit) || (items.meta.current_page-item.label === -pageLimit)) ? (
-                                <div key={key}
-                                    className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
-                                    >...</div>
+                    { items.meta.links.map((item, index) => (
+                            (index > 0 && index < items.meta.links.length-1) ? Number(item.label) ? (
+                                <li key={index} className={`${item.active ? "active" : ""}`}>
+                                    <a onClick={ (e) => handleClick(e,item) }>
+                                        {item.label}
+                                    </a>
+                                </li>
                             ) : (
-                                <a onClick={ (e) => handleClick(e,item) }
-                                    key={key}
-                                    className={getClassName(item.active)}
-                                        >{item.label}</a>
-                            ))
-                            : ""
-                            // <template v-if="(link.label === 1) || (link.label === pagination.last_page) || (pagination.current_page-link.label <2 && pagination.current_page-link.label > - 2)">
-                            //     <a :class="pagination.current_page === link.label ? 'active':''"
-                            //         @click.prevent="getProducts(link.label)"
-                            //         href="#0" >{{ link.label }}
-                            //     </a>
-                            // </template>
-                            // <template v-if="pagination.current_page!==pagination.last_page-2 && pagination.current_page!==3 && ((pagination.current_page-link.label === 2) || (pagination.current_page-link.label === -2))">
-                            //     <a>...</a>
-                            // </template>
-
+                                <div key={index}>
+                                    <div className="px-4 py-3 text-sm leading-4 text-gray-400 border rounded"
+                                    >...</div>
+                                </div>
+                            ) : ""
                     ))}
                     {
                         items.links.next === null ? (
-                            <div className="mr-1 mb-1 px-4 py-3 text-sm leading-4 text-gray-400 border rounded">
-                                {">"}
-                            </div>
+                            <li>
+                                <a>{">"}</a>
+                            </li>
                         ) : (
-                            <a onClick={ (e) => handleClick(e,{url:true,label:items.meta.current_page+1}) }
-                                className={getClassName(false)}>
-                                {">"}
-                            </a>
+                            <li>
+                                <a onClick={ (e) => handleClick(e,{url:true,label:items.meta.current_page+1}) }>
+                                    {">"}
+                                </a>
+                            </li>
                         )
                     }
 
-                </div>
+                </ul>
             </div>
+        ) : (
+            <div className="mb-16"></div>
         )
     );
 }

@@ -26,7 +26,7 @@ class Comment extends Model
 
     public function post()
     {
-        return $this->belongsTo(Post::class);
+        return $this->commentable();
     }
 
     public function replies()
@@ -37,5 +37,10 @@ class Comment extends Model
     public function parent()
     {
         return $this->belongsTo(Comment::class,);
+    }
+
+    public function commentable()
+    {
+        return $this->morphTo();
     }
 }

@@ -11,7 +11,7 @@ class UserFilter extends AbstractFilter
 
     public $filterable = [ 'search' ];
 
-	public $sortable = ['id', 'name', 'email', 'created_at', 'updated_at'];
+	public $sortable = ['id', 'name', 'email','posts_count', 'created_at', 'updated_at'];
 
 
 

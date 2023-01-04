@@ -21,6 +21,7 @@ export default function CommentEditModalForm({show,setShow,title,item,reload}) {
             ...data
         }).then(response => {
             reload().then(response => {
+                setErrors({})
                 setShow(false)
             })
         }).catch(error => {

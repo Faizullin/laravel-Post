@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\User\IndexUserDashboardResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,8 @@ class ProfileController extends Controller
     public function edit(Request $request)
     {
         $user = Auth::user();
-
-
         return Inertia::render("Dashboard/Profile/Index",[
-            "user" => $user,
+            'user' => new IndexUserDashboardResource($user),
         ]);
     }
 

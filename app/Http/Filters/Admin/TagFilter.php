@@ -7,10 +7,6 @@ use Illuminate\Support\Str;
 
 class TagFilter extends AbstractFilter
 {
-    // public $applliedFilters = [
-    //     'per_page' => 3,
-    // ];
-
     public $filterable = [ 'search' ];
 
 	public $sortable = ['id', 'title', 'slug','posts_count','created_at', 'updated_at'];

@@ -13,12 +13,6 @@ export default function EditPasswordForm(){
             data,
             onSuccess:(response) => {
                 reset();
-                // console.log(response,'ok')
-                // const tmp = {...data};
-                // Object.keys(tmp).forEach(key => {
-                //     tmp[key] = '';
-                // });
-                // setData(tmp);
             }
         })
     }

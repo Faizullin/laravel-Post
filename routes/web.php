@@ -16,10 +16,6 @@ use Inertia\Inertia;
 */
 
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard/Index');
-})->middleware(['auth', 'verified'])->name('dashboard.index');
-
 require __DIR__.'/auth.php';
 
 
@@ -90,14 +86,6 @@ Route::group([
     Route::get('post/tag/{tag:slug}', 'TagController')->name('post.tag.index');
 
     Route::match(array('GET', 'POST'),'search', 'SearchController')->name('post.search');
-
-    Route::get("/test",function(){
-        return Inertia::render('Test');
-    })->name('test');
-    Route::get("/test/login",function()
-    {
-        return inertia("Admin2/Pages/Auth/Login");
-    });
 });
 
 

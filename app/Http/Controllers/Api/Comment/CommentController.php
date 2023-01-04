@@ -29,7 +29,7 @@ class CommentController extends Controller
         $data = $request->validate([
             "post_id" => ["required","integer","exists:posts,id"],
         ]);
-        $comments = Post::find($data["post_id"])->comments()->whereNull('parent_id')->latest()->paginate(1)->appends($request->query());
+        $comments = Post::find($data["post_id"])->comments()->whereNull('parent_id')->latest()->paginate(3)->appends($request->query());
         return IndexCommentResource::collection($comments);
     }
 
@@ -91,6 +91,7 @@ class CommentController extends Controller
         }
 
         return response()->json([
+            'comment' => $comment,
             'type' => 'success',
             'message' => 'Comment has been created',
         ]);

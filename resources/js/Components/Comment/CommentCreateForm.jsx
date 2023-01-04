@@ -17,16 +17,14 @@ export default function CommentCreateForm({reload}) {
             ...data
         }).then(response => {
             reset();
+            setErrors({})
             reload();
         }).catch(error => {
-            console.log("Error",error)
             if(error.response.status == 422){
                 const tmp = {}
-                //console.log('E',error.response.data)
                 Object.keys(error.response.data.errors).forEach(function(key, index) {
                     tmp[key] = error.response.data.errors[key][0];
                 });
-
                 setErrors(tmp)
             }
         })

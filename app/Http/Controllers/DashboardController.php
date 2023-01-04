@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Filters\Dashboard\CommentFilter;
 use App\Http\Filters\Dashboard\PostFilter;
-use App\Http\Resources\Comment\IndexCommentResource;
+use App\Http\Resources\Comment\IndexCommentDashboardResource;
 use App\Http\Resources\Post\IndexPostResource;
 use App\Http\Resources\User\IndexUserDashboardResource;
 use App\Models\Post;
@@ -39,7 +39,7 @@ class DashboardController extends Controller
         }
         return Inertia::render('Dashboard/Post/Index', [
             'posts' => IndexPostResource::collection($posts),
-            'user' => new IndexUserDashboardResource(Auth::user()),
+            'user' => new IndexUserDashboardResource($user),
             'appliedFilters' => $appliedFilters,
         ]);
     }
@@ -56,8 +56,8 @@ class DashboardController extends Controller
             $comments = $comments->paginate(1)->appends(request()->query());
         }
         return Inertia::render('Dashboard/Comment/Index', [
-            'comments' => IndexCommentResource::collection($comments),
-            'user' => new IndexUserDashboardResource(Auth::user()),
+            'comments' => IndexCommentDashboardResource::collection($comments),
+            'user' => new IndexUserDashboardResource($user),
             'appliedFilters' => $appliedFilters,
         ]);
     }
@@ -76,7 +76,7 @@ class DashboardController extends Controller
         }
         return Inertia::render('Dashboard/FavouritePost/Index', [
             'posts' => IndexPostResource::collection($posts),
-            'user' => new IndexUserDashboardResource(Auth::user()),
+            'user' => new IndexUserDashboardResource($user),
             'appliedFilters' => $appliedFilters,
         ]);
     }

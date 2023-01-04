@@ -8,7 +8,7 @@ import Pagination from './Pagination';
 import { useModal } from '@ebay/nice-modal-react';
 import { DeleteConfirmModal } from '../Dialog/DeleteConfirmModal';
 
-export default function CommentList({post}){
+export default function CommentList({post,commentsCount,onGetComments}){
     const [createReplyParentId,setCreateReplyParentId] = useState(null);
     const [editItem,setEditItem] = useState({});
     const [openEditModal,setOpenEditModal] = useState(false);
@@ -22,6 +22,7 @@ export default function CommentList({post}){
     const getComments = (page=1) => {
         return apiPost.get(route (`api.comment.index`),{params:{post_id:post.id,page,}}).then(response => {
             setComments(response.data || {data:[]});
+            onGetComments(response);
         });
     }
     const handleReply =(e,parent_id) => {
@@ -53,7 +54,7 @@ export default function CommentList({post}){
     return (
         <div className="comments">
 
-            <h4 className="comments-count">{post.comments_count} Comments</h4>
+            <h4 className="comments-count">{commentsCount} Comments</h4>
 
             { comments.data.map((comment,index) => (
                 <CommentItem comment={comment}
@@ -65,7 +66,7 @@ export default function CommentList({post}){
                     onDelete={handleDelete}
                     />
             )) }
-            <div className={`mb-3 ${!(post.comments_count>0) ? "hidden" : "" }`}>
+            <div className={`mb-3`}>
                 <Pagination items={comments} onPaginate={getComments}/>
             </div>
 

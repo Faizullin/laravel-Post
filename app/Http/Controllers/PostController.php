@@ -32,6 +32,7 @@ class PostController extends Controller
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
         $appliedFilters = $filter->getAppliedFilters();
+        $posts->withCount('comments');
         $posts = $posts->paginate(6)->appends(request()->query());
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
@@ -99,6 +100,7 @@ class PostController extends Controller
      */
     public function show(PostFilter $filter, Post $post)
     {
+        $post->loadCount('comments');
         $appliedFilters = $filter->getAppliedFilters();
         return Inertia::render('Post/Show', [
             'tags' => TagMinResource::collection(Tag::all()),
@@ -139,7 +141,7 @@ class PostController extends Controller
             DB::beginTransaction();
             $data['category_id']=$data['category'];
             $data['user_id']=$user->id;
-            $post_tags = $data['tags'];
+            $post_tags = isset($data['tags']) ? $data['tags'] : [];
             if ($request->hasFile('image_path')) {
 
                 $data['image_path'] = $request->file('image_path')->store('img','public');

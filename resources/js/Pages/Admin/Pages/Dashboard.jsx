@@ -190,21 +190,12 @@ export default function Dashboard({newUsers}){
                 </div>
                 </div>
 
-                <div className="notification blue">
-                <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
-                    <div>
-                    <span className="icon"><i className="mdi mdi-buffer"></i></span>
-                    <b>Responsive table</b>
-                    </div>
-                    <button type="button" className="button small textual --jb-notification-dismiss">Dismiss</button>
-                </div>
-                </div>
 
                 <div className="card has-table">
                 <header className="card-header">
                     <p className="card-header-title">
                     <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                    Clients
+                    New Users
                     </p>
                     <Link href="#" className="card-header-icon">
                     <span className="icon"><i className="mdi mdi-reload"></i></span>
@@ -257,20 +248,6 @@ export default function Dashboard({newUsers}){
 
                     </tbody>
                     </table>
-
-
-
-
-                    <div className="table-pagination">
-                    <div className="flex items-center justify-between">
-                        <div className="buttons">
-                        <button type="button" className="button active">1</button>
-                        <button type="button" className="button">2</button>
-                        <button type="button" className="button">3</button>
-                        </div>
-                        <small>Page 1 of 3</small>
-                    </div>
-                    </div>
                 </div>
                 </div>
             </section>

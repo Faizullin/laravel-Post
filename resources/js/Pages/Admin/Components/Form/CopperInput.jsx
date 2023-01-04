@@ -38,7 +38,6 @@ export default function CropperInput({defaultValue,id,onChange,title}){
             setOpen(true);
 
         };
-        console.log(files[0])
         reader.readAsDataURL(files[0]);
 
     }

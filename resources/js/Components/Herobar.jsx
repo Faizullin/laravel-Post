@@ -1,4 +1,6 @@
 import { Link } from "@inertiajs/inertia-react";
+import HeroImg from "../../img/hero-img.svg"
+
 
 
 export default function Herobar(){
@@ -14,7 +16,7 @@ export default function Herobar(){
                     </div>
                 </div>
                 <div className="lg:w-1/2 pr-4 pl-4 order-1 lg:order-2">
-                <img src="/img/hero-img.svg" className="max-w-full h-auto" alt="" data-aos="zoom-out" data-aos-delay="100"/>
+                <img src={HeroImg} className="max-w-full h-auto" alt="" data-aos="zoom-out" data-aos-delay="100"/>
                 </div>
             </div>
             </div>

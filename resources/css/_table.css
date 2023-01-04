@@ -1,3 +1,52 @@
+.card{
+    border-radius:.25rem;
+    border-width:1px;
+    --tw-border-opacity:1;
+    border-color:rgb(243 244 246 / var(--tw-border-opacity));
+    --tw-bg-opacity:1;
+    background-color:rgb(255 255 255 / var(--tw-bg-opacity))
+}
+.card.has-table .card-content{
+    padding:0
+}
+.card-content{
+    padding:1.5rem
+}
+.card-content hr{
+    margin-top:1.5rem;
+    margin-bottom:1.5rem;
+    margin-left:-1.5rem;
+    margin-right:-1.5rem
+}
+.card.empty .card-content{
+    padding-top:3rem;
+    padding-bottom:3rem;
+    text-align:center;
+    --tw-text-opacity:1;
+    color:rgb(107 114 128 / var(--tw-text-opacity))
+}
+.card-header{
+    display:flex;
+    align-items:stretch;
+    border-bottom-width:1px;
+    --tw-border-opacity:1;
+    border-color:rgb(243 244 246 / var(--tw-border-opacity))
+}
+.card-header-icon,.card-header-title{
+    display:flex;
+    align-items:center;
+    padding-top:.75rem;
+    padding-bottom:.75rem;
+    padding-left:1rem;
+    padding-right:1rem
+}
+.card-header-title{
+    flex-grow:1;
+    font-weight:700
+}
+.card-header-icon{
+    justify-content:center
+}
 
 table {
     width: 100%;

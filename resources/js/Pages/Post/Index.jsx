@@ -10,7 +10,7 @@ import Breadcrumb from "@/Components/Breadcrumb";
 
 
 
-export default function Index({posts,errors,auth}){
+export default function Index({posts}){
     const [filtersSidebarOpen,setFiltersSidebarOpen] = useState(false);
     return (
         <Layout>
@@ -21,14 +21,14 @@ export default function Index({posts,errors,auth}){
             </Breadcrumb>
             <section id="blog" className="blog">
                 <div className="container mx-auto" data-aos="fade-up">
-                    <div className="flex justify-end  items-center items-baseline border-b border-gray-200 px-6 pb-4 md:px-0">
+                    <div className="flex justify-end items-center items-baseline border-b border-gray-200 px-6 pb-4 md:px-0">
                         <SortDropdown/>
                         <Sidebar.TriggerButton onClick={ () => setFiltersSidebarOpen(!filtersSidebarOpen) } />
                     </div>
 
                     <div className="flex mt-8">
                         <div className="lg:w-2/3 ">
-                            <div className="flex flex-wrap mx-auto justify-between posts-list">
+                            <div className="flex flex-wrap mx-auto posts-list">
                                 { posts.data.map((post,index) => (
                                     <PostItem key={post.id} post={post} />
                                 ))}

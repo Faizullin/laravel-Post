@@ -15,7 +15,7 @@ const SORT_ASC = "asc"
 const SORT_DESC = "desc"
 const perPageList = [1,10,20,50];
 
-export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title}) {
+export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title,titlePlural}) {
 	const {appliedFilters} = usePage().props
     const {data} = items
 
@@ -126,12 +126,12 @@ export default function TableModalLayout ({fetchUrls,CreateModal,EditModal,Delet
                     <header className="card-header">
                         <p className="card-header-title">
                             <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                            Tags
+                            { titlePlural }
                         </p>
                         <button
                             className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
                             onClick={ handleCreateClick }>
-                            Create New Tag
+                            Create New {title}
                         </button>
                         <Link href="#" className="card-header-icon">
                             <span className="icon"><i className="mdi mdi-reload"></i></span>

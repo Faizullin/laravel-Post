@@ -46,7 +46,11 @@ export default function AuthDropdown({auth}) {
                 { (auth.user) ?
                     (
                         <>
-                            <li><a href="#">Profile</a></li>
+                            <li>
+                                <Link href={ route(`dashboard.profile.edit`) }>
+                                    Profile
+                                </Link>
+                            </li>
                             <li>
                                 <Link href={ route(`dashboard.index`)  }>
                                     Dashboard

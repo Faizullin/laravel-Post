@@ -20,8 +20,8 @@ class EditContactResource extends JsonResource
             'email' => $this->email,
             'subject'=> $this->subject,
             'message'=> $this->message,
-            'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

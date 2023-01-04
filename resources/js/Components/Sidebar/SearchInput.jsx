@@ -40,10 +40,7 @@ export default function SearchInput(){
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(data.keyword){
-            post(route(`post.search`,{keyword:data.keyword}));
-        }
-
+        post(route(`post.search`,{keyword:data.keyword}));
     }
     useDidUpdateEffect(() => {
         if(data.keyword){

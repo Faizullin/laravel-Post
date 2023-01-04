@@ -5,7 +5,6 @@ import ErrorDialog from './ErrorDialog';
 export default NiceModal.create(({ name }) => {
   const modal = useModal();
   return (
-
         <ErrorDialog
             title={name}
             onConfirm={() => modal.hide()}
@@ -13,14 +12,5 @@ export default NiceModal.create(({ name }) => {
             onCancel={() => modal.hide()}
             afterClose={() => modal.remove()}
         />
-    // <Modal
-    //   title="Hello Antd"
-    //   onOk={() => modal.hide()}
-    //   visible={modal.visible}
-    //   onCancel={() => modal.hide()}
-    //   afterClose={() => modal.remove()}
-    // >
-    //   Hello {name}!
-    // </Modal>
   );
 });

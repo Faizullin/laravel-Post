@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     const selectHeader = document.querySelector('#header');
     if (selectHeader) {
-        console.log("Found")
         let headerOffset = selectHeader.offsetTop;
         let nextElement = selectHeader.nextElementSibling;
 

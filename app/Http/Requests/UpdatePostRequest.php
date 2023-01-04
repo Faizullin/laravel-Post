@@ -28,7 +28,7 @@ class UpdatePostRequest extends FormRequest
             $image_rules = [];
         }
         return [
-            'title'=>['required','string','max:255','min:3','unique:posts,title,'.$this->id],
+            'title'=>['required','string','max:255','min:3','unique:posts,title,'.$this->post->id],
             'description'=>['required','string','max:255'],
             'body'=>['required','string'],
             'category'=>['required','integer','exists:categories,id'],

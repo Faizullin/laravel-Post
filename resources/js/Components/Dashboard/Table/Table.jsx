@@ -1,8 +1,9 @@
 import { useModal } from "@ebay/nice-modal-react";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
-import { debounce } from "lodash";
-import { useEffect, useRef, useState } from "react";
+import Icon from "@mdi/react";
+import { mdiEye,mdiTrashCan,mdiAccountMultiple } from "@mdi/js";
+import { useEffect, useState } from "react";
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import Pagination from "./Pagination";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
@@ -11,7 +12,7 @@ const SORT_ASC = "asc"
 const SORT_DESC = "desc"
 const perPageList = [1,10,20,50];
 
-export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title}) {
+export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,breadcrumbLinks,title,titlePlural}) {
 	const {appliedFilters} = usePage().props
     const {data} = items
 
@@ -73,7 +74,6 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
     }, [perPage, sortColumn, sortOrder, currentPage])
 
     useEffect(function() {
-        console.log(appliedFilters)
         setLoading(false);
     },[])
 
@@ -84,14 +84,12 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
                 <div className="card has-table">
                     <header className="card-header">
                         <p className="card-header-title">
-                            <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                            Tags
+                            <span className="icon mr-1">
+                                <Icon path={mdiAccountMultiple}
+                                    size={0.7}/>
+                            </span>
+                            { titlePlural || "" }
                         </p>
-                        <Link
-                            className='inline-flex items-center px-4 py-2 bg-gray-900 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest active:bg-gray-900 transition ease-in-out duration-150'
-                            href={fetchUrls.create}>
-                            Create New {title}
-                        </Link>
                         <Link href="#" className="card-header-icon">
                             <span className="icon"><i className="mdi mdi-reload"></i></span>
                         </Link>
@@ -171,11 +169,17 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
                                                     <div className="buttons right nowrap">
                                                         <Link className="button small blue --jb-modal"  data-target="sample-modal-2" type="button"
                                                             href={fetchUrls.edit(d.id)}>
-                                                            <span className="icon"><i className="mdi mdi-eye"></i></span>
+                                                            <span className="icon">
+                                                                <Icon path={mdiEye}
+                                                                    size={1}/>
+                                                            </span>
                                                         </Link>
                                                         <button className="button small red --jb-modal" data-target="sample-modal" type="button"
                                                             onClick={ (e) => handleDestroyClick(d.id) }>
-                                                            <span className="icon"><i className="mdi mdi-trash-can"></i></span>
+                                                            <span className="icon">
+                                                                <Icon path={mdiTrashCan}
+                                                                    size={1}/>
+                                                            </span>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -196,37 +200,12 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
                             </tbody>
                         </table>
 
-                        {/* <style>
-                        html,
-                        body {
-                            height: 100%;
-                        }
-
-                        @media (min-width: 640px) {
-                            table {
-                            display: inline-table !important;
-                            }
-
-                            thead tr:not(:first-child) {
-                            display: none;
-                            }
-                        }
-
-                        td:not(:last-child) {
-                            border-bottom: 0;
-                        }
-
-                        th:not(:last-child) {
-                            border-bottom: 2px solid rgba(0, 0, 0, .1);
-                        }
-                        </style> */}
 
                         { data.length > 0 && !loading ? (
 			                <div className="mt-2">
 			                    <Pagination
 			                        items={items}
 			                        onChange={(page) => setCurrentPage(page)}
-			                        // totalItems={data.length}
 			                    />
 			                </div>
 			            ) : null}

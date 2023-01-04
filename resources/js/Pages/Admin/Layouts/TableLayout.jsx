@@ -52,7 +52,9 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
 
     const fetchData = () => {
         const params = {
-            search,
+            filter:{
+                search,
+            },
             sort_field: sortColumn,
             sort_order: sortOrder,
             per_page: perPage,
@@ -219,8 +221,6 @@ export default function TableLayout ({fetchUrls,DeleteConfirmModal,columns,wrap,
 			                    <Pagination
 			                        items={items}
 			                        onChange={(page) => setCurrentPage(page)}
-			                        totalItems={data.length}
-                                    //pageLimit={3}
 			                    />
 			                </div>
 			            ) : null}

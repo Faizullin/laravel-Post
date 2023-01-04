@@ -10,7 +10,7 @@ import { Fragment } from "react";
 
 export default function CommentReplyModalForm({show,setShow,title,createReplyParentId,reload}) {
     const [errors,setErrors] = useState({})
-    const {data,setData,post,reset} = useForm({
+    const {data,setData,reset} = useForm({
         message:"",
         post_id:usePage().props.post.data.id,
         parent_id:null,
@@ -23,6 +23,7 @@ export default function CommentReplyModalForm({show,setShow,title,createReplyPar
         }).then(response => {
             reset();
             reload().then(response => {
+                setErrors({})
                 setShow(false)
             })
         }).catch(error => {

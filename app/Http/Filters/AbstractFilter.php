@@ -56,7 +56,6 @@ abstract class AbstractFilter
     {
         if (is_string($query)) {
             $item = explode(',', $query);
-            //dd("Item",$item, $query);
             if (count($item) > 1) {
                 return $item;
             }

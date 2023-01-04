@@ -9,6 +9,8 @@ export default function Index({posts}){
             breadcrumbLinks={[{label:"Post"}]}>
             <Table
                 wrap="post"
+                title="Post"
+                titlePlural="Posts"
                 fetchUrls={{
                     get:route(`dashboard.post.index`),
                     create:route(`post.create`),
@@ -43,7 +45,6 @@ export default function Index({posts}){
                 ]}
                 items={posts}
                 DeleteConfirmModal={DeleteConfirmModal}
-                title="Post"
             />
         </DashboardLayout>
     );

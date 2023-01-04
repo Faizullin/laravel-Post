@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\PostFilter;
 use App\Http\Requests\Search\SearchRequest;
 use App\Http\Resources\Category\CategoryMinResource;
 use App\Http\Resources\Post\IndexPostResource;
@@ -21,24 +22,27 @@ class SearchController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(SearchRequest $request,)
+    public function __invoke(SearchRequest $request, PostFilter $filter)
     {
-        $keyword = $request->validated()['keyword'];
-        if(is_null($keyword)) {
-            $posts = Post::orderBy('updated_at','DESC')->paginate(6);
-        } else {
-            $posts = Post::where('title','LIKE','%'.$keyword."%")->orderBy('updated_at','DESC')->paginate(6);
+        $data = $request->validated();
+        $posts = (new Post)->newQuery();
+        $keyword = isset($data['keyword']) ? $data['keyword'] : null;
+        if(!is_null($keyword)) {
+            $posts = $posts->where('title','LIKE','%'.$data['keyword']."%");
         }
+        $posts->filter($filter);
+        $appliedFilters = $filter->getAppliedFilters();
+        if(!is_null($keyword)) {
+            $appliedFilters['filters']['search'] = $keyword;
+        }
+        $posts->withCount('comments');
+        $posts = $posts->paginate(6)->appends(request()->query());
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
-            'posts' => IndexPostResource::collection($posts),
             'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
-            'appliedFilters' => [
-                'filters' => [
-                    'search' => $keyword,
-                ]
-            ]
+            'posts' => IndexPostResource::collection($posts),
+            'appliedFilters' => $appliedFilters,
         ]);
     }
 }

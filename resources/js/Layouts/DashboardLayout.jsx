@@ -105,8 +105,8 @@ export default function DashboardLayout({children}) {
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full md:w-9/12 mx-2">
-                            <div className="bg-white p-3 shadow-sm rounded-sm h-64">
+                        <div className="w-full md:w-9/12 md:mx-2 mt-6 md:mt-0">
+                            <div className="bg-white p-3 shadow-sm rounded-sm min-h-64">
                                 <div className="flex items-center space-x-2 font-semibold text-gray-900 leading-8">
                                     <span clas="text-green-500">
                                         <svg className="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

@@ -37,14 +37,9 @@ export default function Create({tags,categories}){
     function handleSubmit(e){
         e.preventDefault();
         post(route(`post.store`), {
-           // method: 'post',
             data,
         })
     }
-
-    useEffect(()=>{
-        console.log("Effect Error",errors)
-    },[errors]);
 
     return (
         <Layout linkTitle="Post">
@@ -68,7 +63,7 @@ export default function Create({tags,categories}){
                                             label="Title"
                                             value={data.title}
                                             name="title"
-                                            handleChange={handleChange}
+                                            onChange={handleChange}
                                             error={errors.title}/>
                                         <InputBlock
                                             label="Description"

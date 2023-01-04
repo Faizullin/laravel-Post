@@ -11,6 +11,8 @@ export default function Index({comments}){
             breadcrumbLinks={[{label:"Comment"}]}>
             <Table
                 wrap="comment"
+                title="Comment"
+                titlePlural="Comments"
                 fetchUrls={{
                     get:route(`dashboard.comment.index`),
                     edit:({item:comment}) => route(`dashboard.comment.index`,comment),
@@ -18,10 +20,6 @@ export default function Index({comments}){
                 }}
                 columns={[
                     {label:"Id",name:"id",sortable:true},
-                    {label:"Author",name:"author",sortable:true,
-                        render: ({item:comment}) => (
-                            <td>{ comment.author?.name  || "Unknown" }</td>
-                        )},
                     {label:"Message",name:"message",
                         render:({item:comment}) => (
                             <td dangerouslySetInnerHTML={{
@@ -30,27 +28,25 @@ export default function Index({comments}){
                                 } ),
                             }} />
                         ) },
-                    {label:"Post",name:"post",sortable:true,
-                        render: ({item:comment}) => (comment.post) ? (
+                    {label:"Post",name:"post",
+                        render: ({item:comment}) => (comment.commentable) ? (
                             <td>
-                                <Link href={route (`post.show`,comment.post.id)}>{ comment.post?.title }</Link>
+                                <Link href={route (`post.show`,comment.commentable.id)}>{ comment.commentable?.title }</Link>
                             </td>
                         ) : (
                             <td>Unknown</td>
                         )},
-                    {label:"Parent",name:"parent",sortable:true,
+                    {label:"Parent",name:"parent",
                         render: ({item:comment}) => (comment.parent) ? (
-                            <td>{ comment.parent?.title }</td>
+                            <td>{ comment.parent.author?.name || "Unknown" }</td>
                         ) : (
-                            <td>Unknown</td>
+                            <td>NULL</td>
                         )},
                     {label:"Created",name:"created_at",sortable:true,type:"time"},
                     {label:"Last Updated",name:"updated_at",sortable:true,type:"time"},
                 ]}
                 items={comments}
                 DeleteConfirmModal={DeleteConfirmModal}
-                title="comment"
-
             />
         </DashboardLayout>
     );

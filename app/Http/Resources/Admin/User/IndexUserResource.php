@@ -19,8 +19,8 @@ class IndexUserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'posts_count' => $this->posts()->count(),
-            'created_at' => $this->created_at->diffForHumans(),
-            'updated_at' => $this->updated_at->diffForHumans(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
 
         ];
     }

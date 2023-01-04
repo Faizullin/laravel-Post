@@ -46,13 +46,14 @@ export default function Edit({tags,categories,post}){
         postRequest(route(`post.update`,post), data);
     }
     const handleDeleteConfirm = () => {
-        Inertia.delete(route('post.destroy',post));
+        Inertia.delete(route('post.destroy',post),{
+            onSuccess: () => modal.hide()
+        });
     }
     const handleDelete = (item) => {
         modal.show({ onConfirm: handleDeleteConfirm, });
     }
 
-    useEffect(()=>{console.log(data)},[data])
     return (
         <Layout linkTitle="Post">
             <Head title={"Create New Post"} />
@@ -63,7 +64,7 @@ export default function Edit({tags,categories,post}){
                         <header className="card-header">
                             <p className="card-header-title">
                                 <span className="icon"><i className="mdi mdi-account-multiple"></i></span>
-                                Create New Post
+                                Edit Post #{post.id}
                             </p>
                         </header>
                         <div className="card-content">
@@ -75,7 +76,7 @@ export default function Edit({tags,categories,post}){
                                             label="Title"
                                             value={data.title}
                                             name="title"
-                                            handleChange={handleChange}
+                                            onChange={handleChange}
                                             error={errors.title}/>
                                         <InputBlock
                                             label="Description"
@@ -96,7 +97,7 @@ export default function Edit({tags,categories,post}){
                                             name="category"
                                             error={errors.category}>
                                             <select className='block'
-                                                name="category" id="input-category" onChange={handleChange} defaultValue={''}>
+                                                name="category" id="input-category" onChange={handleChange} defaultValue={data.category}>
                                                 <option value={''} disabled={true}>Choose category</option>
                                                 { categories.map((category,index) => (
                                                     <option key={category.id} value={category.id}>{category.title}</option>
@@ -112,6 +113,7 @@ export default function Edit({tags,categories,post}){
                                                     id='input-tags'
                                                     dataKey="id"
                                                     textField="title"
+                                                    defaultValue={data.tags}
                                                     data={ tags }
                                                     filter='contains'
                                                     onChange={value => setTags(value)}

@@ -10,7 +10,7 @@ export default function Pagination({items}){
     }
 
     return (
-        (items.meta?.links?.length > 1) && (
+        (items.meta?.last_page > 1) && (
             <div className="blog-pagination">
                 <ul className="justify-center">
                     {

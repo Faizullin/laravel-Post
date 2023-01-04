@@ -1,3 +1,4 @@
+import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
 
 const DropDown = ({children,className,onClick,}) => {
@@ -8,6 +9,10 @@ const DropDown = ({children,className,onClick,}) => {
 
 export default function Navbar(){
     const { user } = usePage().props.auth;
+    const handleLogout = (e) => {
+        e.preventDefault()
+        Inertia.post(route(`logout`))
+    }
     const handleNavBarMenuClick = (e)=>{
         var dropdownIcon = e.currentTarget.getElementsByClassName('icon')[0].getElementsByClassName('mdi')[0];
         document.getElementById(e.currentTarget.getAttribute('data-target')).classList.toggle('active');
@@ -54,7 +59,7 @@ export default function Navbar(){
                             <div className="user-avatar">
                                 <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe" className="rounded-full"/>
                             </div>
-                            <div className="is-user-name"><span>{ user.name }</span></div>
+                            <div className="is-user-name"><span>{ user?.name }</span></div>
                             <span className="icon"><i className="mdi mdi-chevron-down"></i></span>
                         </a>
                         <div className="navbar-dropdown">
@@ -67,17 +72,16 @@ export default function Navbar(){
                                 <span>Messages</span>
                             </Link>
                             <hr className="navbar-divider"/>
-                            <Link className="navbar-item"
-                                method="post" href={route('logout')} as="button">
+                            <a className="navbar-item" onClick={handleLogout}>
                                 <span className="icon"><i className="mdi mdi-logout"></i></span>
                                 <span>Log Out</span>
-                            </Link>
+                            </a>
                         </div>
                     </DropDown>
-                    <Link href="https://github.com/Faizullin/laravel-Post" className="navbar-item has-divider desktop-icon-only">
+                    <a href="https://github.com/Faizullin/laravel-Post" className="navbar-item has-divider desktop-icon-only">
                         <span className="icon"><i className="mdi mdi-github-circle"></i></span>
                         <span>GitHub</span>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </nav>
