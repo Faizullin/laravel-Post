@@ -102,6 +102,10 @@ class PostController extends Controller
     {
         $post->loadCount('comments');
         $appliedFilters = $filter->getAppliedFilters();
+        $appliedFilters['filters']['tags'] = $post->tags->map(function($tag) {
+            return $tag->slug;
+        });
+        $appliedFilters['filters']['category'] = $post->category->slug;
         return Inertia::render('Post/Show', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),

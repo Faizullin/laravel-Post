@@ -1,13 +1,12 @@
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { MagnifyingGlassIcon, MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Inertia } from "@inertiajs/inertia";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/inertia-react";
 import { useEffect, useState } from "react";
 import { Fragment } from "react";
 
 
-export default function MobileSidebar ({open,setOpen,tags,categories}) {
-    const { appliedFilters} = usePage().props;
+export default function MobileSidebar ({open,setOpen,tags,categories,appliedFilters}) {
     const [value,setValue] = useState("");
     const handleChange = (e) => setValue(e.target.value);
     const handleSubmit = (e) => {
@@ -119,7 +118,7 @@ export default function MobileSidebar ({open,setOpen,tags,categories}) {
                                             { tags.map((tag, index) => (
                                                 <div key={tag.id} className="flex items-center">
                                                     <Link
-                                                        href={route(`post.category.index`,tag)}
+                                                        href={route(`post.tag.index`,tag)}
                                                         className="ml-3 text-gray-600"
                                                     >
                                                         {tag.title}

@@ -45,6 +45,7 @@ abstract class AbstractFilter
                 $this->appliedFilters[$column] = $value;
             }
         }
+
     }
 
         /**
@@ -64,12 +65,16 @@ abstract class AbstractFilter
         return $query;
     }
 
+    public function beforeApply(){
+
+    }
 
     /**
      * @param Builder $builder
      */
     public function apply(Builder $builder)
     {
+        $this->beforeApply();
         $this->builder = $builder;
         $this->filterQuery();
         $this->sortQuery();
@@ -107,7 +112,7 @@ abstract class AbstractFilter
     protected function filterQuery()
     {
         $this->input['filters']->each(function ($value, $column) {
-            if (is_string($column) && is_string($value)) {
+            if (is_string($column) && isset($value)) {
                 if(in_array($column,$this->filterable)) {
                     if (method_exists($this, Str::camel($column).'Filter')) {
                         call_user_func_array([$this, Str::camel($column).'Filter'],[ $value]);

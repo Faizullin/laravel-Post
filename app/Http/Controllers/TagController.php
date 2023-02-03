@@ -21,8 +21,11 @@ class TagController extends Controller
      */
     public function __invoke(PostFilter $filter,Tag $tag)
     {
-        $posts = $tag->posts()->paginate(config('var.post_pagination'));
+        $posts = $tag->posts();
+        $posts->filter($filter);
+        $posts = $posts->paginate(6);
         $appliedFilters = $filter->getAppliedFilters();
+        $appliedFilters['filters']['tags'] = [$tag->slug];
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),

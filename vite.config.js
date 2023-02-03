@@ -13,7 +13,6 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@Admin': 'resources/js/Pages/Admin',
             '@img': 'resources/img',
         }
     },

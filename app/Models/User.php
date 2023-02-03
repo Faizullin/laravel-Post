@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Jobs\Auth\PasswordResetMailJob;
 use App\Models\Traits\Filterable;
 use App\Models\Traits\Liker as TraitsLiker;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,5 +75,16 @@ class User extends Authenticatable
     public function likedPosts()
     {
         return $this->getLikedItems(Post::class);
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        dispatch(new PasswordResetMailJob($this, $token));
     }
 }

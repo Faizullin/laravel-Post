@@ -1,4 +1,3 @@
-import { Dialog, Disclosure, Transition } from "@headlessui/react";
 import { FunnelIcon, MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { Link, usePage } from "@inertiajs/inertia-react"
 import DOMPurify from "dompurify";
@@ -11,12 +10,13 @@ const Sidebar = ({open,setOpen}) => {
     const {data:categories} = props.categories;
     const {data:tags} = props.tags;
     const {data:recentPosts} = props.recentPosts;
-
-
+    const appliedFilters = props.appliedFilters;
+    appliedFilters['filters']['tags'] = appliedFilters.filters.tags || []
+    appliedFilters['filters']['category'] = appliedFilters.filters.category || null
     return (
         <>
             <div className="lg:hidden">
-                <MobileSidebar open={open} setOpen={setOpen} tags={tags} categories={categories}/>
+                <MobileSidebar open={open} setOpen={setOpen} tags={tags} categories={categories} appliedFilters={appliedFilters}/>
             </div>
             <div className="lg:w-1/3 hidden lg:block">
 
@@ -29,7 +29,7 @@ const Sidebar = ({open,setOpen}) => {
                         <ul className="mt-3 flex flex-wrap">
                             { categories.map((category,index) => (
                                 <li key={`category-${category.id}`}>
-                                    <Link href={ route('post.category.index',category) }>{category.title}<span>({category.posts_count})</span></Link>
+                                    <Link href={ route('post.category.index',category) } className={`${appliedFilters.filters.category === category.slug && 'active'}`}>{category.title}<span>({category.posts_count})</span></Link>
                                 </li>
                             ))}
                         </ul>
@@ -65,7 +65,7 @@ const Sidebar = ({open,setOpen}) => {
                         <ul className="mt-3 flex flex-wrap">
                             { tags.map((tag,index) => (
                                 <li key={`tag-${tag.id}`}>
-                                    <Link href={ route('post.tag.index',tag) }>{tag.title}</Link>
+                                    <Link href={ route('post.tag.index',tag) } className={`${appliedFilters.filters.tags.includes(tag.slug) && 'active'}`}>{tag.title}</Link>
                                 </li>
                             ))}
                         </ul>

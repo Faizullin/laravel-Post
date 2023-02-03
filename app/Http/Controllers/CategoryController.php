@@ -22,8 +22,12 @@ class CategoryController extends Controller
     public function __invoke(PostFilter $filter, Category $category)
     {
 
-        $posts = $category->posts()->paginate(6);
+        $posts = $category->posts();
+        $posts->filter($filter);
+        $posts = $posts->paginate(6);
         $appliedFilters = $filter->getAppliedFilters();
+        $appliedFilters['filters']['category'] = $category->slug;
+
         return Inertia::render('Post/Index', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),
