@@ -6,6 +6,7 @@ use App\Models\Traits\Filterable;
 use App\Models\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
@@ -39,6 +40,8 @@ class Post extends Model
 
     public function getImageUrlAttribute()
     {
-        return Storage::url($this->image_path ? $this->image_path : 'img/unknown.jpg');
+        return  Storage::url($this->image_path ? $this->image_path : 'img/unknown.jpg');
     }
+
+
 }

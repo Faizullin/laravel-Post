@@ -6,6 +6,7 @@ use App\Http\Resources\Category\CategoryMinResource;
 use App\Http\Resources\Tag\TagMinResource;
 use App\Http\Resources\User\UserMinResource;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class ShowPostResource extends JsonResource
 {
@@ -17,7 +18,12 @@ class ShowPostResource extends JsonResource
      */
     public function toArray($request)
     {
-        //dd($this->likers);
+        $user = null;
+        if(Auth::guard('sanctum')->check()){
+            $user = Auth::guard('sanctum')->user();
+        } elseif (auth()->user()) {
+            $user = auth()->user();
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -28,7 +34,7 @@ class ShowPostResource extends JsonResource
             'tags' => TagMinResource::collection($this->tags),
             'comments_count' => $this->comments_count,
             'likes_count' => $this->likers()->count(),
-            'isLikedByCurrentUser' => auth()->user() ? $this->isLikedBy(auth()->user()) : false,
+            'isLikedByCurrentUser' => $user ? $this->isLikedBy($user) : false,
             'imageUrl' => $this->imageUrl,
             'created_at' => $this->created_at->format('d M, Y'),
             'updated_at' => $this->updated_at->format('d M, Y'),

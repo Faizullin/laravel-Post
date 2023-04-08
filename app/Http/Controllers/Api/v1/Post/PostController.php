@@ -4,10 +4,14 @@ namespace App\Http\Controllers\Api\v1\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Api\v1\PostFilter;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Resources\Post\IndexPostResource;
 use App\Http\Resources\Post\ShowPostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -37,7 +41,44 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title'=>['required','string','min:3','max:150','unique:posts,title'],
+            'description'=>['required','string','max:255'],
+            'body'=>['required','string'],
+            'category'=>['required','integer','exists:categories,id'],
+            'tags'=>['nullable','array'],
+            'tag.*'=>['integer','exists:tags,id'],
+            'image_path'=>['nullable','image','mimes:jpeg,jpg,png,gif,svg','max:2048'],
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json(['errors' => $errors], 422);
+        }
+        $data = $validator->validated();
+        $user = Auth::guard('sanctum')->user();
+        try {
+            DB::beginTransaction();
+            $data['category_id']=$data['category'];
+            $data['user_id']=$user->id;
+
+            $post_tags = isset($data['tags']) ? $data['tags'] : [];
+            unset($data['category'],$data['user'],$data['tags']);
+            if ($request->hasFile('image_path')) {
+                $data['image_path'] = $request->file('image_path')->store('img', 'public');
+            }
+            $post = Post::create($data);
+            $post->tags()->attach($post_tags);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Post has been created',
+        ]);
     }
 
     /**
@@ -48,6 +89,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+        $post->loadCount('comments');
         return response()->json(new ShowPostResource($post));
     }
 

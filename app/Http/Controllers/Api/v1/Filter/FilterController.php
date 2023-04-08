@@ -16,7 +16,7 @@ class FilterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function __invoke()
     {
         return response()->json([
             'categories' => CategoryMinResource::collection(Category::all()),
