@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::group(['namespace'=>'App\Http\Controllers\Api\v1','as'=>'api.',],function(){
     Route::get('search', \Search\SearchController::class)->name('search');
     Route::group(['controller'=>\Like\LikeController::class],function(){
@@ -34,6 +35,10 @@ Route::group(['namespace'=>'App\Http\Controllers\Api\v1','as'=>'api.',],function
         Route::get("/",'index')->name("post.index");
         Route::get("/{post}",'show')->name("post.show");
         // Route::post("/add",'store')->name("post.store")->middleware(["auth","can:create,".\App\Models\Comment::class]);
+    });
+    Route::group(['controller'=>\Auth\AuthenticatedSessionController::class],function(){
+        Route::post('login','store');
+        Route::get('login','store');
     });
 });
 

@@ -11,8 +11,18 @@ const Sidebar = ({open,setOpen}) => {
     const {data:tags} = props.tags;
     const {data:recentPosts} = props.recentPosts;
     const appliedFilters = props.appliedFilters;
-    appliedFilters['filters']['tags'] = appliedFilters.filters.tags || []
-    appliedFilters['filters']['category'] = appliedFilters.filters.category || null
+    console.log(appliedFilters)
+    if(!appliedFilters.filters){
+        appliedFilters['filters'] = {}
+    }
+    if(appliedFilters.filters){
+        appliedFilters['filters']['tags'] = appliedFilters.filters?.tags || []
+        appliedFilters['filters']['category'] = appliedFilters.filters?.category || null
+    } else {
+        appliedFilters['filters']['tags'] =  []
+        appliedFilters['filters']['category'] = null
+    }
+
     return (
         <>
             <div className="lg:hidden">

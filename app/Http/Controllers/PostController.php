@@ -67,12 +67,12 @@ class PostController extends Controller
 
         $data = $request->validated();
         $user = Auth::user();
-
         try {
             DB::beginTransaction();
             $data['category_id']=$data['category'];
             $data['user_id']=$user->id;
-            $post_tags = $data['tags'];
+
+            $post_tags = isset($data['tags']) ? $data['tags'] : [];
             unset($data['category'],$data['user'],$data['tags']);
             if ($request->hasFile('image_path')) {
                 $data['image_path'] = $request->file('image_path')->store('img', 'public');
@@ -145,6 +145,7 @@ class PostController extends Controller
             DB::beginTransaction();
             $data['category_id']=$data['category'];
             $data['user_id']=$user->id;
+
             $post_tags = isset($data['tags']) ? $data['tags'] : [];
             if ($request->hasFile('image_path')) {
 

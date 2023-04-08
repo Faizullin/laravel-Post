@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class PostFilter extends AbstractFilter
 {
 	public $sortable = [ "most_liked", "most_recent",'most_old'];
-	public $filterable = [ "tag", "category"];
+	public $filterable = [ "tag", "category", "search"];
 
     public function beforeApply()
     {
@@ -35,13 +35,7 @@ class PostFilter extends AbstractFilter
 
     public function searchFilter($value)
     {
-        $this->builder->where("id","LIKE","%".$value."%")->orWhere("title","LIKE","%".$value."%")->orWhere("description","LIKE","%".$value."%")
-            ->orWhereHas("category",function (Builder $query) use ($value) {
-                $query->where('title', 'like', "%$value%");
-            })
-            ->orWhereHas("user",function (Builder $query) use ($value) {
-                $query->where('name', 'like', "%$value%");
-         });
+        $this->builder->where("title","LIKE","%".$value."%");
     }
 
 
@@ -64,11 +58,14 @@ class PostFilter extends AbstractFilter
 
     protected function tagFilter($values)
     {
-        //dd($values);
-        foreach ($values as $tag) {
-            $this->builder->whereHas('tags', function ($query) use ($tag) {
-                $query->where('slug', $tag);
-            });
+        if(is_array($values)){
+            foreach ($values as $tag) {
+                if(is_string($tag)){
+                    $this->builder->whereHas('tags', function ($query) use ($tag) {
+                        $query->where('slug', $tag);
+                    });
+                }
+            }
         }
     }
 }

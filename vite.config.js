@@ -16,4 +16,8 @@ export default defineConfig({
             '@img': 'resources/img',
         }
     },
+    mode: "development",
+    build: {
+        minify: false,
+    }
 });

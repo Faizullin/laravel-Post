@@ -18,7 +18,7 @@ export default function Navbar({auth}){
         <div className="container mx-auto flex items-center justify-between px-4">
             <Link href={route('pages.home')} className="logo flex items-center">
                 {/* <!-- <img src="assets/img/logo.png" alt=""> --> */}
-                <h1>Impact<span>.</span></h1>
+                <h1>PostApp<span>.</span></h1>
             </Link>
             <div className={`${ isOpenNavbar ? "" : "hidden" } fixed inset-0 mobile-nav-bg`}>
             </div>

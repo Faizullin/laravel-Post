@@ -45,7 +45,6 @@ abstract class AbstractFilter
                 $this->appliedFilters[$column] = $value;
             }
         }
-
     }
 
         /**
@@ -111,6 +110,7 @@ abstract class AbstractFilter
 
     protected function filterQuery()
     {
+
         $this->input['filters']->each(function ($value, $column) {
             if (is_string($column) && isset($value)) {
                 if(in_array($column,$this->filterable)) {
