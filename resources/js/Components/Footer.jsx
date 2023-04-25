@@ -1,11 +1,7 @@
 import { Link } from "@inertiajs/inertia-react";
-import { mdiFacebook, mdiInstagram, mdiLinkedin, mdiTwitter } from "@mdi/js";
-import Icon from "@mdi/react";
-
+import { FaTwitter, FaFacebook, FaInstagram, FaLinkedin  } from 'react-icons/fa'
 
 export default function Footer() {
-
-
 	return (
 		<footer id="footer" className="footer">
 			<div className="container mx-auto sm:px-4">
@@ -16,25 +12,18 @@ export default function Footer() {
                     </Link>
                     <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
                     <div className="social-links flex mt-4">
+
                         <Link href="#" className="twitter">
-                            <Icon path={mdiTwitter}
-                                size={1}
-                                />
+                            <FaTwitter />
                         </Link>
                         <Link href="#" className="facebook">
-                            <Icon path={mdiFacebook}
-                                size={1}
-                                />
+                            <FaFacebook />
                         </Link>
                         <Link href="#" className="instagram">
-                            <Icon path={mdiInstagram}
-                                size={1}
-                                />
+                            <FaInstagram />
                         </Link>
                         <Link href="#" className="linkedin">
-                            <Icon path={mdiLinkedin}
-                                size={1}
-                                />
+                            <FaLinkedin/>
                         </Link>
                     </div>
 			    </div>

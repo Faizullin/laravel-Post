@@ -18,7 +18,11 @@ class HandleInertiaRequests extends Middleware
     {
         if ($request->route()->getPrefix() === '/admin') {
 
-            return 'admin.app';
+            $user = $request->user();
+            if($user->hasRole('admin') || $user->hasRole('super-admin')) {
+                return 'admin.app';
+            }
+            abort(404);
         }
 
         return 'app';

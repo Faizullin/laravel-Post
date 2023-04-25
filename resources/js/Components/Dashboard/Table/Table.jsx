@@ -1,12 +1,11 @@
 import { useModal } from "@ebay/nice-modal-react";
 import { Inertia } from "@inertiajs/inertia";
 import { Link, usePage } from "@inertiajs/inertia-react";
-import Icon from "@mdi/react";
-import { mdiEye,mdiTrashCan,mdiAccountMultiple } from "@mdi/js";
 import { useEffect, useState } from "react";
 import useDidUpdateEffect from "@/hooks/useDidUpdateEffect";
 import Pagination from "./Pagination";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
+import { FaEye, FaTrash  } from 'react-icons/fa'
 
 const SORT_ASC = "asc"
 const SORT_DESC = "desc"
@@ -84,10 +83,6 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
                 <div className="card has-table">
                     <header className="card-header">
                         <p className="card-header-title">
-                            <span className="icon mr-1">
-                                <Icon path={mdiAccountMultiple}
-                                    size={0.7}/>
-                            </span>
                             { titlePlural || "" }
                         </p>
                         <Link href="#" className="card-header-icon">
@@ -170,15 +165,13 @@ export default function Table ({fetchUrls,DeleteConfirmModal,columns,wrap,items,
                                                         <Link className="button small blue --jb-modal"  data-target="sample-modal-2" type="button"
                                                             href={fetchUrls.edit(d.id)}>
                                                             <span className="icon">
-                                                                <Icon path={mdiEye}
-                                                                    size={1}/>
+                                                                <FaEye />
                                                             </span>
                                                         </Link>
                                                         <button className="button small red --jb-modal" data-target="sample-modal" type="button"
                                                             onClick={ (e) => handleDestroyClick(d.id) }>
                                                             <span className="icon">
-                                                                <Icon path={mdiTrashCan}
-                                                                    size={1}/>
+                                                                <FaTrash />
                                                             </span>
                                                         </button>
                                                     </div>
