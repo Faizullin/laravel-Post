@@ -13,7 +13,6 @@ use App\Http\Resources\Post\ShowPostResource;
 use App\Http\Resources\Tag\TagMinResource;
 use App\Models\Category;
 use App\Models\Tag;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -32,12 +31,16 @@ class PostController extends Controller
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
         $appliedFilters = $filter->getAppliedFilters();
-        $posts->withCount('comments');
+        $posts->withCount('commentsWithReplies');
+        $posts->with(['category','tags','user']);
         $posts = $posts->paginate(6)->appends(request()->query());
+
+        $recentPosts = Post::latest()->with(['category','tags','user'])->take(6)->get();
+
         return Inertia::render('Post/Index', [
-            'tags' => TagMinResource::collection(Tag::all()),
-            'categories' => CategoryMinResource::collection(Category::all()),
-            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
+            'tags' => TagMinResource::collection(Tag::withCount('posts')->get(),),
+            'categories' => CategoryMinResource::collection(Category::withCount('posts')->get(),),
+            'recentPosts' => IndexPostResource::collection($recentPosts),
             'posts' => IndexPostResource::collection($posts),
             'appliedFilters' => $appliedFilters,
         ]);
@@ -100,17 +103,20 @@ class PostController extends Controller
      */
     public function show(PostFilter $filter, Post $post)
     {
-        $post->loadCount('comments');
+        $post->loadCount(['commentsWithReplies','likers']);
+        $post->load(['tags','category','user']);
         $appliedFilters = $filter->getAppliedFilters();
         $appliedFilters['filters']['tags'] = $post->tags->map(function($tag) {
             return $tag->slug;
         });
         $appliedFilters['filters']['category'] = $post->category->slug;
+
+        $recentPosts = Post::latest()->with(['category','tags','user'])->take(6)->get();
         return Inertia::render('Post/Show', [
-            'tags' => TagMinResource::collection(Tag::all()),
-            'categories' => CategoryMinResource::collection(Category::all()),
+            'tags' => TagMinResource::collection(Tag::withCount('posts')->get(),),
+            'categories' => CategoryMinResource::collection(Category::withCount('posts')->get(),),
             'post' => new ShowPostResource($post),
-            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
+            'recentPosts' => IndexPostResource::collection($recentPosts),
             'appliedFilters' => $appliedFilters,
         ]);
     }
@@ -123,6 +129,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        $post->loadCount(['commentsWithReplies','likers']);
+        $post->load(['tags','category','user']);
         return Inertia::render('Post/Edit', [
             'tags' => TagMinResource::collection(Tag::all()),
             'categories' => CategoryMinResource::collection(Category::all()),

@@ -24,6 +24,8 @@ class PostController extends Controller
     {
         $posts = (new Post)->newQuery();
         $posts->filter($filter);
+        $posts->withCount('commentsWithReplies');
+        $posts->with(['category','tags','user']);
         $appliedFilters = $filter->getAppliedFilters();
         if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','6','20','50'])) {
             $posts = $posts->paginate($appliedFilters['per_page'])->appends(request()->query());
@@ -89,7 +91,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        $post->loadCount('comments');
+        $post->loadCount(['commentsWithReplies','likers']);
+        $post->load(['tags','category','user']);
         return response()->json(new ShowPostResource($post));
     }
 

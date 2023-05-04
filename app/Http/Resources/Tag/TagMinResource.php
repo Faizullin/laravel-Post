@@ -14,11 +14,15 @@ class TagMinResource extends JsonResource
      */
     public function toArray($request)
     {
+        $posts_count = 0;
+        if($this->posts_count) {
+            $posts_count = $this->posts_count;
+        }
         return [
             'id' => $this->id,
             'title' => $this->title,
             'slug'  => $this->slug,
-            'posts_count' => $this->posts()->count(),
+            'posts_count' => $posts_count,
         ];
     }
 }

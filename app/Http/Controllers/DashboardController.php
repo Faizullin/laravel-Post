@@ -24,19 +24,21 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function post(PostFilter $filter)
+    public function post(Request $request, PostFilter $filter)
     {
-        $user = Auth::user();
-        $posts = $user->posts();
+        $user = $request->user();
+        $posts = Post::query();//$user->posts();
 
         $posts->filter($filter);
+        $posts->withCount('comments');
+        $posts->with(['category','tags','user']);
         $appliedFilters = $filter->getAppliedFilters();
         if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
-
             $posts = $posts->paginate($appliedFilters['per_page'])->appends(request()->query());
         } else {
             $posts = $posts->paginate(1)->appends(request()->query());
         }
+
         return Inertia::render('Dashboard/Post/Index', [
             'posts' => IndexPostResource::collection($posts),
             'user' => new IndexUserDashboardResource($user),
@@ -49,6 +51,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $comments = $user->comments();
         $comments->filter($filter);
+        $comments->with(['user','post']);
         $appliedFilters = $filter->getAppliedFilters();
         if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
             $comments = $comments->paginate($appliedFilters['per_page'])->appends(request()->query());
@@ -68,6 +71,8 @@ class DashboardController extends Controller
         $user = Auth::user();
         $posts = $user->likedPosts();
         $posts->filter($filter);
+        $posts->withCount('comments');
+        $posts->with(['category','tags','user']);
         $appliedFilters = $filter->getAppliedFilters();
         if (array_key_exists('per_page', $appliedFilters) && in_array($appliedFilters['per_page'],['1','10','20','50'])) {
             $posts = $posts->paginate($appliedFilters['per_page'])->onEachSide(1)->appends(request()->query());

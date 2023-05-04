@@ -35,12 +35,15 @@ class SearchController extends Controller
         if(!is_null($keyword)) {
             $appliedFilters['filters']['search'] = $keyword;
         }
-        $posts->withCount('comments');
+        $posts->withCount('commentsWithReplies');
+        $posts->with(['category','tags','user']);
         $posts = $posts->paginate(6)->appends(request()->query());
+
+        $recentPosts = Post::latest()->with(['category','tags','user'])->take(6)->get();
         return Inertia::render('Post/Index', [
-            'tags' => TagMinResource::collection(Tag::all()),
-            'categories' => CategoryMinResource::collection(Category::all()),
-            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
+            'tags' => TagMinResource::collection(Tag::withCount('posts')->get(),),
+            'categories' => CategoryMinResource::collection(Category::withCount('posts')->get(),),
+            'recentPosts' => IndexPostResource::collection($recentPosts),
             'posts' => IndexPostResource::collection($posts),
             'appliedFilters' => $appliedFilters,
         ]);

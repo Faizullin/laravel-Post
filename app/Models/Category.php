@@ -14,6 +14,8 @@ class Category extends Model
 
     protected $fillable = ["title", "slug"];
 
+    public $withCount = ['posts'];
+
 
     public function posts()
     {

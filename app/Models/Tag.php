@@ -14,6 +14,8 @@ class Tag extends Model
 
     protected $fillable = ["title", "slug"];
 
+    public $withCount = ['posts'];
+
     public function posts()
     {
         return $this->belongsToMany(Post::class, PostTag::class);

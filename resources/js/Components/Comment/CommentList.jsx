@@ -54,7 +54,7 @@ export default function CommentList({post,commentsCount,onGetComments}){
     return (
         <div className="comments">
 
-            <h4 className="comments-count">{commentsCount} Comments</h4>
+            <h4 className="comments-count">{typeof(commentsCount) == 'object' ? commentsCount[commentsCount.length - 1] : commentsCount} Comments</h4>
 
             { comments.data.map((comment,index) => (
                 <CommentItem comment={comment}

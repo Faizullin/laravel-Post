@@ -25,7 +25,7 @@ class IndexPostResource extends JsonResource
             'author'   => $this->user ? new UserMinResource($this->user) : null,
             'category' => new CategoryMinResource($this->category),
             'tags' => TagMinResource::collection($this->tags),
-            "comments_count" => $this->comments_count,
+            "comments_count" => $this->commentsWithReplies()->count() ?? $this->comments_count,
             "imageUrl" => $this->imageUrl,
             'created_at' => $this->created_at->format('d M, Y'),
             'updated_at' => $this->updated_at->format('d M, Y'),

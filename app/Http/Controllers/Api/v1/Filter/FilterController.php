@@ -19,8 +19,8 @@ class FilterController extends Controller
     public function __invoke()
     {
         return response()->json([
-            'categories' => CategoryMinResource::collection(Category::all()),
-            'tags' => TagMinResource::collection(Tag::all()),
+            'categories' => CategoryMinResource::collection(Category::withCount('posts')->get()),
+            'tags' => TagMinResource::collection(Tag::withCount('posts')->get()),
         ]);
     }
 

@@ -30,8 +30,18 @@ class CommentController extends Controller
             "post_id" => ["required","integer","exists:posts,id"],
         ]);
         $appliedFilters = ['per_page' => 100 ];
-        $comments = Post::find($data["post_id"])->comments()->whereNull('parent_id')->latest()->paginate($appliedFilters['per_page'])->appends($request->query());
-        return IndexCommentResource::collection($comments);
+        $post = Post::find($data['post_id']);
+        $post_comments = $post->commentsWithReplies();
+        $post_comments_count = $post_comments->count();
+        $comments = $post_comments->whereNull('parent_id')->latest()
+            ->with(['user','replies'])
+            ->paginate($appliedFilters['per_page'])->appends($request->query());
+        return IndexCommentResource::collection($comments,)
+            ->additional([
+                'meta' => [
+                    'total' => $post_comments_count,
+                ]
+            ]);
     }
 
     /**

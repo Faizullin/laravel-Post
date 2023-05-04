@@ -11,10 +11,10 @@ const Sidebar = ({open,setOpen}) => {
     const {data:tags} = props.tags;
     const {data:recentPosts} = props.recentPosts;
     const appliedFilters = props.appliedFilters;
-    console.log(appliedFilters)
     if(!appliedFilters.filters){
         appliedFilters['filters'] = {}
     }
+
     if(appliedFilters.filters){
         appliedFilters['filters']['tags'] = appliedFilters.filters?.tags || []
         appliedFilters['filters']['category'] = appliedFilters.filters?.category || null

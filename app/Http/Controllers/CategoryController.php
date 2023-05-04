@@ -24,14 +24,18 @@ class CategoryController extends Controller
 
         $posts = $category->posts();
         $posts->filter($filter);
-        $posts = $posts->paginate(6);
+        $posts->withCount('commentsWithReplies');
+        $posts->with(['category','tags','user']);
+        $posts = $posts->paginate(6)->appends(request()->query());
         $appliedFilters = $filter->getAppliedFilters();
         $appliedFilters['filters']['category'] = $category->slug;
 
+        $recentPosts = Post::latest()->with(['category','tags','user'])->take(6)->get();
+
         return Inertia::render('Post/Index', [
-            'tags' => TagMinResource::collection(Tag::all()),
-            'categories' => CategoryMinResource::collection(Category::all()),
-            'recentPosts' => IndexPostResource::collection(Post::latest()->take(6)->get()),
+            'tags' => TagMinResource::collection(Tag::withCount('posts')->get(),),
+            'categories' => CategoryMinResource::collection(Category::withCount('posts')->get(),),
+            'recentPosts' => IndexPostResource::collection($recentPosts),
             'posts' => IndexPostResource::collection($posts),
             'appliedFilters' => $appliedFilters,
         ]);
